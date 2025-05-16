@@ -1,3 +1,3 @@
 # Zabbix-Qca-Template
-TEmplate Zabbix by Qca
+Template Zabbix by Qca
 My template for Zabbix
