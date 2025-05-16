@@ -1,0 +1,703 @@
+zabbix_export:
+  version: '6.2'
+  date: '2025-05-16T09:33:04Z'
+  template_groups:
+    -
+      uuid: 7df96b18c230490a9a0a9e2307226338
+      name: Templates
+  templates:
+    -
+      uuid: 9c777f71ceed407998412b275e09bb0a
+      template: EMI_One
+      name: EMI_One
+      description: |
+        Template Power EMI_One
+        
+        MIBs used:
+        HOST-RESOURCES-MIB
+        SNMPv2-MIB
+        APRA-EMIv6.mib
+      groups:
+        -
+          name: Templates
+      items:
+        -
+          uuid: f5a7502de4b243b1ac19c251d91b9998
+          name: 'Product full name'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.1.1.0
+          key: .1.3.6.1.4.1.48305.1.1.1.0
+          delay: 15m
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          tags:
+            -
+              tag: component
+              value: system
+        -
+          uuid: 8e78f0ead00c4715b13a924c7b8dc057
+          name: 'Hardware PCB version'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.1.2.0
+          key: .1.3.6.1.4.1.48305.1.1.2.0
+          delay: 3m
+          history: 7d
+          value_type: FLOAT
+          tags:
+            -
+              tag: component
+              value: system
+        -
+          uuid: 86039955d7c246c4bdd413d5666a76a6
+          name: 'Embedded bootloader version'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.1.3.0
+          key: .1.3.6.1.4.1.48305.1.1.3.0
+          delay: 3m
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          tags:
+            -
+              tag: component
+              value: system
+        -
+          uuid: 2a91fd4a16e54bcea34d80b30c1a9fc5
+          name: 'Release date of application software'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.1.5.0
+          key: .1.3.6.1.4.1.48305.1.1.5.0
+          delay: 3m
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          tags:
+            -
+              tag: component
+              value: system
+        -
+          uuid: 6760d29bad774e9ca05226b783687611
+          name: 'User-configured device label'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.1.6.0
+          key: .1.3.6.1.4.1.48305.1.1.6.0
+          delay: 3m
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          inventory_link: ASSET_TAG
+          tags:
+            -
+              tag: component
+              value: system
+          triggers:
+            -
+              uuid: 5ff2834ef4d44bf58c2ffd870263533d
+              expression: 'last(/EMI_One/.1.3.6.1.4.1.48305.1.1.6.0,#1)<>last(/EMI_One/.1.3.6.1.4.1.48305.1.1.6.0,#2) and length(last(/EMI_One/.1.3.6.1.4.1.48305.1.1.6.0))>0'
+              name: 'User-configured device label has changed'
+              event_name: 'User-configured device label  has changed (new name: {ITEM.VALUE})'
+              priority: INFO
+              description: 'User-configured device label has changed. Ack to close.'
+              manual_close: 'YES'
+              tags:
+                -
+                  tag: scope
+                  value: notice
+                -
+                  tag: scope
+                  value: security
+        -
+          uuid: 0209f1d5e2ad4e20aee6833c22bfb579
+          name: 'Time elapsed since last system startup in seconds'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.1.7.0
+          key: .1.3.6.1.4.1.48305.1.1.7.0
+          delay: 3m
+          history: 7d
+        -
+          uuid: ca399435f6ff469b87d34ca7907f7d85
+          name: 'User-configured GPS Latitude of controller module'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.1.8.0
+          key: .1.3.6.1.4.1.48305.1.1.8.0
+          delay: 3m
+          history: 7d
+          value_type: FLOAT
+          inventory_link: LOCATION_LAT
+        -
+          uuid: 875e357431b24a239113090ad4906368
+          name: 'User-configured GPS Longitude of controller module'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.1.9.0
+          key: .1.3.6.1.4.1.48305.1.1.9.0
+          delay: 3m
+          history: 7d
+          value_type: FLOAT
+          inventory_link: LOCATION_LON
+        -
+          uuid: 61ee09dde3fc47e59f4ec6da10b733f0
+          name: 'Temperature value from sensor 1'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.2.3.1.0
+          key: .1.3.6.1.4.1.48305.1.2.3.1.0
+          history: 7d
+          value_type: FLOAT
+          units: ℃
+          description: 'Temperature value from sensor 1'
+          tags:
+            -
+              tag: component
+              value: sensor
+        -
+          uuid: 4f7b329227904a5f84087c2b49c002f6
+          name: 'Temperature value from sensor 2'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.2.3.2.0
+          key: .1.3.6.1.4.1.48305.1.2.3.2.0
+          history: 7d
+          value_type: FLOAT
+          units: ℃
+          description: 'Temperature value form sensor 2'
+          tags:
+            -
+              tag: component
+              value: sensor
+          triggers:
+            -
+              uuid: 9fece493b54840e0baa915cfe6bc1e89
+              expression: 'nodata(/EMI_One/.1.3.6.1.4.1.48305.1.2.3.2.0,8h)=1'
+              name: 'EMI_One - device unreachable more than 8 hours'
+              priority: AVERAGE
+            -
+              uuid: 0db1c276416546d2bdcc7d3a504fc326
+              expression: 'nodata(/EMI_One/.1.3.6.1.4.1.48305.1.2.3.2.0,30m)=1'
+              name: 'EMI_One - device unreachable more than 30 min'
+              priority: AVERAGE
+            -
+              uuid: 3b637fe857514c5f8b274d8587a5ca4d
+              expression: 'min(/EMI_One/.1.3.6.1.4.1.48305.1.2.3.2.0,{$TIME.PERIOD}) > {$SENSOR.TEMP.MAX.WARN}'
+              name: 'Sensor has high temperature'
+              event_name: 'Battery has high temperature (over {$SENSOR.TEMP.MAX.WARN}℃ for {$TIME.PERIOD})'
+              opdata: 'Current temperature: {ITEM.LASTVALUE1}'
+              priority: HIGH
+        -
+          uuid: 053575f412ff4112bdd7367789b51331
+          name: 'Humidity value form sensor 2'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.2.3.3.0
+          key: .1.3.6.1.4.1.48305.1.2.3.3.0
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          description: 'Humidity value form sensor 2'
+          tags:
+            -
+              tag: component
+              value: sensor
+        -
+          uuid: 13978a10eee64a448badad0bc308c768
+          name: 'Value form additional temperature sensor 2'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.2.3.4.0
+          key: .1.3.6.1.4.1.48305.1.2.3.4.0
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          description: 'Value form additional temperature sensor 2'
+          tags:
+            -
+              tag: component
+              value: sensor
+        -
+          uuid: 4c690ba475084323b61d117adf7f0691
+          name: 'Value form additional temperature sensor 3'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.2.3.5.0
+          key: .1.3.6.1.4.1.48305.1.2.3.5.0
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          description: 'Value form additional temperature sensor 3'
+          tags:
+            -
+              tag: component
+              value: sensor
+        -
+          uuid: fac9e726d4a24e2e8e632ee13e8a7dbc
+          name: 'Value form additional temperature sensor 4'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.2.3.6.0
+          key: .1.3.6.1.4.1.48305.1.2.3.6.0
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          description: 'Value form additional temperature sensor 4'
+          tags:
+            -
+              tag: component
+              value: sensor
+        -
+          uuid: f37460bf9b604f10b9eb6d6614554aef
+          name: 'Temperature value form additional combo sensor 2'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.2.3.7.0
+          key: .1.3.6.1.4.1.48305.1.2.3.7.0
+          history: 7d
+          value_type: FLOAT
+          units: ℃
+          description: 'Temperature value form additional combo sensor 2'
+          tags:
+            -
+              tag: component
+              value: sensor
+        -
+          uuid: bf7f677eb322446e9389b9f4649548cf
+          name: 'Humidity value form additional combo sensor 2'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.2.3.8.0
+          key: .1.3.6.1.4.1.48305.1.2.3.8.0
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          description: 'Humidity value form additional combo sensor 2'
+          tags:
+            -
+              tag: component
+              value: sensor
+          triggers:
+            -
+              uuid: 002dc7db43154b60aaff85ae7c834ddd
+              expression: 'min(/EMI_One/.1.3.6.1.4.1.48305.1.2.3.8.0,{$TIME.PERIOD}) > {$SENSOR.HUM.MAX.WARN}'
+              name: 'Sensor has high humidity'
+              event_name: 'Sensorhas high humidity(over {$Sensor.HUM.MAX.WARN}℃ for {$TIME.PERIOD})'
+              opdata: 'Current temperature: {ITEM.LASTVALUE1}'
+              priority: HIGH
+        -
+          uuid: 7cd6e96f59fc426aa551e92f9a3aac4d
+          name: 'Temperature value form additional combo sensor 3'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.2.3.9.0
+          key: .1.3.6.1.4.1.48305.1.2.3.9.0
+          history: 7d
+          value_type: FLOAT
+          units: ℃
+          description: 'Temperature value form additional combo sensor 3'
+          tags:
+            -
+              tag: component
+              value: sensor
+        -
+          uuid: 0524b16f88cc45c5a209958d9f2740ca
+          name: 'Humidity value form additional combo sensor 3'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.2.3.10.0
+          key: .1.3.6.1.4.1.48305.1.2.3.10.0
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          description: 'Humidity value form additional combo sensor 3'
+          tags:
+            -
+              tag: component
+              value: sensor
+        -
+          uuid: 077a082ddfd94c5ba9d19b58d80b64e4
+          name: 'Temperature value form additional combo sensor 4'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.2.3.11.0
+          key: .1.3.6.1.4.1.48305.1.2.3.11.0
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          description: 'Temperature value form additional combo sensor 4'
+          tags:
+            -
+              tag: component
+              value: sensor
+        -
+          uuid: e694445b860c4fe4b2d38c7f8ec5462f
+          name: 'Humidity value form additional combo sensor 4'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.2.3.12.0
+          key: .1.3.6.1.4.1.48305.1.2.3.12.0
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          description: 'Humidity value form additional combo sensor 4'
+          tags:
+            -
+              tag: component
+              value: sensor
+        -
+          uuid: 5c3d81ace31c4f1eb6ffcadefb13c9ec
+          name: 'EMI_One:Version of application software'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.48305.1.1.4.0
+          key: 'EMI_One.server.hw.firmware[racFirmwareVersion]'
+          delay: 3m
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          inventory_link: OS_SHORT
+          tags:
+            -
+              tag: component
+              value: system
+          triggers:
+            -
+              uuid: f478f34984094fe79f3fe27ca235b495
+              expression: 'last(/EMI_One/EMI_One.server.hw.firmware[racFirmwareVersion],#1)<>last(/EMI_One/EMI_One.server.hw.firmware[racFirmwareVersion],#2) and length(last(/EMI_One/EMI_One.server.hw.firmware[racFirmwareVersion]))>0'
+              name: 'EMI_One: Firmware has changed'
+              event_name: 'Current value: {ITEM.LASTVALUE1}'
+              priority: INFO
+        -
+          uuid: c8c6a81fbe7e42ceb30f82270955c7ab
+          name: 'EMI_One: System location'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.1.6.0
+          key: 'EMI_One.server.location[sysLocation]'
+          delay: 15m
+          trends: '0'
+          value_type: CHAR
+          description: 'The physical location of this node (e.g., ''telephone closet, 3rd floor''). If the location is unknown, the value is the zero-length string.'
+          tags:
+            -
+              tag: component
+              value: system
+        -
+          uuid: 4c55136543354d23bd9dc6672f79139c
+          name: 'EMI_One: System contact details'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.1.4.0
+          key: 'EMI_Onel.server.contact[sysContact]'
+          trends: '0'
+          value_type: CHAR
+          description: |
+            MIB: SNMPv2-MIB
+            The textual identification of the contact person for this managed node, together with information on how to contact this person. If no contact information is known, the value is the zero-length string.
+          tags:
+            -
+              tag: component
+              value: system
+        -
+          uuid: 4703599b7e56484295fc2213aab53f5e
+          name: 'Emi One Version of application software from  Web'
+          type: TRAP
+          key: GetEmi-OneFirmware
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+        -
+          uuid: 140367504d9b49df85eb2d739cb58ebf
+          name: 'ICMP ping'
+          type: SIMPLE
+          key: icmpping
+          history: 1w
+          status: DISABLED
+          valuemap:
+            name: 'EMI_One: Service'
+          tags:
+            -
+              tag: component
+              value: health
+            -
+              tag: component
+              value: network
+          triggers:
+            -
+              uuid: 46fd91bd49b44d61b8aa5867341debcd
+              expression: 'max(/EMI_One/icmpping,#3)=0'
+              name: 'Unavailable by ICMP ping'
+              status: DISABLED
+              priority: HIGH
+              tags:
+                -
+                  tag: scope
+                  value: avilability
+        -
+          uuid: 5b7434f1b9e344bdabe3c2e798064910
+          name: 'ICMP loss'
+          type: SIMPLE
+          key: icmppingloss
+          status: DISABLED
+          value_type: FLOAT
+          units: '%'
+          tags:
+            -
+              tag: component
+              value: health
+            -
+              tag: component
+              value: network
+          triggers:
+            -
+              uuid: 64f30ff684ac488a93b8489aefd9afa7
+              expression: 'min(/EMI_One/icmppingloss,5m)>{$ICMP_LOSS_WARN} and min(/EMI_One/icmppingloss,5m)<100'
+              name: 'High ICMP ping loss'
+              opdata: 'Loss: {ITEM.LASTVALUE1}'
+              priority: WARNING
+              dependencies:
+                -
+                  name: 'Unavailable by ICMP ping'
+                  expression: 'max(/EMI_One/icmpping,#3)=0'
+              tags:
+                -
+                  tag: scope
+                  value: availability
+                -
+                  tag: scope
+                  value: performance
+        -
+          uuid: f23ac6cbaa004d97a438fe4af556ff0a
+          name: 'EMI_One: Service''s TCP port state'
+          type: SIMPLE
+          key: 'net.tcp.service["{$EMI_ONE.SCHEME}","{HOST.CONN}","{$EMI_ONE.PORT}"]'
+          valuemap:
+            name: 'EMI_One: Service'
+          tags:
+            -
+              tag: component
+              value: health
+            -
+              tag: component
+              value: network
+        -
+          uuid: 436e76c6b08d4fbea4a758f635fabaab
+          name: 'EMI_One - HTML page'
+          type: SIMPLE
+          key: 'net.tcp.service[http]'
+          history: 7d
+          tags:
+            -
+              tag: component
+              value: page
+        -
+          uuid: 3bdf4e245a834bfd990074bc8f89f28f
+          name: 'EMI_One: SNMP traps (fallback)'
+          type: SNMP_TRAP
+          key: snmptrap.fallback
+          delay: '0'
+          history: 2w
+          trends: '0'
+          value_type: LOG
+          description: 'The item is used to collect all SNMP traps unmatched by other snmptrap items'
+          logtimefmt: 'hh:mm:sszyyyy/MM/dd'
+          tags:
+            -
+              tag: component
+              value: network
+        -
+          uuid: 542176adc61a41cda7a7c0745bf03fbd
+          name: 'Uptime (hardware)'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.25.1.1.0
+          key: 'system.hw.uptime[hrSystemUptime.0]'
+          history: 2w
+          trends: '0'
+          units: uptime
+          description: |
+            MIB: HOST-RESOURCES-MIB
+            The amount of time since this host was last initialized. Note that this is different from sysUpTime in the SNMPv2-MIB [RFC1907] because sysUpTime is the uptime of the network management portion of the system.
+          tags:
+            -
+              tag: component
+              value: system
+        -
+          uuid: 9e024743fc584d9988b5967d82443e06
+          name: 'EMI_One: System name'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.1.5.0
+          key: system.name
+          delay: 15m
+          trends: '0'
+          value_type: CHAR
+          description: |
+            MIB: SNMPv2-MIB
+            An administratively-assigned name for this managed node.By convention, this is the node's fully-qualified domain name.  If the name is unknown, the value is the zero-length string.
+          tags:
+            -
+              tag: component
+              value: system
+        -
+          uuid: e75ab6d83cc742f5bab02902b0875fae
+          name: 'Uptime (network)'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.1.3.0
+          key: 'system.net.uptime[sysUpTime.0]'
+          description: |
+            MIB: SNMPv2-MIB
+            The time (in hundredths of a second) since the network management portion of the system was last re-initialized.
+          tags:
+            -
+              tag: component
+              value: system
+      tags:
+        -
+          tag: class
+          value: boot-os
+        -
+          tag: class
+          value: network
+        -
+          tag: class
+          value: os
+        -
+          tag: class
+          value: sensor
+        -
+          tag: target
+          value: EMI_One
+      macros:
+        -
+          macro: '{$EMI_ONE.CGI.IO_SETTINGS}'
+          value: 'http:// 10.38.31.182/io_settings.cgi'
+        -
+          macro: '{$EMI_ONE.CGI.SENSOR_SETTINGS}'
+          value: 'http:// 10.38.31.182/sensor_settings.cgi'
+        -
+          macro: '{$EMI_ONE.HTTP.FAIL.MAX.WARN}'
+          value: '2'
+          description: 'Maximum number of HTTP requests failures.'
+        -
+          macro: '{$EMI_ONE.PORT}'
+          value: '80'
+          description: 'The port of EMI_OneAPI endpoint.'
+        -
+          macro: '{$EMI_ONE.SCHEME}'
+          value: http
+          description: 'Request scheme which may be http or https.'
+        -
+          macro: '{$EMI_ONE.SENSOR.HUM.MAX.WARN}'
+          value: '40'
+          description: 'Maximum sensor humidityfor trigger expression.'
+        -
+          macro: '{$EMI_ONE.SENSOR.TEMP.MAX.WARN}'
+          value: '35'
+          description: 'Maximum sensor temperature for trigger expression.'
+        -
+          macro: '{$EMI_ONE.USER}'
+          description: 'Login for www user'
+        -
+          macro: '{$EMI_ONE.USER.PASSWORD}'
+          type: SECRET_TEXT
+          description: 'Password for www user'
+        -
+          macro: '{$TIME.PERIOD}'
+          value: 15m
+          description: 'Time period for trigger expression.'
+      valuemaps:
+        -
+          uuid: 8d84e0cb345545b0b6993050c3c8c44a
+          name: 'EMI_One: Service'
+          mappings:
+            -
+              value: '0'
+              newvalue: Down
+            -
+              value: '1'
+              newvalue: Up
+  triggers:
+    -
+      uuid: 2c84739c07b245efaaee4a7339fa426e
+      expression: '(last(/EMI_One/system.hw.uptime[hrSystemUptime.0])>0 and last(/EMI_One/system.hw.uptime[hrSystemUptime.0])<10m) or (last(/EMI_One/system.hw.uptime[hrSystemUptime.0])=0 and last(/EMI_One/system.net.uptime[sysUpTime.0])<10m)'
+      name: 'Host has been restarted'
+      event_name: '{HOST.NAME} has been restarted (uptime < 10m)'
+      priority: WARNING
+      description: 'Uptime is less than 10 minutes.'
+      manual_close: 'YES'
+      tags:
+        -
+          tag: scope
+          value: noteice
+    -
+      uuid: 25b07770388b46f1ae882e8fc0902190
+      expression: 'last(/EMI_One/.1.3.6.1.4.1.48305.1.1.3.0)<>last(/EMI_One/GetEmi-OneFirmware) and length(last(/EMI_One/GetEmi-OneFirmware))>0'
+      name: 'New Version Firmware Avilable'
+      url: 'https://www.apra-optinet.pl/products/emi-one-cabinet-monitoring-access-control-fire-extinguishing-systems/'
+      priority: INFO
+      description: 'Use Emi-One Firmware Upgrade by tftpd from web over lan - use instruktion'
+  graphs:
+    -
+      uuid: 19e9a6671fe54062ac8894f6adcff722
+      name: Temperature
+      graph_items:
+        -
+          color: 2774A4
+          calc_fnc: ALL
+          item:
+            host: EMI_One
+            key: .1.3.6.1.4.1.48305.1.2.3.1.0
+        -
+          sortorder: '1'
+          color: 199C0D
+          calc_fnc: ALL
+          item:
+            host: EMI_One
+            key: .1.3.6.1.4.1.48305.1.2.3.2.0
+        -
+          sortorder: '2'
+          color: 6C59DC
+          calc_fnc: ALL
+          item:
+            host: EMI_One
+            key: .1.3.6.1.4.1.48305.1.2.3.9.0
+        -
+          sortorder: '3'
+          color: C7A72D
+          calc_fnc: ALL
+          item:
+            host: EMI_One
+            key: .1.3.6.1.4.1.48305.1.2.3.11.0
+    -
+      uuid: c315802b22d14641a9b73d06a14e5244
+      name: 'Temperature and humidity'
+      graph_items:
+        -
+          color: 2774A4
+          calc_fnc: ALL
+          item:
+            host: EMI_One
+            key: .1.3.6.1.4.1.48305.1.2.3.1.0
+        -
+          sortorder: '1'
+          color: 199C0D
+          calc_fnc: ALL
+          item:
+            host: EMI_One
+            key: .1.3.6.1.4.1.48305.1.2.3.2.0
+        -
+          sortorder: '2'
+          color: F63100
+          calc_fnc: ALL
+          item:
+            host: EMI_One
+            key: .1.3.6.1.4.1.48305.1.2.3.3.0
+        -
+          sortorder: '3'
+          color: 6C59DC
+          calc_fnc: ALL
+          item:
+            host: EMI_One
+            key: .1.3.6.1.4.1.48305.1.2.3.9.0
+        -
+          sortorder: '4'
+          color: F7941D
+          calc_fnc: ALL
+          item:
+            host: EMI_One
+            key: .1.3.6.1.4.1.48305.1.2.3.10.0
+        -
+          sortorder: '5'
+          color: C7A72D
+          calc_fnc: ALL
+          item:
+            host: EMI_One
+            key: .1.3.6.1.4.1.48305.1.2.3.11.0
+        -
+          sortorder: '6'
+          color: FC6EA3
+          calc_fnc: ALL
+          item:
+            host: EMI_One
+            key: .1.3.6.1.4.1.48305.1.2.3.12.0
