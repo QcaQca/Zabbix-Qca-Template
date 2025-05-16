@@ -1,0 +1,1861 @@
+zabbix_export:
+  version: '6.2'
+  date: '2025-05-16T05:11:57Z'
+  template_groups:
+    -
+      uuid: 36bff6c29af64692839d077febfc7079
+      name: 'Templates/Network devices'
+  templates:
+    -
+      uuid: 7efd8d11848c41528851bf97cbbf2e98
+      template: 'ZYXEL GS-1900-10-HP SNMP'
+      name: 'ZYXEL GS-1900-10-HP SNMP'
+      description: |
+        ZYXEL GS-1900-10-HP
+        
+        MIBs used:
+        ZYXEL-GS2200-24-MIB
+        RFC1213-MIB
+        HOST-RESOURCES-MIB
+        IF-MIB
+        
+        Known Issues:
+        
+          Description: Incorrect handling of SNMP bulk requests. Disable the use of bulk requests in the SNMP interface settings.
+          Version: all versions firmware
+          Device: ZYXEL GS-4012F
+        
+        You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/422668-discussion-thread-for-official-zabbix-templates-for-zyxel
+        
+        Template tooling version used: 0.42
+      groups:
+        -
+          name: 'Templates/Network devices'
+      items:
+        -
+          uuid: f0bd5afd2c3d46218c4ff0f88ee3f275
+          name: 'ZYXEL {$MODEL} Zyxel firmware wersion from Web'
+          type: TRAP
+          key: GetZyxel1900Firmware
+          delay: '0'
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+        -
+          uuid: d5e9dee1c2e14d348c3218d74009e903
+          name: 'ZYXEL {$MODEL}: Contact'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.4.0
+          key: zyxel.GS1900-10-HP.contact
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          description: |
+            MIB: RFC1213-MIB
+            The textual identification of the contact person
+            for this managed node, together with information
+            on how to contact this person.
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: component
+              value: inventory
+        -
+          uuid: b3544ba806e34e609c44e704b17d2911
+          name: 'ZYXEL {$MODEL}: ZyNOS F/W Version'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.890.1.15.3.1.6.0
+          key: zyxel.GS1900-10-HP.fwversion
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          description: 'MIB: ZYXEL-ES-COMMON'
+          inventory_link: SOFTWARE_FULL
+          preprocessing:
+            -
+              type: LTRIM
+              parameters:
+                - V
+            -
+              type: RTRIM
+              parameters:
+                - ' | 03/04/2025'
+          tags:
+            -
+              tag: component
+              value: inventory
+          triggers:
+            -
+              uuid: 00966e890926448285f870a5f519a4e6
+              expression: 'last(/ZYXEL GS-1900-10-HP SNMP/zyxel.GS1900-10-HP.fwversion,#1)<>last(/ZYXEL GS-1900-10-HP SNMP/zyxel.GS1900-10-HP.fwversion,#2) and length(last(/ZYXEL GS-1900-10-HP SNMP/zyxel.GS1900-10-HP.fwversion))>0'
+              name: 'ZYXEL {$MODEL}: Firmware has changed'
+              opdata: 'Current value: {ITEM.LASTVALUE1}'
+              priority: INFO
+              description: 'Firmware version has changed. Ack to close'
+              manual_close: 'YES'
+              tags:
+                -
+                  tag: scope
+                  value: notice
+        -
+          uuid: f1b16ee1d98842618f5b781d251ec75f
+          name: 'ZYXEL {$MODEL}: Uptime (hardware)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.25.1.1.0
+          key: zyxel.GS1900-10-HP.hw.uptime
+          delay: 30s
+          history: 2w
+          trends: '0'
+          units: uptime
+          description: |
+            MIB: HOST-RESOURCES-MIB
+            The amount of time since this host was last initialized.
+            Note that this is different from sysUpTime in the SNMPv2-MIB
+            [RFC1907] because sysUpTime is the uptime of the
+            network management portion of the system.
+          preprocessing:
+            -
+              type: CHECK_NOT_SUPPORTED
+              parameters:
+                - ''
+              error_handler: CUSTOM_VALUE
+              error_handler_params: '0'
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            -
+              tag: component
+              value: system
+        -
+          uuid: 5664ccd552d24fd1bd9170cc6c19c5ea
+          name: 'ZYXEL {$MODEL}: Location'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.6.0
+          key: zyxel.GS1900-10-HP.location
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          description: |
+            MIB: RFC1213-MIB
+            The physical location of this node (e.g.,
+            `telephone closet, 3rd floor').
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: component
+              value: inventory
+        -
+          uuid: 31b0ceb065ba40c3b1a52d4f5fa1ab94
+          name: 'ZYXEL {$MODEL}: MAC address'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.6.1
+          key: zyxel.GS1900-10-HP.mac
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          description: |
+            MIB: IF-MIB
+            The interface's address at the protocol layer
+            immediately `below' the network layer in the
+            protocol stack.  For interfaces which do not have
+            such an address (e.g., a serial line), this object
+            should contain an octet string of zero length.
+          inventory_link: MACADDRESS_A
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: component
+              value: inventory
+        -
+          uuid: 9226d108da044d0eb5d8a5f6e76bb613
+          name: 'ZYXEL {$MODEL}: Hardware model name'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.1.0
+          key: zyxel.GS1900-10-HP.model
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          description: |
+            MIB: RFC1213-MIB
+            A textual description of the entity.  This value
+            should include the full name and version
+            identification of the system's hardware type,
+            software operating-system, and networking
+            software.  It is mandatory that this only contain
+            printable ASCII characters.
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: component
+              value: inventory
+          triggers:
+            -
+              uuid: 0b0a84fd37a242ba8d7af3cb39a777bd
+              expression: 'last(/ZYXEL GS-1900-10-HP SNMP/zyxel.GS1900-10-HP.model)<>{$MODEL}'
+              name: 'ZYXEL {$MODEL}: Template does not match hardware'
+              priority: INFO
+              description: 'This template is for Zyxel GS1900-10HP, but connected to {ITEM.VALUE}'
+              tags:
+                -
+                  tag: scope
+                  value: notice
+        -
+          uuid: 9eb257444a214e9ba0586cd02fe8e655
+          name: 'ZYXEL {$MODEL}: Host name'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.5.0
+          key: zyxel.GS1900-10-HP.name
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          description: |
+            MIB: RFC1213-MIB
+            An administratively-assigned name for this
+            managed node.  By convention, this is the node's
+            fully-qualified domain name.
+          preprocessing:
+            -
+              type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            -
+              tag: component
+              value: inventory
+        -
+          uuid: a0f5db29cf7c49a0992ed856b2b24e86
+          name: 'ZYXEL {$MODEL}: Uptime (network)'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.1.3.0
+          key: zyxel.GS1900-10-HP.net.uptime
+          delay: 30s
+          history: 2w
+          trends: '0'
+          units: uptime
+          description: |
+            MIB: RFC1213-MIB
+            The time (in hundredths of a second) since the
+            network management portion of the system was last
+            re-initialized.
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            -
+              tag: component
+              value: system
+        -
+          uuid: d2f4728ad33d4d93a85c28eb7d8db9f6
+          name: 'ZYXEL {$MODEL}: ZyNOS SerialNumber'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.890.1.15.3.1.12.0
+          key: zyxel.GS1900-10-HP.serialnumber
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          description: 'MIB: ZYXEL-ES-COMMON'
+          inventory_link: SERIALNO_A
+          tags:
+            -
+              tag: component
+              value: inventory
+          triggers:
+            -
+              uuid: 1aced322622c49b9bd98bff45ddad2cb
+              expression: 'last(/ZYXEL GS-1900-10-HP SNMP/zyxel.GS1900-10-HP.serialnumber,#1)<>last(/ZYXEL GS-1900-10-HP SNMP/zyxel.GS1900-10-HP.serialnumber,#2) and length(last(/ZYXEL GS-1900-10-HP SNMP/zyxel.GS1900-10-HP.serialnumber))>0'
+              name: 'Device has been replaced'
+              event_name: 'Device has been replaced (new serial number received)'
+              priority: INFO
+              description: 'MIB: ZYXEL-ES-COMMON'
+              manual_close: 'YES'
+              tags:
+                -
+                  tag: scope
+                  value: notice
+        -
+          uuid: 09b1a46ed7244f3c9a93cb92cc1a80dd
+          name: 'ZYXEL {$MODEL}: sysMgmtCPU1MinUsage.0'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.890.1.15.3.2.8.0
+          key: zyxel.GS1900-10-HP.sysMgmtCPU1MinUsage.0
+          history: 7d
+          units: '%'
+          description: |
+            MIB: ZYXEL-ES-COMMON
+            Average CPU usage in 1 minute. (%)
+          tags:
+            -
+              tag: component
+              value: inventory
+        -
+          uuid: 899abbe82e174300a22798bce27479b9
+          name: 'ZYXEL {$MODEL}: sysMgmtCPU5MinUsage.0'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.890.1.15.3.2.9.0
+          key: zyxel.GS1900-10-HP.sysMgmtCPU5MinUsage.0
+          history: 7d
+          units: '%'
+          description: |
+            MIB: ZYXEL-ES-COMMON
+            Average CPU usage in 5 minutes. (%)
+          tags:
+            -
+              tag: component
+              value: inventory
+          triggers:
+            -
+              uuid: 609b0467a1bc4463ba49aabbc349f9f9
+              expression: 'last(/ZYXEL GS-1900-10-HP SNMP/zyxel.GS1900-10-HP.sysMgmtCPU5MinUsage.0)>{$CPU.UTIL.CRIT}'
+              name: 'Load average is is critical'
+              event_name: 'Load average is too high (per CPU load over {$CPU.UTIL.CRIT} for 5m)'
+              opdata: 'Load averages(1m 5m 15m): ({ITEM.LASTVALUE1} {ITEM.LASTVALUE3} {ITEM.LASTVALUE4}), # of CPUs: {ITEM.LASTVALUE2}'
+              priority: HIGH
+              description: 'Per CPU load average is too high. Your system may be slow to respond.'
+              tags:
+                -
+                  tag: scope
+                  value: capacity
+                -
+                  tag: scope
+                  value: performance
+            -
+              uuid: 1bf0640a2aa64a10af4efdf9b9eda23a
+              expression: 'last(/ZYXEL GS-1900-10-HP SNMP/zyxel.GS1900-10-HP.sysMgmtCPU5MinUsage.0)>{$LOAD_AVG_PER_CPU.MAX.WARN}'
+              name: 'Load average is too high'
+              event_name: 'Load average is too high (per CPU load over {$LOAD_AVG_PER_CPU.MAX.WARN} for 5m)'
+              opdata: 'Load averages(1m 5m 15m): ({ITEM.LASTVALUE1} {ITEM.LASTVALUE3} {ITEM.LASTVALUE4}), # of CPUs: {ITEM.LASTVALUE2}'
+              priority: AVERAGE
+              description: 'Per CPU load average is too high. Your system may be slow to respond.'
+              tags:
+                -
+                  tag: scope
+                  value: capacity
+                -
+                  tag: scope
+                  value: performance
+        -
+          uuid: 606e9df6eb744886a729e381e8984e3a
+          name: 'ZYXEL {$MODEL}: sysMgmtCPU5SecUsage.0'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.890.1.15.3.2.7.0
+          key: zyxel.GS1900-10-HP.sysMgmtCPU5SecUsage.0
+          history: 7d
+          units: '%'
+          description: |
+            MIB: ZYXEL-ES-COMMON
+            Average CPU usage in 5 seconds. (%)
+          tags:
+            -
+              tag: component
+              value: inventory
+        -
+          uuid: f59bdba8d0f04ee19778d5272c9830a9
+          name: 'ZYXEL {$MODEL}: sysMgmtCPUUsage.0'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.890.1.15.3.2.4.0
+          key: zyxel.GS1900-10-HP.sysMgmtCPUUsage.0
+          history: 7d
+          units: '%'
+          description: |
+            MIB: ZYXEL-ES-COMMON
+            evice CPU usage (%)
+          tags:
+            -
+              tag: component
+              value: inventory
+        -
+          uuid: 21bf9bfc8bae4a5d88784118b33f8277
+          name: 'ZYXEL {$MODEL}: sysMgmtMemUsage.0'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.890.1.15.3.2.5.0
+          key: zyxel.GS1900-10-HP.sysMgmtMemUsage.0
+          history: 7d
+          units: '%'
+          description: |
+            MIB: ZYXEL-ES-COMMON
+            Device memory usage (%)
+          tags:
+            -
+              tag: component
+              value: inventory
+        -
+          uuid: 400bc1c2d8624dc893f689197d3387a6
+          name: 'ZYXEL {$MODEL}: snmpCommunityName'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.6.3.18.1.1.1.2.112.117.98.108.105.99.112.117.98.108.105.9
+          key: Zyxel.snmpCommunityName
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          description: 'MIB:SNMP-COMMUNITY-MIB'
+          tags:
+            -
+              tag: component
+              value: access
+          triggers:
+            -
+              uuid: 534d2fec52404a898080b20e174b8708
+              expression: 'last(/ZYXEL GS-1900-10-HP SNMP/Zyxel.snmpCommunityName)="public"'
+              name: 'Change default password for snmpGet'
+              url: 'http://{HOST.IP}'
+              priority: INFO
+              description: 'Change default password and don''t forget after change password write new password for zabbix Config on host'
+              manual_close: 'YES'
+        -
+          uuid: f1ddd5e218aa4ed6b7b9406d06a14baf
+          name: 'ZYXEL {$MODEL}: snmpCommunitySecurityName'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.6.3.18.1.1.1.3.112.117.98.108.105.99.112.117.98.108.105.9
+          key: Zyxel.snmpCommunitySecurityName
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          description: 'MIB:SNMP-COMMUNITY-MIB'
+          tags:
+            -
+              tag: component
+              value: access
+          triggers:
+            -
+              uuid: a7132347a1db411c91473f050a559f22
+              expression: 'last(/ZYXEL GS-1900-10-HP SNMP/Zyxel.snmpCommunitySecurityName)="public" or last(/ZYXEL GS-1900-10-HP SNMP/Zyxel.snmpCommunitySecurityName)="private"'
+              name: 'Change default password for snmpSet'
+              url: 'http://{HOST.IP}'
+              priority: INFO
+              description: 'Change default password and don''t forget after change password write new password for zabbix Config on host'
+              manual_close: 'YES'
+      discovery_rules:
+        -
+          uuid: 6b8c4d2cb6ae45d786fca5f9c59aa2f1
+          name: 'Network interfaces discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#IFOPERSTATUS},1.3.6.1.2.1.2.2.1.8,{#IFADMINSTATUS},1.3.6.1.2.1.2.2.1.7,{#IFALIAS},1.3.6.1.2.1.31.1.1.1.18,{#IFNAME},1.3.6.1.2.1.31.1.1.1.1,{#IFDESCR},1.3.6.1.2.1.2.2.1.2,{#IFTYPE},1.3.6.1.2.1.2.2.1.3]'
+          key: net.if.discovery
+          delay: 2h
+          filter:
+            conditions:
+              -
+                macro: '{#IFADMINSTATUS}'
+                value: '{$NET.IF.IFADMINSTATUS.MATCHES}'
+                formulaid: A
+              -
+                macro: '{#IFADMINSTATUS}'
+                value: '{$NET.IF.IFADMINSTATUS.NOT_MATCHES}'
+                operator: NOT_MATCHES_REGEX
+                formulaid: B
+              -
+                macro: '{#IFALIAS}'
+                value: '{$NET.IF.IFALIAS.MATCHES}'
+                formulaid: C
+              -
+                macro: '{#IFALIAS}'
+                value: '{$NET.IF.IFALIAS.NOT_MATCHES}'
+                operator: NOT_MATCHES_REGEX
+                formulaid: D
+              -
+                macro: '{#IFDESCR}'
+                value: '{$NET.IF.IFDESCR.MATCHES}'
+                formulaid: E
+              -
+                macro: '{#IFDESCR}'
+                value: '{$NET.IF.IFDESCR.NOT_MATCHES}'
+                operator: NOT_MATCHES_REGEX
+                formulaid: F
+              -
+                macro: '{#IFNAME}'
+                value: '{$NET.IF.IFNAME.MATCHES}'
+                formulaid: G
+              -
+                macro: '{#IFNAME}'
+                value: '{$NET.IF.IFNAME.NOT_MATCHES}'
+                operator: NOT_MATCHES_REGEX
+                formulaid: H
+              -
+                macro: '{#IFOPERSTATUS}'
+                value: '{$NET.IF.IFOPERSTATUS.MATCHES}'
+                formulaid: I
+              -
+                macro: '{#IFOPERSTATUS}'
+                value: '{$NET.IF.IFOPERSTATUS.NOT_MATCHES}'
+                operator: NOT_MATCHES_REGEX
+                formulaid: J
+              -
+                macro: '{#IFTYPE}'
+                value: '{$NET.IF.IFTYPE.MATCHES}'
+                formulaid: K
+              -
+                macro: '{#IFTYPE}'
+                value: '{$NET.IF.IFTYPE.NOT_MATCHES}'
+                operator: NOT_MATCHES_REGEX
+                formulaid: L
+          description: 'Discovering interfaces from IF-MIB.'
+          item_prototypes:
+            -
+              uuid: e429771a2c0a48ec91444eb7887709f3
+              name: 'Interface {#IFNAME}({#IFALIAS}): Inbound packets discarded'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.2.1.2.2.1.13.{#SNMPINDEX}'
+              key: 'net.if.in.discards[ifInDiscards.{#SNMPINDEX}]'
+              delay: 3m
+              history: 7d
+              description: |
+                MIB: IF-MIB
+                The number of inbound packets which were chosen to be discarded
+                even though no errors had been detected to prevent their being deliverable to a higher-layer protocol.
+                One possible reason for discarding such a packet could be to free up buffer space.
+                Discontinuities in the value of this counter can occur at re-initialization of the management system,
+                and at other times as indicated by the value of ifCounterDiscontinuityTime.
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#IFALIAS}'
+                -
+                  tag: interface
+                  value: '{#IFNAME}'
+            -
+              uuid: efb4c43ffe184fda9ea7f0867177169d
+              name: 'Interface {#IFNAME}({#IFALIAS}): Inbound packets with errors'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.2.1.2.2.1.14.{#SNMPINDEX}'
+              key: 'net.if.in.errors[ifInErrors.{#SNMPINDEX}]'
+              delay: 3m
+              history: 7d
+              description: |
+                MIB: IF-MIB
+                For packet-oriented interfaces, the number of inbound packets that contained errors preventing them from being deliverable to a higher-layer protocol.  For character-oriented or fixed-length interfaces, the number of inbound transmission units that contained errors preventing them from being deliverable to a higher-layer protocol. Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#IFALIAS}'
+                -
+                  tag: interface
+                  value: '{#IFNAME}'
+            -
+              uuid: 3f0139bf207b4ca591addcc92d66a480
+              name: 'Interface {#IFNAME}({#IFALIAS}): Bits received'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.2.1.31.1.1.1.6.{#SNMPINDEX}'
+              key: 'net.if.in[ifHCInOctets.{#SNMPINDEX}]'
+              delay: 3m
+              history: 7d
+              units: bps
+              description: |
+                MIB: IF-MIB
+                The total number of octets received on the interface, including framing characters. This object is a 64-bit version of ifInOctets. Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+                -
+                  type: MULTIPLIER
+                  parameters:
+                    - '8'
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#IFALIAS}'
+                -
+                  tag: interface
+                  value: '{#IFNAME}'
+            -
+              uuid: 5773afed8fc64344ac24d1be7809243e
+              name: 'Interface {#IFNAME}({#IFALIAS}): Outbound packets discarded'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.2.1.2.2.1.19.{#SNMPINDEX}'
+              key: 'net.if.out.discards[ifOutDiscards.{#SNMPINDEX}]'
+              delay: 3m
+              history: 7d
+              description: |
+                MIB: IF-MIB
+                The number of outbound packets which were chosen to be discarded
+                even though no errors had been detected to prevent their being deliverable to a higher-layer protocol.
+                One possible reason for discarding such a packet could be to free up buffer space.
+                Discontinuities in the value of this counter can occur at re-initialization of the management system,
+                and at other times as indicated by the value of ifCounterDiscontinuityTime.
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#IFALIAS}'
+                -
+                  tag: interface
+                  value: '{#IFNAME}'
+            -
+              uuid: 97b2bef27458474f8f82d3726e753989
+              name: 'Interface {#IFNAME}({#IFALIAS}): Outbound packets with errors'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.2.1.2.2.1.20.{#SNMPINDEX}'
+              key: 'net.if.out.errors[ifOutErrors.{#SNMPINDEX}]'
+              delay: 3m
+              history: 7d
+              description: |
+                MIB: IF-MIB
+                For packet-oriented interfaces, the number of outbound packets that contained errors preventing them from being deliverable to a higher-layer protocol.  For character-oriented or fixed-length interfaces, the number of outbound transmission units that contained errors preventing them from being deliverable to a higher-layer protocol. Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#IFALIAS}'
+                -
+                  tag: interface
+                  value: '{#IFNAME}'
+            -
+              uuid: 34df2cb0306b44f5bb439abe03a26cbf
+              name: 'Interface {#IFNAME}({#IFALIAS}): Bits sent'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.2.1.31.1.1.1.10.{#SNMPINDEX}'
+              key: 'net.if.out[ifHCOutOctets.{#SNMPINDEX}]'
+              delay: 3m
+              history: 7d
+              units: bps
+              description: |
+                MIB: IF-MIB
+                The total number of octets transmitted out of the interface, including framing characters. This object is a 64-bit version of ifOutOctets.Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+                -
+                  type: MULTIPLIER
+                  parameters:
+                    - '8'
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#IFALIAS}'
+                -
+                  tag: interface
+                  value: '{#IFNAME}'
+            -
+              uuid: fdc1bb45cc1244f9b05599aeb7f5bc16
+              name: 'Interface {#IFNAME}({#IFALIAS}): Speed'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.2.1.31.1.1.1.15.{#SNMPINDEX}'
+              key: 'net.if.speed[ifHighSpeed.{#SNMPINDEX}]'
+              delay: 5m
+              history: 7d
+              units: bps
+              description: |
+                MIB: IF-MIB
+                An estimate of the interface's current bandwidth in units of 1,000,000 bits per second. If this object reports a value of `n' then the speed of the interface is somewhere in the range of `n-500,000' to`n+499,999'.  For interfaces which do not vary in bandwidth or for those where no accurate estimation can be made, this object should contain the nominal bandwidth. For a sub-layer which has no concept of bandwidth, this object should be zero.
+              preprocessing:
+                -
+                  type: MULTIPLIER
+                  parameters:
+                    - '1000000'
+                -
+                  type: DISCARD_UNCHANGED_HEARTBEAT
+                  parameters:
+                    - 1h
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#IFALIAS}'
+                -
+                  tag: interface
+                  value: '{#IFNAME}'
+            -
+              uuid: e92b9ec70343402cbed8471f52ebf256
+              name: 'Interface {#IFNAME}({#IFALIAS}): Operational status'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.2.1.2.2.1.8.{#SNMPINDEX}'
+              key: 'net.if.status[ifOperStatus.{#SNMPINDEX}]'
+              history: 7d
+              description: |
+                MIB: IF-MIB
+                The current operational state of the interface.
+                - The testing(3) state indicates that no operational packet scan be passed
+                - If ifAdminStatus is down(2) then ifOperStatus should be down(2)
+                - If ifAdminStatus is changed to up(1) then ifOperStatus should change to up(1) if the interface is ready to transmit and receive network traffic
+                - It should change todormant(5) if the interface is waiting for external actions (such as a serial line waiting for an incoming connection)
+                - It should remain in the down(2) state if and only if there is a fault that prevents it from going to the up(1) state
+                - It should remain in the notPresent(6) state if the interface has missing(typically, hardware) components.
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#IFALIAS}'
+                -
+                  tag: interface
+                  value: '{#IFNAME}'
+              trigger_prototypes:
+                -
+                  uuid: 835a1975c17e4782a5a1984cdcc87fbd
+                  expression: '{$IFCONTROL:"{#IFNAME}"}=1 and last(/ZYXEL GS-1900-10-HP SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/ZYXEL GS-1900-10-HP SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/ZYXEL GS-1900-10-HP SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'last(/ZYXEL GS-1900-10-HP SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFNAME}"}=0'
+                  name: 'Interface {#IFNAME}({#IFALIAS}): Link down'
+                  opdata: 'Current state: {ITEM.LASTVALUE1}'
+                  priority: AVERAGE
+                  description: |
+                    This trigger expression works as follows:
+                    1. Can be triggered if operations status is down.
+                    2. {$IFCONTROL:"{#IFNAME}"}=1 - user can redefine Context macro to value - 0. That marks this interface as not important. No new trigger will be fired if this interface is down.
+                    3. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only if operational status was up(1) sometime before. (So, do not fire 'ethernal off' interfaces.)
+                    
+                    WARNING: if closed manually - won't fire again on next poll, because of .diff.
+                  manual_close: 'YES'
+                  tags:
+                    -
+                      tag: scope
+                      value: availability
+            -
+              uuid: 0f4f006777eb4f6dac27054c97222d54
+              name: 'Interface {#IFNAME}({#IFALIAS}): Interface type'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.2.1.2.2.1.3.{#SNMPINDEX}'
+              key: 'net.if.type[ifType.{#SNMPINDEX}]'
+              delay: 1h
+              history: 7d
+              description: |
+                MIB: IF-MIB
+                The type of interface.
+                Additional values for ifType are assigned by the Internet Assigned Numbers Authority (IANA),
+                through updating the syntax of the IANAifType textual convention.
+              preprocessing:
+                -
+                  type: DISCARD_UNCHANGED_HEARTBEAT
+                  parameters:
+                    - 1d
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#IFALIAS}'
+                -
+                  tag: interface
+                  value: '{#IFNAME}'
+          trigger_prototypes:
+            -
+              uuid: 342363cc08b5418c81f8178b4a778bf2
+              expression: |
+                change(/ZYXEL GS-1900-10-HP SNMP/net.if.speed[ifHighSpeed.{#SNMPINDEX}])<0 and last(/ZYXEL GS-1900-10-HP SNMP/net.if.speed[ifHighSpeed.{#SNMPINDEX}])>0
+                and (
+                last(/ZYXEL GS-1900-10-HP SNMP/net.if.type[ifType.{#SNMPINDEX}])=6 or
+                last(/ZYXEL GS-1900-10-HP SNMP/net.if.type[ifType.{#SNMPINDEX}])=7 or
+                last(/ZYXEL GS-1900-10-HP SNMP/net.if.type[ifType.{#SNMPINDEX}])=11 or
+                last(/ZYXEL GS-1900-10-HP SNMP/net.if.type[ifType.{#SNMPINDEX}])=62 or
+                last(/ZYXEL GS-1900-10-HP SNMP/net.if.type[ifType.{#SNMPINDEX}])=69 or
+                last(/ZYXEL GS-1900-10-HP SNMP/net.if.type[ifType.{#SNMPINDEX}])=117
+                )
+                and
+                (last(/ZYXEL GS-1900-10-HP SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2)
+              recovery_mode: RECOVERY_EXPRESSION
+              recovery_expression: |
+                (change(/ZYXEL GS-1900-10-HP SNMP/net.if.speed[ifHighSpeed.{#SNMPINDEX}])>0 and last(/ZYXEL GS-1900-10-HP SNMP/net.if.speed[ifHighSpeed.{#SNMPINDEX}],#2)>0) or
+                (last(/ZYXEL GS-1900-10-HP SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}])=2)
+              name: 'Interface {#IFNAME}({#IFALIAS}): Ethernet has changed to lower speed than it was before'
+              opdata: 'Current reported speed: {ITEM.LASTVALUE1}'
+              priority: WARNING
+              description: 'The network interface utilization is close to its estimated maximum bandwidth.'
+              manual_close: 'YES'
+              dependencies:
+                -
+                  name: 'Interface {#IFNAME}({#IFALIAS}): Link down'
+                  expression: '{$IFCONTROL:"{#IFNAME}"}=1 and last(/ZYXEL GS-1900-10-HP SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/ZYXEL GS-1900-10-HP SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/ZYXEL GS-1900-10-HP SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))'
+                  recovery_expression: 'last(/ZYXEL GS-1900-10-HP SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFNAME}"}=0'
+              tags:
+                -
+                  tag: scope
+                  value: availability
+                -
+                  tag: scope
+                  value: performance
+            -
+              uuid: 55f4a39d303c4e62918e5f36b44d2c77
+              expression: |
+                (avg(/ZYXEL GS-1900-10-HP SNMP/net.if.in[ifHCInOctets.{#SNMPINDEX}],15m)>({$IF.UTIL.MAX:"{#IFNAME}"}/100)*last(/ZYXEL GS-1900-10-HP SNMP/net.if.speed[ifHighSpeed.{#SNMPINDEX}]) or avg(/ZYXEL GS-1900-10-HP SNMP/net.if.out[ifHCOutOctets.{#SNMPINDEX}],15m)>({$IF.UTIL.MAX:"{#IFNAME}"}/100)*last(/ZYXEL GS-1900-10-HP SNMP/net.if.speed[ifHighSpeed.{#SNMPINDEX}])) and
+                last(/ZYXEL GS-1900-10-HP SNMP/net.if.speed[ifHighSpeed.{#SNMPINDEX}])>0
+              recovery_mode: RECOVERY_EXPRESSION
+              recovery_expression: |
+                avg(/ZYXEL GS-1900-10-HP SNMP/net.if.in[ifHCInOctets.{#SNMPINDEX}],15m)<(({$IF.UTIL.MAX:"{#IFNAME}"}-3)/100)*last(/ZYXEL GS-1900-10-HP SNMP/net.if.speed[ifHighSpeed.{#SNMPINDEX}]) and
+                avg(/ZYXEL GS-1900-10-HP SNMP/net.if.out[ifHCOutOctets.{#SNMPINDEX}],15m)<(({$IF.UTIL.MAX:"{#IFNAME}"}-3)/100)*last(/ZYXEL GS-1900-10-HP SNMP/net.if.speed[ifHighSpeed.{#SNMPINDEX}])
+              name: 'Interface {#IFNAME}({#IFALIAS}): High bandwidth usage'
+              opdata: 'In: {ITEM.LASTVALUE1}, out: {ITEM.LASTVALUE3}, speed: {ITEM.LASTVALUE2}'
+              priority: WARNING
+              description: 'The network interface utilization is close to its estimated maximum bandwidth.'
+              manual_close: 'YES'
+              dependencies:
+                -
+                  name: 'Interface {#IFNAME}({#IFALIAS}): Link down'
+                  expression: '{$IFCONTROL:"{#IFNAME}"}=1 and last(/ZYXEL GS-1900-10-HP SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/ZYXEL GS-1900-10-HP SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/ZYXEL GS-1900-10-HP SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))'
+                  recovery_expression: 'last(/ZYXEL GS-1900-10-HP SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFNAME}"}=0'
+              tags:
+                -
+                  tag: scope
+                  value: availability
+                -
+                  tag: scope
+                  value: performance
+            -
+              uuid: c596fbe1cf484da1bb035b71b806f6ed
+              expression: |
+                min(/ZYXEL GS-1900-10-HP SNMP/net.if.in.errors[ifInErrors.{#SNMPINDEX}],5m)>{$IF.ERRORS.WARN:"{#IFNAME}"}
+                or min(/ZYXEL GS-1900-10-HP SNMP/net.if.out.errors[ifOutErrors.{#SNMPINDEX}],5m)>{$IF.ERRORS.WARN:"{#IFNAME}"}
+              recovery_mode: RECOVERY_EXPRESSION
+              recovery_expression: |
+                max(/ZYXEL GS-1900-10-HP SNMP/net.if.in.errors[ifInErrors.{#SNMPINDEX}],5m)<{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8
+                and max(/ZYXEL GS-1900-10-HP SNMP/net.if.out.errors[ifOutErrors.{#SNMPINDEX}],5m)<{$IF.ERRORS.WARN:"{#IFNAME}"}*0.8
+              name: 'Interface {#IFNAME}({#IFALIAS}): High error rate'
+              opdata: 'errors in: {ITEM.LASTVALUE1}, errors out: {ITEM.LASTVALUE2}'
+              priority: WARNING
+              description: 'Recovers when below 80% of {$IF.ERRORS.WARN:"{#IFNAME}"} threshold'
+              manual_close: 'YES'
+              dependencies:
+                -
+                  name: 'Interface {#IFNAME}({#IFALIAS}): Link down'
+                  expression: '{$IFCONTROL:"{#IFNAME}"}=1 and last(/ZYXEL GS-1900-10-HP SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}])=2 and (last(/ZYXEL GS-1900-10-HP SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}],#1)<>last(/ZYXEL GS-1900-10-HP SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}],#2))'
+                  recovery_expression: 'last(/ZYXEL GS-1900-10-HP SNMP/net.if.status[ifOperStatus.{#SNMPINDEX}])<>2 or {$IFCONTROL:"{#IFNAME}"}=0'
+              tags:
+                -
+                  tag: scope
+                  value: availability
+                -
+                  tag: scope
+                  value: performance
+          graph_prototypes:
+            -
+              uuid: 87a7d984fb264baf83d0ffcd509f9f6b
+              name: 'Interface {#IFNAME}({#IFALIAS}): Network traffic'
+              graph_items:
+                -
+                  color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'ZYXEL GS-1900-10-HP SNMP'
+                    key: 'net.if.in[ifHCInOctets.{#SNMPINDEX}]'
+                -
+                  sortorder: '1'
+                  color: F63100
+                  calc_fnc: ALL
+                  item:
+                    host: 'ZYXEL GS-1900-10-HP SNMP'
+                    key: 'net.if.out[ifHCOutOctets.{#SNMPINDEX}]'
+                -
+                  sortorder: '2'
+                  color: 2774A4
+                  calc_fnc: ALL
+                  item:
+                    host: 'ZYXEL GS-1900-10-HP SNMP'
+                    key: 'net.if.in.discards[ifInDiscards.{#SNMPINDEX}]'
+                -
+                  sortorder: '3'
+                  color: F7941D
+                  calc_fnc: ALL
+                  item:
+                    host: 'ZYXEL GS-1900-10-HP SNMP'
+                    key: 'net.if.in.errors[ifInErrors.{#SNMPINDEX}]'
+                -
+                  sortorder: '4'
+                  color: FC6EA3
+                  calc_fnc: ALL
+                  item:
+                    host: 'ZYXEL GS-1900-10-HP SNMP'
+                    key: 'net.if.out.discards[ifOutDiscards.{#SNMPINDEX}]'
+                -
+                  sortorder: '5'
+                  color: 6C59DC
+                  calc_fnc: ALL
+                  item:
+                    host: 'ZYXEL GS-1900-10-HP SNMP'
+                    key: 'net.if.out.errors[ifOutErrors.{#SNMPINDEX}]'
+        -
+          uuid: 6dc5987b1c434a538368da99035d10a1
+          name: 'EtherLike-MIB Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.2.1.10.7.2.1.19,{#IFOPERSTATUS},1.3.6.1.2.1.2.2.1.8,{#IFALIAS},1.3.6.1.2.1.31.1.1.1.18,{#IFNAME},1.3.6.1.2.1.31.1.1.1.1,{#IFDESCR},1.3.6.1.2.1.2.2.1.2]'
+          key: net.if.duplex.discovery
+          delay: 2h
+          filter:
+            conditions:
+              -
+                macro: '{#IFOPERSTATUS}'
+                value: '1'
+                formulaid: A
+              -
+                macro: '{#SNMPVALUE}'
+                value: (2|3)
+                formulaid: B
+          description: 'Discovering interfaces from IF-MIB and EtherLike-MIB. Interfaces with up(1) Operational Status are discovered.'
+          item_prototypes:
+            -
+              uuid: 8b445f96adda4777ac7e96230cd4770c
+              name: 'Interface {#IFNAME}({#IFALIAS}): Duplex status'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.2.1.10.7.2.1.19.{#SNMPINDEX}'
+              key: 'net.if.duplex[dot3StatsDuplexStatus.{#SNMPINDEX}]'
+              history: 7d
+              description: |
+                MIB: EtherLike-MIB
+                The current mode of operation of the MAC
+                entity.  'unknown' indicates that the current
+                duplex mode could not be determined.
+                
+                Management control of the duplex mode is
+                accomplished through the MAU MIB.  When
+                an interface does not support autonegotiation,
+                or when autonegotiation is not enabled, the
+                duplex mode is controlled using
+                ifMauDefaultType.  When autonegotiation is
+                supported and enabled, duplex mode is controlled
+                using ifMauAutoNegAdvertisedBits.  In either
+                case, the currently operating duplex mode is
+                reflected both in this object and in ifMauType.
+                
+                Note that this object provides redundant
+                information with ifMauType.  Normally, redundant
+                objects are discouraged.  However, in this
+                instance, it allows a management application to
+                determine the duplex status of an interface
+                without having to know every possible value of
+                ifMauType.  This was felt to be sufficiently
+                valuable to justify the redundancy.
+                Reference: [IEEE 802.3 Std.], 30.3.1.1.32,aDuplexStatus.
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#IFALIAS}'
+                -
+                  tag: interface
+                  value: '{#IFNAME}'
+              trigger_prototypes:
+                -
+                  uuid: 0b5e9bbab8874e4baa81b39524907881
+                  expression: 'last(/ZYXEL GS-1900-10-HP SNMP/net.if.duplex[dot3StatsDuplexStatus.{#SNMPINDEX}])=2'
+                  name: 'Interface {#IFNAME}({#IFALIAS}): In half-duplex mode'
+                  priority: WARNING
+                  description: 'Please check autonegotiation settings and cabling'
+                  tags:
+                    -
+                      tag: scope
+                      value: performance
+          preprocessing:
+            -
+              type: JAVASCRIPT
+              parameters:
+                - |
+                  try {
+                      var data = JSON.parse(value);
+                  }
+                  catch (error) {
+                      throw 'Failed to parse JSON of EtherLike-MIB discovery.';
+                  }
+                  var fields = ['{#SNMPVALUE}','{#IFOPERSTATUS}','{#IFALIAS}','{#IFNAME}','{#IFDESCR}'];
+                  data.forEach(function (element) {
+                      fields.forEach(function (field) {
+                          element[field] = element[field] || '';
+                      });
+                  });
+                  return JSON.stringify(data);
+        -
+          uuid: 0d1441b2f4c24a709dba22ef90f44e58
+          name: 'Interface discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#ZYXEL.IF.NAME},.1.3.6.1.4.1.890.1.5.8.20.23.1.1.3,{#ZYXEL.IF.LINKUPTYPE},.1.3.6.1.4.1.890.1.5.8.20.23.1.1.5]'
+          key: zyxel.GS-1900-10-HP.net.if.discovery
+          delay: 1h
+          filter:
+            evaltype: AND
+            conditions:
+              -
+                macro: '{#ZYXEL.IF.NAME}'
+                value: '{$ZYXEL.LLD.FILTER.IF.NAME.MATCHES}'
+                formulaid: C
+              -
+                macro: '{#ZYXEL.IF.NAME}'
+                value: '{$ZYXEL.LLD.FILTER.IF.NAME.NOT_MATCHES}'
+                operator: NOT_MATCHES_REGEX
+                formulaid: D
+              -
+                macro: '{#ZYXEL.IF.LINKUPTYPE}'
+                value: '{$ZYXEL.LLD.FILTER.IF.LINKUPTYPE.MATCHES}'
+                formulaid: A
+              -
+                macro: '{#ZYXEL.IF.LINKUPTYPE}'
+                value: '{$ZYXEL.LLD.FILTER.IF.LINKUPTYPE.NOT_MATCHES}'
+                operator: NOT_MATCHES_REGEX
+                formulaid: B
+          item_prototypes:
+            -
+              uuid: 3b5b2c19623e49999086fd8556b22a0a
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Administrative status'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.2.1.2.2.1.7.{#SNMPINDEX}'
+              key: 'zyxel.GS-1900-10-HP.net.if.adminstatus[{#SNMPINDEX}]'
+              history: 7d
+              description: |
+                MIB: IF-MIB
+                The desired state of the interface.  The
+                testing(3) state indicates that no operational
+                packets can be passed.
+              valuemap:
+                name: 'ZYXEL GS-4012F port admin status'
+              preprocessing:
+                -
+                  type: DISCARD_UNCHANGED_HEARTBEAT
+                  parameters:
+                    - 6h
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#ZYXEL.IF.NAME}'
+                -
+                  tag: interface
+                  value: '{#SNMPINDEX}'
+            -
+              uuid: 5011b8cf89124f81a9e512212bdc41e3
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Interface name'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.2.1.2.2.1.2.{#SNMPINDEX}'
+              key: 'zyxel.GS-1900-10-HP.net.if.descr[{#SNMPINDEX}]'
+              history: 7d
+              trends: '0'
+              value_type: CHAR
+              description: |
+                MIB: IF-MIB
+                A textual string containing information about the interface
+              preprocessing:
+                -
+                  type: DISCARD_UNCHANGED_HEARTBEAT
+                  parameters:
+                    - 6h
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#ZYXEL.IF.NAME}'
+                -
+                  tag: interface
+                  value: '{#SNMPINDEX}'
+            -
+              uuid: f13658f64c744793adecbd91c730dbb9
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Link speed'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.2.1.31.1.1.1.15.{#SNMPINDEX}'
+              key: 'zyxel.GS-1900-10-HP.net.if.highspeed[{#SNMPINDEX}]'
+              history: 7d
+              units: bps
+              description: |
+                MIB: IF-MIB
+                An estimate of the interface's current bandwidth in bits per second
+              preprocessing:
+                -
+                  type: MULTIPLIER
+                  parameters:
+                    - '1000000'
+                -
+                  type: DISCARD_UNCHANGED_HEARTBEAT
+                  parameters:
+                    - 6h
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#ZYXEL.IF.NAME}'
+                -
+                  tag: interface
+                  value: '{#SNMPINDEX}'
+            -
+              uuid: 4ec761495975479084ed40265c276b7c
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Incoming broadcast packages'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.2.1.31.1.1.1.9.{#SNMPINDEX}'
+              key: 'zyxel.GS-1900-10-HP.net.if.in.broadcastpkts[{#SNMPINDEX}]'
+              history: 7d
+              units: packets/s
+              description: |
+                MIB: IF-MIB
+                The number of packets, delivered by this sub-layer to a
+                higher (sub-)layer, which were addressed to a broadcast
+                address at this sub-layer.
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#ZYXEL.IF.NAME}'
+                -
+                  tag: interface
+                  value: '{#SNMPINDEX}'
+            -
+              uuid: c3cdac6c0e7b4636afa31d76e1d0fde0
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Incoming multicast packages'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.2.1.31.1.1.1.8.{#SNMPINDEX}'
+              key: 'zyxel.GS-1900-10-HP.net.if.in.multicastpkts[{#SNMPINDEX}]'
+              history: 7d
+              units: packets/s
+              description: |
+                MIB: IF-MIB
+                The number of packets, delivered by this sub-layer to a
+                higher (sub-)layer, which were addressed to a multicast
+                address at this sub-layer.  For a MAC layer protocol, this
+                includes both Group and Functional addresses.
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#ZYXEL.IF.NAME}'
+                -
+                  tag: interface
+                  value: '{#SNMPINDEX}'
+            -
+              uuid: d4fbd0a57e614d439feb47e6c9291ad1
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Incoming traffic'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.2.1.31.1.1.1.6.{#SNMPINDEX}'
+              key: 'zyxel.GS-1900-10-HP.net.if.in.traffic[{#SNMPINDEX}]'
+              history: 7d
+              units: bps
+              description: |
+                MIB: IF-MIB
+                The total number of octets received on the interface,
+                including framing characters.
+              preprocessing:
+                -
+                  type: MULTIPLIER
+                  parameters:
+                    - '8'
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#ZYXEL.IF.NAME}'
+                -
+                  tag: interface
+                  value: '{#SNMPINDEX}'
+            -
+              uuid: a15620e51b624ba7b1e4f70c798aba1d
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Incoming unicast packages'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.2.1.31.1.1.1.7.{#SNMPINDEX}'
+              key: 'zyxel.GS-1900-10-HP.net.if.in.ucastpkts[{#SNMPINDEX}]'
+              history: 7d
+              units: packets/s
+              description: |
+                MIB: IF-MIB
+                The number of packets, delivered by this sub-layer to a
+                higher (sub-)layer, which were not addressed to a multicast
+                or broadcast address at this sub-layer
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#ZYXEL.IF.NAME}'
+                -
+                  tag: interface
+                  value: '{#SNMPINDEX}'
+            -
+              uuid: 5b2f78e56c684e2d8c011df87d606227
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Incoming utilization'
+              type: CALCULATED
+              key: 'zyxel.GS-1900-10-HP.net.if.in.util[{#SNMPINDEX}]'
+              history: 7d
+              value_type: FLOAT
+              units: '%'
+              params: 'last(//zyxel.4012f.net.if.in.traffic[{#SNMPINDEX}]) * (last(//zyxel.4012f.net.if.highspeed[{#SNMPINDEX}]) <> 0) / ( last(//zyxel.4012f.net.if.highspeed[{#SNMPINDEX}]) + (last(//zyxel.4012f.net.if.highspeed[{#SNMPINDEX}]) = 0) ) * 100'
+              description: 'Interface utilization percentage'
+              preprocessing:
+                -
+                  type: IN_RANGE
+                  parameters:
+                    - '0'
+                    - '100'
+                  error_handler: DISCARD_VALUE
+                -
+                  type: JAVASCRIPT
+                  parameters:
+                    - 'return +parseFloat(value).toFixed(0);'
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#ZYXEL.IF.NAME}'
+                -
+                  tag: interface
+                  value: '{#SNMPINDEX}'
+            -
+              uuid: 9a92add0e91d4e0ca711fd7c3793a0f5
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Link type'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.4.1.890.1.5.8.20.23.1.1.5.{#SNMPINDEX}'
+              key: 'zyxel.GS-1900-10-HP.net.if.link_type[{#SNMPINDEX}]'
+              history: 7d
+              description: |
+                MIB: ZYXEL-GS4012F-MIB
+                Physical connection type
+              valuemap:
+                name: 'ZYXEL GS-4012F operational mode port link up type'
+              preprocessing:
+                -
+                  type: DISCARD_UNCHANGED_HEARTBEAT
+                  parameters:
+                    - 6h
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#ZYXEL.IF.NAME}'
+                -
+                  tag: interface
+                  value: '{#SNMPINDEX}'
+            -
+              uuid: 57bc563e1cf64a7bb94b62d23d6f5ad1
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Interface description'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.4.1.890.1.5.8.20.23.1.1.3.{#SNMPINDEX}'
+              key: 'zyxel.GS-1900-10-HP.net.if.name[{#SNMPINDEX}]'
+              history: 7d
+              trends: '0'
+              value_type: CHAR
+              description: |
+                MIB: ZYXEL-GS4012F-MIB
+                A textual string containing information about the interface
+              preprocessing:
+                -
+                  type: DISCARD_UNCHANGED_HEARTBEAT
+                  parameters:
+                    - 6h
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#ZYXEL.IF.NAME}'
+                -
+                  tag: interface
+                  value: '{#SNMPINDEX}'
+            -
+              uuid: a29afc0e0a724ea0838a8fa37cd50b06
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Operational status'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.2.1.2.2.1.8.{#SNMPINDEX}'
+              key: 'zyxel.GS-1900-10-HP.net.if.operstatus[{#SNMPINDEX}]'
+              history: 7d
+              description: |
+                MIB: IF-MIB
+                The current operational state of the interface.
+                The testing(3) state indicates that no operational
+                packets can be passed.
+              valuemap:
+                name: 'ZYXEL GS-4012F port operational status'
+              preprocessing:
+                -
+                  type: DISCARD_UNCHANGED_HEARTBEAT
+                  parameters:
+                    - 6h
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#ZYXEL.IF.NAME}'
+                -
+                  tag: interface
+                  value: '{#SNMPINDEX}'
+              trigger_prototypes:
+                -
+                  uuid: 3f527e0d296449198422c6d7db7aed93
+                  expression: 'last(/ZYXEL GS-1900-10-HP SNMP/zyxel.GS-1900-10-HP.net.if.operstatus[{#SNMPINDEX}])=2 and last(/ZYXEL GS-1900-10-HP SNMP/zyxel.GS-1900-10-HP.net.if.operstatus[{#SNMPINDEX}],#1)<>last(/ZYXEL GS-1900-10-HP SNMP/zyxel.GS-1900-10-HP.net.if.operstatus[{#SNMPINDEX}],#2)'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'last(/ZYXEL GS-1900-10-HP SNMP/zyxel.GS-1900-10-HP.net.if.operstatus[{#SNMPINDEX}])<>2'
+                  name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Link down'
+                  opdata: 'Current state: {ITEM.LASTVALUE1}'
+                  priority: AVERAGE
+                  description: |
+                    This trigger expression works as follows:
+                    1. Can be triggered if operations status is down.
+                    2. {TEMPLATE_NAME:METRIC.diff()}=1) - trigger fires only if operational status was up(1) sometime before. (So, do not fire 'ethernal off' interfaces.)
+                    
+                    WARNING: if closed manually - won't fire again on next poll, because of .diff.
+                  tags:
+                    -
+                      tag: scope
+                      value: notice
+            -
+              uuid: 271e487f5c6842a683e612719866f071
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Outgoing broadcast packages'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.2.1.31.1.1.1.13.{#SNMPINDEX}'
+              key: 'zyxel.GS-1900-10-HP.net.if.out.broadcastpkts[{#SNMPINDEX}]'
+              history: 7d
+              units: packets/s
+              description: |
+                MIB: IF-MIB
+                The total number of packets that higher-level protocols
+                requested be transmitted, and which were addressed to a
+                broadcast address at this sub-layer, including those that
+                were discarded or not sent.
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#ZYXEL.IF.NAME}'
+                -
+                  tag: interface
+                  value: '{#SNMPINDEX}'
+            -
+              uuid: 5a3fbc934e1340bb8bc9c4a1b9e4b853
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Outgoing multicast packages'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.2.1.31.1.1.1.12.{#SNMPINDEX}'
+              key: 'zyxel.GS-1900-10-HP.net.if.out.multicastpkts[{#SNMPINDEX}]'
+              history: 7d
+              units: packets/s
+              description: |
+                MIB: IF-MIB
+                The total number of packets that higher-level protocols
+                requested be transmitted, and which were addressed to a
+                multicast address at this sub-layer, including those that
+                were discarded or not sent.  For a MAC layer protocol, this
+                includes both Group and Functional addresses.
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#ZYXEL.IF.NAME}'
+                -
+                  tag: interface
+                  value: '{#SNMPINDEX}'
+            -
+              uuid: 877601ec68234e0d845443d2b029946b
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Outgoing traffic'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.2.1.31.1.1.1.10.{#SNMPINDEX}'
+              key: 'zyxel.GS-1900-10-HP.net.if.out.traffic[{#SNMPINDEX}]'
+              history: 7d
+              units: bps
+              description: |
+                MIB: IF-MIB
+                The total number of octets transmitted out of the
+                interface, including framing characters.  This object is a
+                64-bit version of ifOutOctets.
+              preprocessing:
+                -
+                  type: MULTIPLIER
+                  parameters:
+                    - '8'
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#ZYXEL.IF.NAME}'
+                -
+                  tag: interface
+                  value: '{#SNMPINDEX}'
+            -
+              uuid: 7dac91631bbc4c428382c5ae532a21de
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Outgoing unicast packages'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.2.1.31.1.1.1.11.{#SNMPINDEX}'
+              key: 'zyxel.GS-1900-10-HP.net.if.out.ucastpkts[{#SNMPINDEX}]'
+              history: 7d
+              units: packets/s
+              description: |
+                MIB: IF-MIB
+                The total number of packets that higher-level protocols
+                requested be transmitted, and which were not addressed to a
+                multicast or broadcast address at this sub-layer, including
+                those that were discarded or not sent.
+              preprocessing:
+                -
+                  type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#ZYXEL.IF.NAME}'
+                -
+                  tag: interface
+                  value: '{#SNMPINDEX}'
+            -
+              uuid: 9dec707ae201407490852a3c6c55a2b7
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Outgoing utilization'
+              type: CALCULATED
+              key: 'zyxel.GS-1900-10-HP.net.if.out.util[{#SNMPINDEX}]'
+              history: 7d
+              value_type: FLOAT
+              units: '%'
+              params: 'last(//zyxel.4012f.net.if.out.traffic[{#SNMPINDEX}]) * (last(//zyxel.4012f.net.if.highspeed[{#SNMPINDEX}]) <> 0) / ( last(//zyxel.4012f.net.if.highspeed[{#SNMPINDEX}]) + (last(//zyxel.4012f.net.if.highspeed[{#SNMPINDEX}]) = 0) ) * 100'
+              description: 'Interface utilization percentage'
+              preprocessing:
+                -
+                  type: IN_RANGE
+                  parameters:
+                    - '0'
+                    - '100'
+                  error_handler: DISCARD_VALUE
+                -
+                  type: JAVASCRIPT
+                  parameters:
+                    - 'return +parseFloat(value).toFixed(0);'
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#ZYXEL.IF.NAME}'
+                -
+                  tag: interface
+                  value: '{#SNMPINDEX}'
+            -
+              uuid: 136e74e267be472085346ff17657a893
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Speed Duplex'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.4.1.890.1.5.8.20.23.1.1.1.{#SNMPINDEX}'
+              key: 'zyxel.GS-1900-10-HP.net.if.speed_duplex[{#SNMPINDEX}]'
+              history: 7d
+              description: |
+                MIB: ZYXEL-GS4012F-MIB
+                Transmission mode
+              valuemap:
+                name: 'ZYXEL GS-4012F operational mode port speed duplex'
+              preprocessing:
+                -
+                  type: DISCARD_UNCHANGED_HEARTBEAT
+                  parameters:
+                    - 6h
+              tags:
+                -
+                  tag: component
+                  value: network
+                -
+                  tag: description
+                  value: '{#ZYXEL.IF.NAME}'
+                -
+                  tag: interface
+                  value: '{#SNMPINDEX}'
+          graph_prototypes:
+            -
+              uuid: b682edcdc6a74a6488168d6b42b85f42
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Packets traffic'
+              graph_items:
+                -
+                  color: 1A7C11
+                  item:
+                    host: 'ZYXEL GS-1900-10-HP SNMP'
+                    key: 'zyxel.GS-1900-10-HP.net.if.in.ucastpkts[{#SNMPINDEX}]'
+                -
+                  sortorder: '1'
+                  color: 2774A4
+                  item:
+                    host: 'ZYXEL GS-1900-10-HP SNMP'
+                    key: 'zyxel.GS-1900-10-HP.net.if.out.ucastpkts[{#SNMPINDEX}]'
+                -
+                  sortorder: '2'
+                  color: F63100
+                  item:
+                    host: 'ZYXEL GS-1900-10-HP SNMP'
+                    key: 'zyxel.GS-1900-10-HP.net.if.in.multicastpkts[{#SNMPINDEX}]'
+                -
+                  sortorder: '3'
+                  color: A54F10
+                  item:
+                    host: 'ZYXEL GS-1900-10-HP SNMP'
+                    key: 'zyxel.GS-1900-10-HP.net.if.out.multicastpkts[{#SNMPINDEX}]'
+                -
+                  sortorder: '4'
+                  color: FC6EA3
+                  item:
+                    host: 'ZYXEL GS-1900-10-HP SNMP'
+                    key: 'zyxel.GS-1900-10-HP.net.if.in.broadcastpkts[{#SNMPINDEX}]'
+                -
+                  sortorder: '5'
+                  color: 6C59DC
+                  item:
+                    host: 'ZYXEL GS-1900-10-HP SNMP'
+                    key: 'zyxel.GS-1900-10-HP.net.if.out.broadcastpkts[{#SNMPINDEX}]'
+            -
+              uuid: 084827022bcf4e72964350265806d444
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Traffic'
+              graph_items:
+                -
+                  color: 1A7C11
+                  item:
+                    host: 'ZYXEL GS-1900-10-HP SNMP'
+                    key: 'zyxel.GS-1900-10-HP.net.if.in.traffic[{#SNMPINDEX}]'
+                -
+                  sortorder: '1'
+                  color: 2774A4
+                  item:
+                    host: 'ZYXEL GS-1900-10-HP SNMP'
+                    key: 'zyxel.GS-1900-10-HP.net.if.out.traffic[{#SNMPINDEX}]'
+            -
+              uuid: d50d8c027d3a4c339a7233f0dbe65cef
+              name: 'ZYXEL {$MODEL}: Port {#SNMPINDEX}: Utilization'
+              ymin_type_1: FIXED
+              ymax_type_1: FIXED
+              graph_items:
+                -
+                  color: 1A7C11
+                  item:
+                    host: 'ZYXEL GS-1900-10-HP SNMP'
+                    key: 'zyxel.GS-1900-10-HP.net.if.out.util[{#SNMPINDEX}]'
+                -
+                  sortorder: '1'
+                  color: 2774A4
+                  item:
+                    host: 'ZYXEL GS-1900-10-HP SNMP'
+                    key: 'zyxel.GS-1900-10-HP.net.if.in.util[{#SNMPINDEX}]'
+          overrides:
+            -
+              name: 'Don''t create triggers for matching interface'
+              step: '1'
+              filter:
+                conditions:
+                  -
+                    macro: '{#ZYXEL.IF.NAME}'
+                    value: '{$ZYXEL.LLD.FILTER.IF.CONTROL.MATCHES}'
+                    operator: NOT_MATCHES_REGEX
+                    formulaid: A
+              operations:
+                -
+                  operationobject: TRIGGER_PROTOTYPE
+                  operator: REGEXP
+                  value: '.*'
+                  status: ENABLED
+                  discover: NO_DISCOVER
+      tags:
+        -
+          tag: class
+          value: network
+        -
+          tag: target
+          value: gs-1900-10HP
+        -
+          tag: target
+          value: switch
+        -
+          tag: target
+          value: zyxel
+      macros:
+        -
+          macro: '{$CPU.UTIL.CRIT}'
+          value: '90'
+        -
+          macro: '{$IF.ERRORS.WARN}'
+          value: '2'
+        -
+          macro: '{$IF.UTIL.MAX}'
+          value: '90'
+        -
+          macro: '{$LOAD_AVG_PER_CPU.MAX.WARN}'
+          value: '75'
+        -
+          macro: '{$MEMORY.UTIL.MAX}'
+          value: '90'
+        -
+          macro: '{$MODEL}'
+          value: GS1900-10HP
+        -
+          macro: '{$NET.IF.IFADMINSTATUS.MATCHES}'
+          value: '^.*'
+          description: 'Ignore notPresent(6)'
+        -
+          macro: '{$NET.IF.IFADMINSTATUS.NOT_MATCHES}'
+          value: ^2$
+          description: 'Ignore down(2) administrative status'
+        -
+          macro: '{$NET.IF.IFALIAS.MATCHES}'
+          value: '.*'
+        -
+          macro: '{$NET.IF.IFALIAS.NOT_MATCHES}'
+          value: CHANGE_IF_NEEDED
+        -
+          macro: '{$NET.IF.IFDESCR.MATCHES}'
+          value: '.*'
+        -
+          macro: '{$NET.IF.IFDESCR.NOT_MATCHES}'
+          value: CHANGE_IF_NEEDED
+        -
+          macro: '{$NET.IF.IFNAME.MATCHES}'
+          value: '^.*$'
+        -
+          macro: '{$NET.IF.IFNAME.NOT_MATCHES}'
+          value: '(^Software Loopback Interface|^NULL[0-9.]*$|^[Ll]o[0-9.]*$|^[Ss]ystem$|^Nu[0-9.]*$|^veth[0-9a-z]+$|docker[0-9]+|br-[a-z0-9]{12})'
+          description: 'Filter out loopbacks, nulls, docker veth links and docker0 bridge by default'
+        -
+          macro: '{$NET.IF.IFOPERSTATUS.MATCHES}'
+          value: '^.*$'
+        -
+          macro: '{$NET.IF.IFOPERSTATUS.NOT_MATCHES}'
+          value: ^6$
+          description: 'Ignore notPresent(6)'
+        -
+          macro: '{$NET.IF.IFTYPE.MATCHES}'
+          value: '.*'
+        -
+          macro: '{$NET.IF.IFTYPE.NOT_MATCHES}'
+          value: CHANGE_IF_NEEDED
+        -
+          macro: '{$SNMP.TIMEOUT}'
+          value: 5m
+          description: 'The time interval for SNMP agent availability trigger expression.'
+        -
+          macro: '{$ZYXEL.LLD.FILTER.IF.CONTROL.MATCHES}'
+          value: CHANGE_IF_NEEDED
+          description: 'Triggers will be created only for interfaces whose description contains the value of this macro'
+        -
+          macro: '{$ZYXEL.LLD.FILTER.IF.LINKUPTYPE.MATCHES}'
+          value: 1|2
+          description: 'Filter of discoverable link types. 0 - Down link 1 - Cooper link 2 - Fiber link'
+        -
+          macro: '{$ZYXEL.LLD.FILTER.IF.LINKUPTYPE.NOT_MATCHES}'
+          value: CHANGE_IF_NEEDED
+          description: 'Filter to exclude discovered by link types.'
+        -
+          macro: '{$ZYXEL.LLD.FILTER.IF.NAME.MATCHES}'
+          value: '.*'
+          description: 'Filter by discoverable interface names.'
+        -
+          macro: '{$ZYXEL.LLD.FILTER.IF.NAME.NOT_MATCHES}'
+          value: CHANGE_IF_NEEDED
+          description: 'Filter to exclude discovered interfaces by name.'
+      valuemaps:
+        -
+          uuid: 515de569278a4b39966309c818850ad3
+          name: 'SNMP available'
+          mappings:
+            -
+              value: '0'
+              newvalue: 'not available'
+            -
+              value: '1'
+              newvalue: available
+            -
+              value: '2'
+              newvalue: unknown
+        -
+          uuid: d6a16ca6b0bc4d02b568747f3e378832
+          name: 'ZYXEL GS-4012F operational mode port link up type'
+          mappings:
+            -
+              value: '0'
+              newvalue: Down
+            -
+              value: '1'
+              newvalue: Cooper
+            -
+              value: '2'
+              newvalue: Fiber
+        -
+          uuid: 9d300681fc2c439f8ecba50959cb1270
+          name: 'ZYXEL GS-4012F operational mode port speed duplex'
+          mappings:
+            -
+              value: '0'
+              newvalue: auto
+            -
+              value: '1'
+              newvalue: '10M half'
+            -
+              value: '2'
+              newvalue: '10M full'
+            -
+              value: '3'
+              newvalue: '100M half'
+            -
+              value: '4'
+              newvalue: '100M full'
+            -
+              value: '5'
+              newvalue: '1G full'
+        -
+          uuid: 58c84b1c7d774106b58d9c2afe7e2587
+          name: 'ZYXEL GS-4012F port admin status'
+          mappings:
+            -
+              value: '1'
+              newvalue: Up
+            -
+              value: '2'
+              newvalue: Down
+            -
+              value: '3'
+              newvalue: Testing
+        -
+          uuid: 3d82ef13645e40bbabce8ae701db6245
+          name: 'ZYXEL GS-4012F port operational status'
+          mappings:
+            -
+              value: '1'
+              newvalue: Up
+            -
+              value: '2'
+              newvalue: Down
+            -
+              value: '3'
+              newvalue: Testing
+            -
+              value: '4'
+              newvalue: Unknown
+            -
+              value: '5'
+              newvalue: Dormant
+            -
+              value: '6'
+              newvalue: NotPresent
+            -
+              value: '7'
+              newvalue: lowerLayerDown
+  triggers:
+    -
+      uuid: 3fd5a8191a94470c96ab433517aee319
+      expression: 'last(/ZYXEL GS-1900-10-HP SNMP/zyxel.GS1900-10-HP.fwversion)<>last(/ZYXEL GS-1900-10-HP SNMP/GetZyxel1900Firmware)'
+      name: 'New Version Zyxel {$MODEL} Firmware Avilable'
+      url: 'https://www.zyxel.com/pl/pl/support/download?model=gs1900-10hp'
+      priority: INFO
+      description: 'Use Zyxel Firmware Upgrade Utility from web over lan'
+    -
+      uuid: 4c862bb2be4b41ed9285fd4f79457e21
+      expression: '(last(/ZYXEL GS-1900-10-HP SNMP/zyxel.GS1900-10-HP.hw.uptime)>0 and last(/ZYXEL GS-1900-10-HP SNMP/zyxel.GS1900-10-HP.hw.uptime)<10m) or (last(/ZYXEL GS-1900-10-HP SNMP/zyxel.GS1900-10-HP.hw.uptime)=0 and last(/ZYXEL GS-1900-10-HP SNMP/zyxel.GS1900-10-HP.net.uptime)<10m)'
+      name: 'ZYXEL {$MODEL}: Host has been restarted'
+      event_name: 'ZYXEL GS1900-10HP: {HOST.NAME} has been restarted (uptime < 10m)'
+      priority: INFO
+      description: 'Uptime is less than 10 minutes.'
+      manual_close: 'YES'
+      tags:
+        -
+          tag: scope
+          value: notice
