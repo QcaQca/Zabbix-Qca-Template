@@ -1,0 +1,1935 @@
+zabbix_export:
+  version: '6.2'
+  date: '2025-05-19T12:04:18Z'
+  template_groups:
+    -
+      uuid: e960332b3f6c46a1956486d4f3f99fce
+      name: 'Templates/Server hardware'
+  templates:
+    -
+      uuid: f1233088bf4e4363a5e89aca76cb175e
+      template: 'Supermicro Aten by SNMP 2'
+      name: 'Supermicro Aten by SNMP 2'
+      description: |
+        Template Server Supermicro Aten
+        
+        TODO:
+        Triggers
+        status hardware
+        
+        
+        MIBs used:
+        HOST-RESOURCES-MIB
+        SNMPv2-MIB
+        ATEN-IPMI-MIB
+        
+        Template tooling version used: 0.42
+      groups:
+        -
+          name: 'Templates/Server hardware'
+      items:
+        -
+          uuid: 1d4c0b444840484ebb0e5c4e953ff3b8
+          name: 'Device MAC address'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.6.1
+          key: ifPhysAddress
+          delay: 1d
+          trends: '0'
+          status: DISABLED
+          value_type: CHAR
+          description: |
+            MIB: IF-MIB
+            An entry containing management information applicable to a
+            particular interface.
+          inventory_link: MACADDRESS_A
+        -
+          uuid: c3ae9557180d44fb88647ce6f2917eec
+          name: powerStatus
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.21317.1.4.0
+          key: powerStatus
+          description: |
+            MIB:ATEN-IPMI-MIB
+            Get and set the power status of system.
+            Set case:
+            0 : power off
+            1 : power on
+            2 : power reset
+          valuemap:
+            name: PowerStatus
+          triggers:
+            -
+              uuid: aa1e6e471b934297b4f3174dc714755d
+              expression: 'last(/Supermicro Aten by SNMP 2/powerStatus)<>1'
+              name: 'Power Status FAILED on {HOST.NAME}'
+              priority: HIGH
+        -
+          uuid: 263ed0ad240a4972a23ca6545cbbacb3
+          name: 'Serial number'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.21317.1.6.1.0
+          key: system.hw.serialnumber
+          delay: 1h
+          trends: '0'
+          value_type: TEXT
+          inventory_link: SERIALNO_A
+          tags:
+            -
+              tag: component
+              value: inventory
+          triggers:
+            -
+              uuid: 2e2e2e1172144441ba4f6cb1475e1066
+              expression: 'last(/Supermicro Aten by SNMP 2/system.hw.serialnumber,#1)<>last(/Supermicro Aten by SNMP 2/system.hw.serialnumber,#2) and length(last(/Supermicro Aten by SNMP 2/system.hw.serialnumber)) > 0'
+              name: 'Device has been replaced'
+              event_name: 'Device has been replaced (new serial number received)'
+              priority: INFO
+              manual_close: 'YES'
+        -
+          uuid: 6326816e88fa41be8252b582d1449ed1
+          name: 'Uptime (network)'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.1.3.0
+          key: 'system.net.uptime[sysUpTime.0]'
+          delay: 30s
+          history: 2w
+          trends: 0d
+          units: uptime
+          description: |
+            MIB: SNMPv2-MIB
+            The time (in hundredths of a second) since the network management portion of the system was last re-initialized.
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            -
+              tag: component
+              value: system
+      discovery_rules:
+        -
+          uuid: 98915e1171e24286bc5e38bdbcef796c
+          name: 'Board Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.21317.1.16.2]'
+          key: board.discovery
+          delay: 12h
+          filter:
+            conditions:
+              -
+                macro: '{#SNMPVALUE}'
+                value: '[1-9]+'
+                formulaid: A
+          description: 'MIB: ATEN-IPMI-MIB'
+          item_prototypes:
+            -
+              uuid: 62a88d3b4bee427cb14f7250901be5b9
+              name: boardLanguage.0
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.21317.1.16.2.1.0
+              key: boardLanguage.0
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+              description: |
+                MIB: ATEN-IPMI-MIB
+                afar (1)
+                abkhazian (2)
+                afrikaans (3)
+                amharic (4)
+                arabic (5)
+                assamese (6)
+                aymara (7)
+                azerbaijani (8)
+                bashkir (9)
+                byelorussian (10)
+                bulgarian (11)
+                bihari (12)
+                bislama (13)
+                bengali (14)
+                tibetan (15)
+                breton (16)
+                catalan (17)
+                corsican (18)
+                czech (19)
+                welsh (20)
+                danish (21)
+                german (22)
+                bhutani (23)
+                greek (24)
+                english (25)
+                esperanto (26)
+                spanish (27)
+                estonian (28)
+                basque (29)
+                persian (30)
+                finnish (31)
+                fiji (32)
+                faeroese (33)
+                french (34)
+                frisian (35)
+                irish (36)
+                gaelic (37)
+                galician (38)
+                guarani (39)
+                gujarati (40)
+                hausa (41)
+                hindi (42)
+                croatian (43)
+                hungarian (44)
+                armenian (45)
+                interlingua (46)
+                interlingue (47)
+                inupiak (48)
+                indonesian (49)
+                icelandic (50)
+                italian (51)
+                hebrew (52)
+                japanese (53)
+                yiddish (54)
+                javanese (55)
+                georgian (56)
+                kazakh (57)
+                greenlandic (58)
+                cambodian (59)
+                kannada (60)
+                korean (61)
+                kashmiri (62)
+                kurdish (63)
+                kirghiz (64)
+                latin (65)
+                lingala (66)
+                laothian (67)
+                lithuanian (68)
+                lettish (69)
+                malagasy (70)
+                maori (71)
+                macedonian (72)
+                malayalam (73)
+                mongolian (74)
+                moldavian (75)
+                marathi (76)
+                malay (77)
+                maltese (78)
+                burmese (79)
+                nauru (80)
+                nepali (81)
+                dutch (82)
+                norwegian (83)
+                occitan (84)
+                oromo (85)
+                oriya (86)
+                punjabi (87)
+                polish (88)
+                pushto (89)
+                portuguese (90)
+                quechua (91)
+                rhaeto-romance (92)
+                kirundi (93)
+                romanian (94)
+                russian (95)
+                kinyarwanda (96)
+                sanskrit (97)
+                sindhi (98)
+                sangro (99)
+                serbo-croatian (100)
+                singhalese (101)
+                slovak (102)
+                slovenian (103)
+                samoan (104)
+                shona (105)
+                somali (106)
+                albanian (107)
+                serbian (108)
+                siswati (109)
+                sesotho (110)
+                sudanese (111)
+                swedish (112)
+                swahili (113)
+                tamil (114)
+                tegulu (115)
+                tajik (116)
+                thai (117)
+                tigrinya (118)
+                turkmen (119)
+                tagalog (120)
+                setswana (121)
+                tonga (122)
+                turkish (123)
+                tsonga (124)
+                tatar (125)
+                twi (126)
+                ukrainian (127)
+                urdu (128)
+                uzbek (129)
+                vietnamese (130)
+                volapuk (131)
+                wolof (132)
+                xhosa (133)
+                yoruba (134)
+                chinese (135)
+                zulu (136)
+              tags:
+                -
+                  tag: component
+                  value: board
+            -
+              uuid: 7a93edd898d34dab85a04c6556acb020
+              name: boardManufacturer
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.21317.1.16.2.2.0
+              key: boardManufacturer
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+              description: |
+                MIB: ATEN-IPMI-MIB
+                FRU Board Manufacturer
+              tags:
+                -
+                  tag: component
+                  value: board
+            -
+              uuid: 2b0eedd59bea4b808ed57ea53e728ba3
+              name: boardPartNumber
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.21317.1.16.2.5.0
+              key: boardPartNumber
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+              description: |
+                MIB: ATEN-IPMI-MIB
+                FRU Board part Number
+              tags:
+                -
+                  tag: component
+                  value: board
+            -
+              uuid: 0681db4e51a44b289b62c301f36ea3b5
+              name: boardProductName
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.21317.1.16.2.3.0
+              key: boardProductName
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+              description: |
+                MIB: ATEN-IPMI-MIB
+                FRU Board Product Name
+              tags:
+                -
+                  tag: component
+                  value: board
+            -
+              uuid: f04d47b50a7b446dae5627a972e92f99
+              name: boardSerialNumber
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.21317.1.16.2.4.0
+              key: boardSerialNumber
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+              description: |
+                MIB: ATEN-IPMI-MIB
+                FRU Board Serial Number
+              tags:
+                -
+                  tag: component
+                  value: board
+              trigger_prototypes:
+                -
+                  uuid: b9c48b42ae3248f5934c353497426275
+                  expression: 'last(/Supermicro Aten by SNMP 2/boardSerialNumber,#1)<>last(/Supermicro Aten by SNMP 2/boardSerialNumber,#2) and length(last(/Supermicro Aten by SNMP 2/boardSerialNumber))>0'
+                  name: 'Motherboard has been replaced'
+                  priority: INFO
+                  manual_close: 'YES'
+        -
+          uuid: b8c8b8e6a5814261b8c85c8d9d8d46fe
+          name: 'Controller Discovery'
+          type: SNMP_AGENT
+          snmp_oid: PSU.discovery
+          key: Controller.discovery
+          delay: 12h
+          filter:
+            conditions:
+              -
+                macro: '{#SNMPVALUE}'
+                value: '[1-9]+'
+                formulaid: A
+          description: |
+            MIB:ATEN-IPMI-MIB
+            A list of raid controllers.  The number of entries is
+            given by the number of controllers.
+          item_prototypes:
+            -
+              uuid: 68cdb42bcce34181b4c828ab5a76046d
+              name: batteryStatus
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.1.1.8.{#SNMPINDEX}'
+              key: 'sensor.controler.batteryStatus[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB: ATEN-IPMI-MIB
+                Battery status of the controller.
+                0: Missing
+                1: Charging
+                2: Discharging
+                3: Optimal
+                4: Needs to be replaced
+              tags:
+                -
+                  tag: component
+                  value: controller
+            -
+              uuid: 7d59cc35bace4a55a9551d8dde37da6a
+              name: bootBlockVersion
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.1.1.7.{#SNMPINDEX}'
+              key: 'sensor.controler.bootBlockVersion[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB: ATEN-IPMI-MIB
+                Boot block version of the controller.
+              tags:
+                -
+                  tag: component
+                  value: controller
+            -
+              uuid: c10da77cf97841eb94dd4331f31a64fc
+              name: fwVersion
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.1.1.5.{#SNMPINDEX}'
+              key: 'sensor.controler.fwVersion[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB: ATEN-IPMI-MIB
+                Firmware version of the controller.
+              tags:
+                -
+                  tag: component
+                  value: controller
+              trigger_prototypes:
+                -
+                  uuid: 616f2e27938c491695955dc840ecdedb
+                  expression: 'last(/Supermicro Aten by SNMP 2/sensor.controler.fwVersion[sensorReading.{#SNMPINDEX}],#1)<>last(/Supermicro Aten by SNMP 2/sensor.controler.fwVersion[sensorReading.{#SNMPINDEX}],#2) and length(last(/Supermicro Aten by SNMP 2/sensor.controler.fwVersion[sensorReading.{#SNMPINDEX}]))>0'
+                  name: 'Controller Firmware has beed upgraded'
+                  priority: INFO
+            -
+              uuid: b236fc769aa24f5e8f56214c1d43fd37
+              name: controllerNumber
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.1.1.1.{#SNMPINDEX}'
+              key: 'sensor.controler.number[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB: ATEN-IPMI-MIB
+                A unique value, greater than zero, for each controller.  It
+                is recommended that values are assigned contiguously
+                starting from 1.
+              tags:
+                -
+                  tag: component
+                  value: controller
+            -
+              uuid: df06ffc307464f9e899e9f2cad499105
+              name: package
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.1.1.4.{#SNMPINDEX}'
+              key: 'sensor.controler.package[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB: ATEN-IPMI-MIB
+                Package version of the controller.
+              tags:
+                -
+                  tag: component
+                  value: controller
+            -
+              uuid: c0af5ca474f9493b85ea6fa4e81d54be
+              name: pcieLocation
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.1.1.9.{#SNMPINDEX}'
+              key: 'sensor.controler.pcieLocation[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB: ATEN-IPMI-MIB
+                PCIE location of the controller.
+                0: ONBOARD
+                1: RISER WIO Right
+                2: RISER WIO Left
+                3: RISER Ultra IO
+            -
+              uuid: c7d08a1bb6f44a3493c341c216aed57f
+              name: pcieSlot
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.1.1.10.{#SNMPINDEX}'
+              key: 'sensor.controler.pcieSlot[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB: ATEN-IPMI-MIB
+                PCIE slot number of the controller.
+              tags:
+                -
+                  tag: component
+                  value: controller
+            -
+              uuid: 7b11c9e38f204d51a95fa72eb6573ddb
+              name: controllerProductName
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.1.1.2.{#SNMPINDEX}'
+              key: 'sensor.controler.productName[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              history: '0'
+              trends: '0'
+              value_type: TEXT
+              description: |
+                MIB: ATEN-IPMI-MIB
+                A unique value, greater than zero, for each controller.  It
+                Product name of the controller.
+              tags:
+                -
+                  tag: component
+                  value: controller
+            -
+              uuid: f22613ab7a7a4ae08cdfeeb5823091f3
+              name: serial
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.1.1.3.{#SNMPINDEX}'
+              key: 'sensor.controler.serial[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB: ATEN-IPMI-MIB
+                Serial number of the controller.
+              tags:
+                -
+                  tag: component
+                  value: controller
+        -
+          uuid: b133f511a7c94a26aad2633322be0547
+          name: 'FAN Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.21317.1.3.1.2,{#SENSOR_DESCR},1.3.6.1.4.1.21317.1.3.1.13]'
+          key: fan.discovery
+          delay: 12h
+          filter:
+            evaltype: AND
+            conditions:
+              -
+                macro: '{#SNMPVALUE}'
+                value: '[1-9]+'
+                formulaid: B
+              -
+                macro: '{#SENSOR_DESCR}'
+                value: 'FAN*'
+                formulaid: A
+          description: |
+            MIB: ATEN-IPMI-MIB
+            Scanning ATEN-IPMI-MIB::sensorTable with filter: not connected FAN sensors (Value = 0)
+          item_prototypes:
+            -
+              uuid: 3762a173fbbc4c9c86018766639e688a
+              name: fanMode
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.21317.1.15.0
+              key: fanMode
+              delay: 1h
+              description: |
+                MIB: ATEN-IPMI-MIB
+                standard (0)
+                fullspeed (1)
+                optimal (2)
+                pue2optimal (3)
+                heavyIO (4)
+              tags:
+                -
+                  tag: component
+                  value: fan
+            -
+              uuid: 62c6b846126d450ebd606375b929a720
+              name: '{#SENSOR_DESCR}: Fan speed'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.3.1.2.{#SNMPINDEX}'
+              key: 'sensor.fan.speed.percentage[sensorReading.{#SNMPINDEX}]'
+              delay: 5m
+              units: RPM
+              description: |
+                MIB: ATEN-IPMI-MIB
+                A textual string containing information about the interface.
+                This string should include the name of the manufacturer, the product name and the version of the interface hardware/software.
+              tags:
+                -
+                  tag: component
+                  value: fan
+              trigger_prototypes:
+                -
+                  uuid: 02028ad9f5944af1bfe3b188f6623763
+                  expression: 'last(/Supermicro Aten by SNMP 2/sensor.fan.speed.percentage[sensorReading.{#SNMPINDEX}],#2)=0'
+                  name: 'CPU Fan CRITICAL on {HOST.NAME}'
+                  priority: HIGH
+          graph_prototypes:
+            -
+              uuid: 53fd9726f9f54e45bf20cf9de759a9a4
+              name: 'FANs RPM'
+              graph_items:
+                -
+                  color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'Supermicro Aten by SNMP 2'
+                    key: 'sensor.fan.speed.percentage[sensorReading.{#SNMPINDEX}]'
+        -
+          uuid: 42b26478b1324b0f81a4fa112d71de3b
+          name: 'Hdd Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.21317.1.7.2.1.1]'
+          key: Hdd.discovery
+          delay: 12h
+          filter:
+            conditions:
+              -
+                macro: '{#SNMPVALUE}'
+                value: '[1-9]+'
+                formulaid: A
+          description: |
+            MIB:ATEN-IPMI-MIB
+            A unique value, greater than zero, for each HDD.  It
+            is recommended that values are assigned contiguously
+            starting from 1.
+          item_prototypes:
+            -
+              uuid: c96266dce09f48c29b6be1966ddb9bca
+              name: 'capacity.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.6.{#SNMPINDEX}'
+              key: 'sensor.hdd.capacity[sensorReading.{#SNMPINDEX}]'
+              units: GB
+              description: |
+                MIB:ATEN-IPMI-MIB
+                Capacity(GB) of the HDD.
+              tags:
+                -
+                  tag: component
+                  value: disk
+            -
+              uuid: 493863b657f94747a41e1b4eabdedc2f
+              name: 'hddControllerNumber.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.2.{#SNMPINDEX}'
+              key: 'sensor.hdd.ControllerNumber[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              description: |
+                MIB:ATEN-IPMI-MIB
+                The controller that this HDD belongs to.
+              tags:
+                -
+                  tag: component
+                  value: disk
+            -
+              uuid: bfaf8d5d70a644c89bae232bee4dac0c
+              name: 'enclosureNumber.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.3.{#SNMPINDEX}'
+              key: 'sensor.hdd.enclosureNumber[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              description: |
+                MIB:ATEN-IPMI-MIB
+                The enclosure that this HDD belongs to.
+              tags:
+                -
+                  tag: component
+                  value: disk
+            -
+              uuid: 078a0376ffd749dd94b0cf444ee61091
+              name: 'hddNumber.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.1.{#SNMPINDEX}'
+              key: 'sensor.hdd.hddNumber[sensorReading.{#SNMPINDEX}]'
+              description: |
+                MIB:ATEN-IPMI-MIB
+                A unique value, greater than zero, for each HDD.  It
+                is recommended that values are assigned contiguously
+                starting from 1.
+              tags:
+                -
+                  tag: component
+                  value: disk
+            -
+              uuid: 03fb1dbd72204fdea8f38dad1466f8f0
+              name: 'modelName.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.8.{#SNMPINDEX}'
+              key: 'sensor.hdd.modelName[sensorReading.{#SNMPINDEX}]'
+              trends: '0'
+              value_type: TEXT
+              description: |
+                MIB:ATEN-IPMI-MIB
+                Model name of the HDD.
+              tags:
+                -
+                  tag: component
+                  value: disk
+            -
+              uuid: 4b83a8abb18f40d9be7a0a15d8ddfdde
+              name: 'revision.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.9.{#SNMPINDEX}'
+              key: 'sensor.hdd.revision[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+              description: |
+                MIB:ATEN-IPMI-MIB
+                Revision of the HDD.
+              tags:
+                -
+                  tag: component
+                  value: disk
+            -
+              uuid: 2fadced75f874ed08461ebba8e8619ee
+              name: 'sn.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.10.{#SNMPINDEX}'
+              key: 'sensor.hdd.sn[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+              description: |
+                MIB:ATEN-IPMI-MIB
+                The serial number of the HDD.
+              tags:
+                -
+                  tag: component
+                  value: disk
+              trigger_prototypes:
+                -
+                  uuid: fd3d9f533c404154b802c9279bf86f44
+                  expression: 'last(/Supermicro Aten by SNMP 2/sensor.hdd.sn[sensorReading.{#SNMPINDEX}],#1)<>last(/Supermicro Aten by SNMP 2/sensor.hdd.sn[sensorReading.{#SNMPINDEX}],#2) and length(last(/Supermicro Aten by SNMP 2/sensor.hdd.sn[sensorReading.{#SNMPINDEX}]))>0'
+                  name: 'Disk has beed replaced'
+                  priority: INFO
+                  manual_close: 'YES'
+            -
+              uuid: 07f12c27e51748608b4a9aed813751b8
+              name: 'status.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.4.{#SNMPINDEX}'
+              key: 'sensor.hdd.status[sensorReading.{#SNMPINDEX}]'
+              description: |
+                MIB:ATEN-IPMI-MIB
+                Current status of the HDD.
+                1: present
+                0: not present
+              valuemap:
+                name: DiskStatus
+              tags:
+                -
+                  tag: component
+                  value: disk
+                -
+                  tag: component
+                  value: health
+            -
+              uuid: e0c4bd81157a467685c8bd0467c7eb41
+              name: 'temperature.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.5.{#SNMPINDEX}'
+              key: 'sensor.hdd.temperature[sensorReading.{#SNMPINDEX}]'
+              units: °C
+              description: |
+                MIB:ATEN-IPMI-MIB
+                Current temperature of the HDD.
+              tags:
+                -
+                  tag: component
+                  value: disk
+              trigger_prototypes:
+                -
+                  uuid: 09d20bf03f7e42a1a07f8dad9012fc06
+                  expression: 'avg(/Supermicro Aten by SNMP 2/sensor.hdd.temperature[sensorReading.{#SNMPINDEX}],5m)>{$HDD_TEMP_CRIT}'
+                  name: 'HDD TEM CRIT'
+                  priority: HIGH
+                -
+                  uuid: 672d314af1ef4187baf18632886b0f51
+                  expression: 'avg(/Supermicro Aten by SNMP 2/sensor.hdd.temperature[sensorReading.{#SNMPINDEX}],5m)>{$HDD_TEMP_WARN}'
+                  name: 'HDD TEM WARN'
+                  priority: AVERAGE
+            -
+              uuid: b1e9eb4e173349a7938a15e2024da2aa
+              name: 'vendor.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.7.{#SNMPINDEX}'
+              key: 'sensor.hdd.vendor[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+              description: |
+                MIB:ATEN-IPMI-MIB
+                The vendor of the HDD.
+              tags:
+                -
+                  tag: component
+                  value: disk
+        -
+          uuid: e1e6fd4e6a72409fb6dfea4f1765304a
+          name: 'Memory Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.21317.1.6.3.1.1]'
+          key: Memory.discovery
+          delay: 12h
+          filter:
+            conditions:
+              -
+                macro: '{#SNMPVALUE}'
+                value: '[1-9]+'
+                formulaid: A
+          description: |
+            MIB: ATEN-IPMI-MIB
+            A list of DIMMs.  The number of entries is
+            given by the number of DIMMs.
+          item_prototypes:
+            -
+              uuid: f814495fb86d47fa8e40c17372ad9d4d
+              name: 'dimmLocation Discovery'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.6.3.1.2.{#SNMPINDEX}'
+              key: 'sensor.memory.location[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              status: DISABLED
+              value_type: TEXT
+              description: |
+                MIB: ATEN-IPMI-MIB
+                The location of this DIMM.
+              tags:
+                -
+                  tag: component
+                  value: memory
+            -
+              uuid: 2429185e1bfb48cdb258dd54407f5ce8
+              name: 'dimmManufacturer Discovery'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.6.3.1.8.{#SNMPINDEX}'
+              key: 'sensor.memory.manufacturer[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              status: DISABLED
+              value_type: TEXT
+              description: |
+                MIB: ATEN-IPMI-MIB
+                The manufacturer of this DIMM.
+              tags:
+                -
+                  tag: component
+                  value: memory
+            -
+              uuid: fb516fc7e0894efdb542bfd25111e80d
+              name: 'dimmMaxCapSpeed Discovery'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.6.3.1.3.{#SNMPINDEX}'
+              key: 'sensor.memory.maxspeed[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              status: DISABLED
+              units: MHz
+              description: |
+                MIB: ATEN-IPMI-MIB
+                The max capable speed (MHz) of this DIMM.
+              tags:
+                -
+                  tag: component
+                  value: memory
+            -
+              uuid: 5a37ea5944ae4970b9b7fb0da63d42ea
+              name: 'dimmNumber Discovery'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.6.3.1.6.{#SNMPINDEX}'
+              key: 'sensor.memory.number[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              status: DISABLED
+              value_type: TEXT
+              description: |
+                MIB: ATEN-IPMI-M
+                A unique value, greater than zero, for each DIMM.  It
+                is recommended that values are assigned contiguously
+                starting from 1.IB
+              tags:
+                -
+                  tag: component
+                  value: memory
+            -
+              uuid: a4a3b846698148e5b5eb04d8d5f6fda4
+              name: 'dimmOpSpeed Discovery'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.6.3.1.4.{#SNMPINDEX}'
+              key: 'sensor.memory.opspeed[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              status: DISABLED
+              units: MHz
+              description: |
+                MIB: ATEN-IPMI-MIB
+                The current operation speed (MHz) of this DIMM.
+              tags:
+                -
+                  tag: component
+                  value: memory
+            -
+              uuid: e2445d53bc5e4a538f0113fbbad5cba7
+              name: 'dimmPartNo Discovery'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.6.3.1.7.{#SNMPINDEX}'
+              key: 'sensor.memory.partno[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              status: DISABLED
+              value_type: TEXT
+              description: |
+                MIB: ATEN-IPMI-MIB
+                The serial number of this DIMM.
+              tags:
+                -
+                  tag: component
+                  value: memory
+            -
+              uuid: 84b74de393e2457c9581b9267b62dfc5
+              name: 'dimmSerialNo Discovery'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.6.3.1.6.{#SNMPINDEX}'
+              key: 'sensor.memory.serialno[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              status: DISABLED
+              value_type: TEXT
+              description: |
+                MIB: ATEN-IPM
+                The serial number of this DIMM.I-MIB
+              tags:
+                -
+                  tag: component
+                  value: memory
+            -
+              uuid: a96d18cad72a480fb3ba922bbf4ecb67
+              name: 'dimmSize Discovery'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.6.3.1.5.{#SNMPINDEX}'
+              key: 'sensor.memory.size[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              status: DISABLED
+              units: MB
+              description: |
+                MIB: ATEN-IPMI-MIB
+                The size (MBytes) of this DIMM.
+              tags:
+                -
+                  tag: component
+                  value: memory
+              trigger_prototypes:
+                -
+                  uuid: 9c0b1c5d52dd4b2db47cc8f6db395bec
+                  expression: 'last(/Supermicro Aten by SNMP 2/sensor.memory.size[sensorReading.{#SNMPINDEX}])=0'
+                  name: 'Memory decrease'
+                  priority: INFO
+                -
+                  uuid: 51001a0aa73841bf89f9492b5207d0ab
+                  expression: 'last(/Supermicro Aten by SNMP 2/sensor.memory.size[sensorReading.{#SNMPINDEX}])=0'
+                  name: 'Memory increase'
+                  priority: INFO
+        -
+          uuid: a4d9ffb382ce48fca6dafc8a44a71840
+          name: 'NVME Controlers Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.21317.1.19.1.1]'
+          key: NVME.controlers.discovery
+          delay: 12h
+          filter:
+            conditions:
+              -
+                macro: '{#SNMPVALUE}'
+                value: '[1-9]+'
+                formulaid: A
+          description: |
+            MIB:ATEN-IPMI-MIB
+            A list of NVMe controllers.  The number of entries is
+            given by the number of controllers.
+        -
+          uuid: 908bb4c5413f46f1bb3d871a976a7f9b
+          name: 'NVME Drive Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.21317.1.19.1.1]'
+          key: NVME.drive.discovery
+          delay: 12h
+          filter:
+            conditions:
+              -
+                macro: '{#SNMPVALUE}'
+                value: '[1-9]+'
+                formulaid: A
+          description: |
+            MIB:ATEN-IPMI-MIB
+            A list of NVMe drives.  The number of entries is
+            given by the number of drives.
+        -
+          uuid: becca997172b43baa411ca2294ab18e7
+          name: 'Procesor Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.21317.1.6.2.1.1]'
+          key: Procesor.discovery
+          delay: 12h
+          filter:
+            conditions:
+              -
+                macro: '{#SNMPVALUE}'
+                value: '[1-9]+'
+                formulaid: A
+          description: |
+            MIB: ATEN-IPMI-MIB
+            A list of CPUs.  The number of entries is
+            given by the number of CPUs.
+          item_prototypes:
+            -
+              uuid: c8efc0614a25416cb173139ecc12ff07
+              name: 'core.{#SNMPINDEX} Discovery'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.6.2.1.4.{#SNMPINDEX}'
+              key: 'sensor.procesor.core.[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              units: cores
+              description: |
+                MIB: ATEN-IPMI-MIB
+                The number of processor cores.
+              tags:
+                -
+                  tag: application
+                  value: system
+                -
+                  tag: component
+                  value: cpu
+            -
+              uuid: 441d0788496a482d8ebc32a26b0b827c
+              name: 'coreActive.{#SNMPINDEX} Discovery'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.6.2.1.5.{#SNMPINDEX}'
+              key: 'sensor.procesor.coreActive.[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              description: |
+                MIB: ATEN-IPMI-MIB
+                The number of active processor cores.
+              tags:
+                -
+                  tag: application
+                  value: system
+                -
+                  tag: component
+                  value: cpu
+            -
+              uuid: f5a68f646ef643efb51f7a804455bd41
+              name: 'manufacturer.{#SNMPINDEX} Discovery'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.6.2.1.6.{#SNMPINDEX}'
+              key: 'sensor.procesor.manufacturer.[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+              description: |
+                MIB: ATEN-IPMI-MIB
+                CPU Manufacturer
+              tags:
+                -
+                  tag: application
+                  value: system
+                -
+                  tag: component
+                  value: cpu
+            -
+              uuid: 37ddbf87ac194e268661b2cfa3713f75
+              name: 'cpuNumber.{#SNMPINDEX} Discovery'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.6.2.1.1.{#SNMPINDEX}'
+              key: 'sensor.procesor.number.[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              description: |
+                MIB: ATEN-IPMI-MIB
+                A unique value, greater than zero, for each CPU.  It
+                is recommended that values are assigned contiguously
+                starting from 1.
+              tags:
+                -
+                  tag: application
+                  value: system
+                -
+                  tag: component
+                  value: cpu
+            -
+              uuid: 9c66adda79524a68b840297e4edf456b
+              name: 'processor.{#SNMPINDEX} Discovery'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.6.2.1.2.{#SNMPINDEX}'
+              key: 'sensor.procesor.processor.[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+              description: |
+                MIB: ATEN-IPMI-MIB
+                Processor name.
+              tags:
+                -
+                  tag: application
+                  value: system
+                -
+                  tag: component
+                  value: cpu
+            -
+              uuid: d6f566b443fb4864b7425e14395108d2
+              name: 'speed.{#SNMPINDEX} Discovery'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.6.2.1.3.{#SNMPINDEX}'
+              key: 'sensor.procesor.speed.[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              units: MHz
+              description: |
+                MIB: ATEN-IPMI-MIB
+                Processor speed (MHz).
+              tags:
+                -
+                  tag: application
+                  value: system
+                -
+                  tag: component
+                  value: cpu
+        -
+          uuid: cc95aadb7daf4261ade717089a3790a6
+          name: 'Product Discovery'
+          type: SNMP_AGENT
+          snmp_oid: product.0
+          key: product.discovery
+          delay: 12h
+          filter:
+            conditions:
+              -
+                macro: '{#SNMPVALUE}'
+                value: '[1-9]+'
+                formulaid: A
+          item_prototypes:
+            -
+              uuid: 29f7e260842e4bc0ad558126b061aec8
+              name: productAssetTag
+              type: SNMP_AGENT
+              snmp_oid: productAssetTag
+              key: productAssetTag
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+            -
+              uuid: 7a7a74a3ba4347fc8ed20450e8181ebb
+              name: productLanguage
+              type: SNMP_AGENT
+              snmp_oid: productLanguage
+              key: productLanguage
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+            -
+              uuid: 6bab2e860aef43a5aff6687a0b233a46
+              name: productManufacturer
+              type: SNMP_AGENT
+              snmp_oid: productManufacturer
+              key: productManufacturer
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+            -
+              uuid: 7cd3ce21b6f243c3bcabc80e98b76d02
+              name: productName
+              type: SNMP_AGENT
+              snmp_oid: productName
+              key: productName
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+            -
+              uuid: bff6f1d46b0b4482ae5a5541ee3907bb
+              name: productPartNumber
+              type: SNMP_AGENT
+              snmp_oid: productPartNumber
+              key: productPartNumber
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+            -
+              uuid: 18575b6eb6064c2db43789b2a65b95d9
+              name: productSerialNumber
+              type: SNMP_AGENT
+              snmp_oid: productSerialNumber
+              key: productSerialNumber
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+              trigger_prototypes:
+                -
+                  uuid: 23e5d7a3652240d882bc85745075efc0
+                  expression: 'last(/Supermicro Aten by SNMP 2/productSerialNumber,#1)<>last(/Supermicro Aten by SNMP 2/productSerialNumber,#2) and length(last(/Supermicro Aten by SNMP 2/productSerialNumber))>0'
+                  name: 'Product has been replaced'
+                  priority: INFO
+                  manual_close: 'YES'
+            -
+              uuid: 7435725221664afba80f52d39fe97b5b
+              name: productVersion
+              type: SNMP_AGENT
+              snmp_oid: productVersion
+              key: productVersion
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+        -
+          uuid: 17a90f435db94fde9b7f4fe69793171a
+          name: 'PSU Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.21317.1.14.2.1.1]'
+          key: PSU.discovery
+          delay: 12h
+          filter:
+            conditions:
+              -
+                macro: '{#SNMPVALUE}'
+                formulaid: A
+          description: |
+            MIB: ATEN-IPMI-MIB
+            A unique value, start from one, for each PSU. It is
+            recommended that values are assigned contiguously
+            starting from 1.
+          item_prototypes:
+            -
+              uuid: 45af80c4e7f940a79185b5d2e3904a45
+              name: fanRPM1
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.14.2.1.11.{#SNMPINDEX}'
+              key: 'sensor.psu.fan1[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              units: RPM
+              description: |
+                MIB:ATEN-IPMI-MIB
+                PSU Fan RPM1.
+              tags:
+                -
+                  tag: component
+                  value: psu
+            -
+              uuid: 0ef89c3332a641189698a9502e2f7c20
+              name: fanRPM2
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.14.2.1.12.{#SNMPINDEX}'
+              key: 'sensor.psu.fan2[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              units: RPM
+              description: |
+                MIB:ATEN-IPMI-MIB
+                PSU Fan RPM1.
+              tags:
+                -
+                  tag: component
+                  value: psu
+            -
+              uuid: b718905546d5432a9d39d4d147f51fa8
+              name: psuIndex
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.14.2.1.1.{#SNMPINDEX}'
+              key: 'sensor.psu.index[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+              tags:
+                -
+                  tag: component
+                  value: psu
+            -
+              uuid: 6531c45c741d40518e8a8b0206f19efb
+              name: inputCurrent
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.14.2.1.4.{#SNMPINDEX}'
+              key: 'sensor.psu.inputCurrent[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              value_type: FLOAT
+              description: |
+                MIB: ATEN-IPMI-MIB
+                PSU Input Current.
+              tags:
+                -
+                  tag: component
+                  value: psu
+            -
+              uuid: c7cf146570db4d4ea5b407b69b6edb43
+              name: inputPower
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.14.2.1.5.{#SNMPINDEX}'
+              key: 'sensor.psu.inputPower[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              units: W
+              description: |
+                MIB: ATEN-IPMI-MIB
+                PSU Input Power.
+              tags:
+                -
+                  tag: component
+                  value: psu
+                -
+                  tag: sensor
+                  value: power
+            -
+              uuid: 578e5a9f45aa49adb2d587631cd5432f
+              name: inputVoltage
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.14.2.1.6.{#SNMPINDEX}'
+              key: 'sensor.psu.inputVoltage[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              value_type: FLOAT
+              units: V
+              description: |
+                MIB: ATEN-IPMI-MIB
+                PSU Input Voltage.
+              tags:
+                -
+                  tag: component
+                  value: psu
+                -
+                  tag: sensor
+                  value: voltage
+            -
+              uuid: a403cddece9442e0a6c83011f30e35e3
+              name: outputCurrent
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.14.2.1.7.{#SNMPINDEX}'
+              key: 'sensor.psu.outputCurrent[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              value_type: FLOAT
+              description: |
+                MIB: ATEN-IPMI-MIB
+                PSU Output Current.
+              tags:
+                -
+                  tag: component
+                  value: psu
+            -
+              uuid: d337be7a2c8540c1996b041e1f76091a
+              name: outputPower
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.14.2.1.8.{#SNMPINDEX}'
+              key: 'sensor.psu.outputPower[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              value_type: FLOAT
+              units: W
+              description: |
+                MIB: ATEN-IPMI-MIB
+                PSU Output Power.
+              tags:
+                -
+                  tag: component
+                  value: psu
+                -
+                  tag: sensor
+                  value: power
+            -
+              uuid: 23c55aa9bff747f2b62ab3aa59a3634f
+              name: outputVoltage
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.14.2.1.6.{#SNMPINDEX}'
+              key: 'sensor.psu.outputVoltage[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              value_type: FLOAT
+              units: V
+              description: |
+                MIB: ATEN-IPMI-MIB
+                PSU Output Voltage.
+              tags:
+                -
+                  tag: component
+                  value: psu
+                -
+                  tag: sensor
+                  value: voltage
+            -
+              uuid: fba49ae56aaa4dd2aa6f22973d5884d0
+              name: psuSerialNumber.1
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.14.2.1.13.{#SNMPINDEX}'
+              key: 'sensor.psu.serialNumber[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+              description: |
+                MIB: ATEN-IPMI-MIB
+                PSU Serial Number.
+              tags:
+                -
+                  tag: component
+                  value: psu
+              trigger_prototypes:
+                -
+                  uuid: 52f6dbaf3cbf4fc0a8c686ae6c8382a6
+                  expression: 'last(/Supermicro Aten by SNMP 2/sensor.psu.serialNumber[sensorReading.{#SNMPINDEX}],#1)<>last(/Supermicro Aten by SNMP 2/sensor.psu.serialNumber[sensorReading.{#SNMPINDEX}],#2) and length(last(/Supermicro Aten by SNMP 2/sensor.psu.serialNumber[sensorReading.{#SNMPINDEX}]))>0'
+                  name: 'PSU  has been replaced'
+                  priority: INFO
+                  manual_close: 'YES'
+            -
+              uuid: 233311ff75a64a048bcfee00f872d50a
+              name: psuStatus
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.14.2.1.2.{#SNMPINDEX}'
+              key: 'sensor.psu.status[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB:ATEN-IPMI-MIB
+                PSU Status.
+                
+                fail (0)
+                good (1)
+              valuemap:
+                name: PsuStatus
+              tags:
+                -
+                  tag: component
+                  value: psu
+            -
+              uuid: 046602f59cdf42a784f6af37b60a38f4
+              name: temperature1
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.14.2.1.9.{#SNMPINDEX}'
+              key: 'sensor.psu.temperature1[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              units: °C
+              description: |
+                MIB: ATEN-IPMI-MIB
+                PSU Temperature1.
+              tags:
+                -
+                  tag: component
+                  value: psu
+                -
+                  tag: sensor
+                  value: temperature
+            -
+              uuid: 8eaae28c65934499bc54cb70ee3269a9
+              name: temperature2
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.14.2.1.10.{#SNMPINDEX}'
+              key: 'sensor.psu.temperature2[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              units: °C
+              description: |
+                MIB: ATEN-IPMI-MIB
+                PSU Temperature1.
+              tags:
+                -
+                  tag: component
+                  value: psu
+                -
+                  tag: sensor
+                  value: temperature
+        -
+          uuid: 6f502d6773cf47d68b15f84d13b33703
+          name: 'Temperature Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.21317.1.3.1.2,{#SENSOR_DESCR},1.3.6.1.4.1.21317.1.3.1.13]'
+          key: tempDescr.discovery
+          delay: 12h
+          filter:
+            evaltype: AND
+            conditions:
+              -
+                macro: '{#SNMPVALUE}'
+                value: '[1-9]+'
+                formulaid: B
+              -
+                macro: '{#SENSOR_DESCR}'
+                value: '.*Temp.*'
+                formulaid: A
+          description: 'Scanning ATEN-IPMI-MIB::sensorTable with filter: not connected temp sensors (Value = 0)'
+          item_prototypes:
+            -
+              uuid: b23c19f672904797829cd43e0c18d21f
+              name: '{#SENSOR_DESCR}: Temperature'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.3.1.2.{#SNMPINDEX}'
+              key: 'sensor.temp.value[sensorReading.{#SNMPINDEX}]'
+              delay: 5m
+              value_type: FLOAT
+              units: °C
+              description: |
+                MIB: ATEN-IPMI-MIB
+                A textual string containing information about the interface.
+                This string should include the name of the manufacturer, the product name and the version of the interface hardware/software.
+              tags:
+                -
+                  tag: component
+                  value: temperature
+                -
+                  tag: sensor
+                  value: temperature
+              trigger_prototypes:
+                -
+                  uuid: 50ee485b560947b7bfc139f1ff3d46f5
+                  expression: 'avg(/Supermicro Aten by SNMP 2/sensor.temp.value[sensorReading.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"{#SENSOR_DESCR}"}'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'max(/Supermicro Aten by SNMP 2/sensor.temp.value[sensorReading.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"{#SENSOR_DESCR}"}-1'
+                  name: '{#SENSOR_DESCR}: Temperature is above critical threshold'
+                  event_name: '{#SENSOR_DESCR}: Temperature is above critical threshold: >{$TEMP_CRIT:"{#SENSOR_DESCR}"}'
+                  opdata: 'Current value: {ITEM.LASTVALUE1}'
+                  priority: HIGH
+                  description: 'This trigger uses temperature sensor values as well as temperature sensor status if available'
+                  tags:
+                    -
+                      tag: scope
+                      value: availability
+                    -
+                      tag: scope
+                      value: performance
+                -
+                  uuid: 9cd44312df9b4d01a3fde76f7edef6d9
+                  expression: 'avg(/Supermicro Aten by SNMP 2/sensor.temp.value[sensorReading.{#SNMPINDEX}],5m)>{$TEMP_WARN:"{#SENSOR_DESCR}"}'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'max(/Supermicro Aten by SNMP 2/sensor.temp.value[sensorReading.{#SNMPINDEX}],5m)<{$TEMP_WARN:"{#SENSOR_DESCR}"}-1'
+                  name: '{#SENSOR_DESCR}: Temperature is above warning threshold'
+                  event_name: '{#SENSOR_DESCR}: Temperature is above warning threshold: >{$TEMP_WARN:"{#SENSOR_DESCR}"}'
+                  opdata: 'Current value: {ITEM.LASTVALUE1}'
+                  priority: WARNING
+                  description: 'This trigger uses temperature sensor values as well as temperature sensor status if available'
+                  dependencies:
+                    -
+                      name: '{#SENSOR_DESCR}: Temperature is above critical threshold'
+                      expression: 'avg(/Supermicro Aten by SNMP 2/sensor.temp.value[sensorReading.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"{#SENSOR_DESCR}"}'
+                      recovery_expression: 'max(/Supermicro Aten by SNMP 2/sensor.temp.value[sensorReading.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"{#SENSOR_DESCR}"}-1'
+                  tags:
+                    -
+                      tag: scope
+                      value: availability
+                    -
+                      tag: scope
+                      value: performance
+                -
+                  uuid: 30dc627506ff467d88ad50891349988f
+                  expression: 'avg(/Supermicro Aten by SNMP 2/sensor.temp.value[sensorReading.{#SNMPINDEX}],5m)<{$TEMP_CRIT_LOW:"{#SENSOR_DESCR}"}'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'min(/Supermicro Aten by SNMP 2/sensor.temp.value[sensorReading.{#SNMPINDEX}],5m)>{$TEMP_CRIT_LOW:"{#SENSOR_DESCR}"}+3'
+                  name: '{#SENSOR_DESCR}: Temperature is too low'
+                  event_name: '{#SENSOR_DESCR}: Temperature is too low: <{$TEMP_CRIT_LOW:"{#SENSOR_DESCR}"}'
+                  opdata: 'Current value: {ITEM.LASTVALUE1}'
+                  priority: AVERAGE
+                  tags:
+                    -
+                      tag: scope
+                      value: availability
+                    -
+                      tag: scope
+                      value: performance
+          graph_prototypes:
+            -
+              uuid: 4e98e97c1b784d8ba3887915d91a3268
+              name: Temperatures
+              graph_items:
+                -
+                  color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'Supermicro Aten by SNMP 2'
+                    key: 'sensor.temp.value[sensorReading.{#SNMPINDEX}]'
+        -
+          uuid: 1365e99511304c9ea188e5c705eb5f12
+          name: 'Vol Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.21317.1.7.3.1.1]'
+          key: Vol.discovery
+          delay: 12h
+          filter:
+            conditions:
+              -
+                macro: '{#SNMPVALUE}'
+                value: '[1-9]+'
+                formulaid: A
+          description: |
+            MIB:ATEN-IPMI-MIB
+            A unique value, greater than zero, for each volume.  It
+            is recommended that values are assigned contiguously
+            starting from 1.
+          item_prototypes:
+            -
+              uuid: f4d894296ebe463eb338a5201f127ae2
+              name: 'volControllerNumber.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.3.1.2.{#SNMPINDEX}'
+              key: 'sensor.vol.ControllerNumber[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB: ATEN-IPMI-MIB
+                The controller that this HDD belongs to.
+              tags:
+                -
+                  tag: component
+                  value: volume
+            -
+              uuid: d2430db882fe4bcd83bf9b6a281049ac
+              name: 'ldStripSize.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.3.1.8.{#SNMPINDEX}'
+              key: 'sensor.vol.ldStripSize[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB: ATEN-IPMI-MIB
+                LD strip size of the volume.
+                (per DDF: 4=8K, 5=16K, 7=64K, 11=1MB, etc.)
+              tags:
+                -
+                  tag: component
+                  value: volume
+            -
+              uuid: 38fb63aa591f404bb439502557a060d3
+              name: 'numDevices.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.3.1.9.{#SNMPINDEX}'
+              key: 'sensor.vol.numDevices[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB: ATEN-IPMI-MIB
+                number of drives per span.
+              tags:
+                -
+                  tag: component
+                  value: volume
+            -
+              uuid: 33801c78c62744cab77b7c91b51189ef
+              name: 'priRaidLevel.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.3.1.5.{#SNMPINDEX}'
+              key: 'sensor.vol.priRaidLevel[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB: ATEN-IPMI-MIB
+                Primary raid level of the volume.
+              tags:
+                -
+                  tag: component
+                  value: volume
+            -
+              uuid: ee9164a41b6e461988e09f8a01c184b6
+              name: 'raidLevelQualifier.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.3.1.6.{#SNMPINDEX}'
+              key: 'sensor.vol.raidLevelQualifier[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB: ATEN-IPMI-MIB
+                Raid level qaulifier of the volume.
+              tags:
+                -
+                  tag: component
+                  value: volume
+            -
+              uuid: 44db685d47ee434fbf65d33294271eb8
+              name: 'secRaidLevel.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.3.1.7.{#SNMPINDEX}'
+              key: 'sensor.vol.secRaidLevel[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB: ATEN-IPMI-MIB
+                Secondary raid level of the volume.
+              tags:
+                -
+                  tag: component
+                  value: volume
+            -
+              uuid: e2a60580c1d640338cb81a5f8673b5e4
+              name: 'spanDepth.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.3.1.10.{#SNMPINDEX}'
+              key: 'sensor.vol.spanDepth[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB: ATEN-IPMI-MIB
+                Span depth of the volume.
+              tags:
+                -
+                  tag: component
+                  value: volume
+            -
+              uuid: 52471aa67718435b888abc70a24dd6b8
+              name: 'state.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.3.1.11.{#SNMPINDEX}'
+              key: 'sensor.vol.state[sensorReading.{#SNMPINDEX}]'
+              delay: 15m
+              trends: '0'
+              description: |
+                MIB: ATEN-IPMI-MIB
+                State of the volume.
+                0: offline
+                1: partially degraded
+                2: degraded
+                3: optimal
+              tags:
+                -
+                  tag: component
+                  value: volume
+            -
+              uuid: 8ff3a74989b148678d0cae6ec385661e
+              name: 'volCapacity.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.3.1.4.{#SNMPINDEX}'
+              key: 'sensor.vol.volCapacity[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              units: GB
+              description: |
+                MIB: ATEN-IPMI-MIB
+                Capacity(GB) of the volume.
+              tags:
+                -
+                  tag: component
+                  value: volume
+            -
+              uuid: 5bc8d41d6b034ce18f5586e0ec93a41f
+              name: 'volName.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.3.1.1.{#SNMPINDEX}'
+              key: 'sensor.vol.volName[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+              description: |
+                MIB: ATEN-IPMI-MIB
+                The name of the volume.
+              tags:
+                -
+                  tag: component
+                  value: volume
+            -
+              uuid: af4de6c17e894f1d8c2b1f205c4b76d3
+              name: 'volNumber.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.3.1.1.{#SNMPINDEX}'
+              key: 'sensor.vol.volNumber[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB: ATEN-IPMI-MIB
+                A unique value, greater than zero, for each volume.  It
+                is recommended that values are assigned contiguously
+                starting from 1.
+              tags:
+                -
+                  tag: component
+                  value: volume
+            -
+              uuid: bf7f23d8abde4d51a48bc5360cd052d5
+              name: 'volStatus.{#SNMPINDEX}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.3.1.3.{#SNMPINDEX}'
+              key: 'sensor.vol.volStatus[sensorReading.{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB: ATEN-IPMI-MIB
+                Current status of the volume.
+                1: present
+                0: not present
+              tags:
+                -
+                  tag: component
+                  value: volume
+        -
+          uuid: 3d47fc07f93948b4968f4011498be9be
+          name: 'Voltage Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.21317.1.3.1.2,{#SENSOR_DESCR},1.3.6.1.4.1.21317.1.3.1.13]'
+          key: voltage.discovery
+          delay: 12h
+          filter:
+            evaltype: AND
+            conditions:
+              -
+                macro: '{#SNMPVALUE}'
+                value: '[1-9]+'
+                formulaid: B
+              -
+                macro: '{#SENSOR_DESCR}'
+                value: '*V*'
+                formulaid: A
+          description: 'Scanning ATEN-IPMI-MIB::sensorTable with filter: voltage (Value = 0)'
+          item_prototypes:
+            -
+              uuid: 7e0eeada79c94178b65ac4cc8ac111a1
+              name: '{#SENSOR_DESCR}: Voltage'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.21317.1.3.1.2.{#SNMPINDEX}'
+              key: 'sensor.voltage.value[sensorReading.{#SNMPINDEX}]'
+              delay: 5m
+              value_type: FLOAT
+              units: V
+              description: |
+                MIB: ATEN-IPMI-MIB
+                A textual string containing information about the interface.
+                This string should include the name of the manufacturer, the product name and the version of the interface hardware/software.
+              tags:
+                -
+                  tag: component
+                  value: voltage
+                -
+                  tag: sensor
+                  value: voltage
+          graph_prototypes:
+            -
+              uuid: 191243605b194c879c8fc67d8776c449
+              name: Voltages
+              graph_items:
+                -
+                  color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'Supermicro Aten by SNMP 2'
+                    key: 'sensor.voltage.value[sensorReading.{#SNMPINDEX}]'
+      tags:
+        -
+          tag: class
+          value: hardware
+        -
+          tag: target
+          value: aten
+        -
+          tag: target
+          value: supermicro
+      macros:
+        -
+          macro: '{$HDD_TEMP_CRIT}'
+          value: '75'
+        -
+          macro: '{$HDD_TEMP_WARN}'
+          value: '60'
+        -
+          macro: '{$ICMP_LOSS_WARN}'
+          value: '20'
+        -
+          macro: '{$ICMP_RESPONSE_TIME_WARN}'
+          value: '0.15'
+        -
+          macro: '{$SNMP.TIMEOUT}'
+          value: 5m
+        -
+          macro: '{$TEMP_CRIT}'
+          value: '72'
+        -
+          macro: '{$TEMP_CRIT_LOW}'
+          value: '5'
+        -
+          macro: '{$TEMP_WARN}'
+          value: '68'
+      valuemaps:
+        -
+          uuid: 617e4868d549450382b0e0110acddbe2
+          name: DiskStatus
+          mappings:
+            -
+              value: '0'
+              newvalue: 'not present'
+            -
+              value: '2'
+              newvalue: present
+        -
+          uuid: 02499d234be6461f8a874c8adf4d0365
+          name: fanMode
+          mappings:
+            -
+              value: '0'
+              newvalue: standard
+            -
+              value: '1'
+              newvalue: fullspeed
+            -
+              value: '2'
+              newvalue: optimal
+            -
+              value: '3'
+              newvalue: pue2optimal
+            -
+              value: '4'
+              newvalue: heavyIO
+        -
+          uuid: b20993e56ab847978fc872138c1488c0
+          name: PowerStatus
+          mappings:
+            -
+              value: '0'
+              newvalue: 'power off'
+            -
+              value: '1'
+              newvalue: 'power on'
+            -
+              value: '2'
+              newvalue: 'power reset'
+        -
+          uuid: 1e455e15474842c9bc871ac3174a2316
+          name: PsuStatus
+          mappings:
+            -
+              value: '0'
+              newvalue: fail
+            -
+              value: '1'
+              newvalue: good
+        -
+          uuid: b36ea97df4fe441083de63ea565498f6
+          name: psuStatus
+          mappings:
+            -
+              value: '1'
+              newvalue: good
+            -
+              value: '0'
+              newvalue: fail
+        -
+          uuid: 74affd17c8474fae90319c274cbb6a54
+          name: 'Service state'
+          mappings:
+            -
+              value: '0'
+              newvalue: Down
+            -
+              value: '1'
+              newvalue: Up
+        -
+          uuid: a6b64ee6be1e4b6c81b62509e7f7399d
+          name: zabbix.host.available
+          mappings:
+            -
+              value: '0'
+              newvalue: 'not available'
+            -
+              value: '1'
+              newvalue: available
+            -
+              value: '2'
+              newvalue: unknown
