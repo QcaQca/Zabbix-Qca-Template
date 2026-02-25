@@ -1,1 +1,2063 @@
 
+zabbix_export:
+  version: '7.4'
+  template_groups:
+    - uuid: 357667219cde4e2fb8d1b215503ece4b
+      name: Templates/DiskArray
+  templates:
+    - uuid: a757bf9aae894a7cb28fb05236d24c2e
+      template: 'Hitachi Cluster NAS 11096'
+      name: 'Hitachi Cluster NAS 11096'
+      description: |
+        ## Description
+        
+        Hitachi NAS 11096 ver 0.8
+        
+        ## Overview
+        
+        Monitor Template of Hitachi DiskArray
+        
+        
+        Suitable for 
+        
+        Repalce macro {$CLOUD\_SNMP\_COMMUNITY} with your snmp community
+        
+        
+        
+        ## Piotr
+      groups:
+        - name: Templates/DiskArray
+      discovery_rules:
+        - uuid: 39657233209641ba95c38f5fd08399d8
+          name: 'Battery Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.1.2.1.17.1.2]'
+          key: Battery.discovery
+          delay: 12h
+          description: |
+            MIB: BLUEARC-SERVER-MIB
+            A unique value for each battery on a cluster node.
+          item_prototypes:
+            - uuid: bb291283d2544d518a359d86f503c094
+              name: batteryClusterNode
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.17.1.1.{#SNMPINDEX}'
+              key: 'batteryClusterNode.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The ID of the cluster code in which the battery is located.
+              tags:
+                - tag: component
+                  value: battery
+            - uuid: 7ee8e3f4c170456da382688cf140f856
+              name: batteryIndex
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.17.1.2.{#SNMPINDEX}'
+              key: 'batteryIndex.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                A unique value for each battery on a cluster node.
+              tags:
+                - tag: component
+                  value: battery
+            - uuid: 028d12ba47154b30b042fbc3846d4da1
+              name: batteryStatus
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.17.1.3.{#SNMPINDEX}'
+              key: 'batteryStatus.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                Indicates the status of the battery.
+                ok(1)                  - the battery is ok.
+                fault(2)               - the battery has a fault.
+                notFitted(3)           - the battery is not fitted.
+                initializing(4)        - the battery is initializing
+                normalCharging(5)      - the battery is charging normally.
+                discharged(6)          - the battery is discharged.
+                cellTesting(7)         - the battery is testing itself.
+                notResponding(8)       - the battery is not responding
+                low(9)                 - the battery charge is low.
+                veryLow(10)            - the battery charge is very low.
+                ignore(11)             - ignore this battery.
+              valuemap:
+                name: batteryStatus
+              tags:
+                - tag: component
+                  value: battery
+                - tag: component
+                  value: diskarray
+              trigger_prototypes:
+                - uuid: f732ef367bf84038a0f78df925d022a0
+                  expression: 'last(/Hitachi Cluster NAS 11096/batteryStatus.[{#SNMPINDEX}])<>1'
+                  name: 'Hitachu :Battery [{#BATTERY_NAME}]: Critical state'
+                  opdata: 'Current state: {ITEM.LASTVALUE1}'
+                  priority: AVERAGE
+                  description: 'Please check the device battery for faults.'
+                  tags:
+                    - tag: scope
+                      value: availability
+        - uuid: d4ae5066ad4a4849b5ba6ab0417a6e82
+          name: 'chassisDrive Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.1.2.1.15.1.2]'
+          key: chassisDriveDiscovery
+          delay: 12h
+          lifetime_type: DELETE_IMMEDIATELY
+          description: |
+            MIB:BLUEARC-SERVER-MIB
+            A table containing information about the fans located in all 
+            silicon server units in the cluster.
+          item_prototypes:
+            - uuid: ae77d84dd7fa4c77ac79af54593f462f
+              name: chassisDriveClusterNode
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.15.1.1.{#SNMPINDEX}'
+              key: 'chassisDriveClusterNode[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The ID of the cluster node in which the chassis drive
+                is located.
+              tags:
+                - tag: component
+                  value: chassisDrive
+            - uuid: a05b56149aaf49b28abf21f5105b88df
+              name: chassisDriveIndex
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.15.1.2.{#SNMPINDEX}'
+              key: 'chassisDriveIndex[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                A unique value for each chassis drive on a
+                cluster node.
+              tags:
+                - tag: component
+                  value: chassisDrive
+            - uuid: b92970b3c1ae4689a2f6dec20d3d1904
+              name: chassisDrivePercentRebuild
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.15.1.8.{#SNMPINDEX}'
+              key: 'chassisDrivePercentRebuild[{#SNMPINDEX}]'
+              units: '%'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                Percent rebuilt metric for chassis drive. 
+                This value is only meaningful when chassisDriveStatus 
+                is equal to raidRebuilding.
+              valuemap:
+                name: chassisDriveType
+              tags:
+                - tag: component
+                  value: chassisDrive
+            - uuid: 9aaceea9bb644cff804196e529bee139
+              name: chassisDrivePercentUsed
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.15.1.5.{#SNMPINDEX}'
+              key: 'chassisDrivePercentUsed[{#SNMPINDEX}]'
+              units: '%'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                Percent used metric for chassis drive.
+              valuemap:
+                name: chassisDriveType
+              tags:
+                - tag: component
+                  value: chassisDrive
+            - uuid: cc1edf69d39a4ecc8c8003dcfa4295a9
+              name: chassisDriveSize4kBlocks
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.15.1.6.{#SNMPINDEX}'
+              key: 'chassisDriveSize4kBlocks[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                Size of chassis drive in 4k blocks.
+              tags:
+                - tag: component
+                  value: chassisDrive
+            - uuid: 9e8234751b2843fcbc00304660feb2c1
+              name: chassisDriveStatus
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.15.1.4.{#SNMPINDEX}'
+              key: 'chassisDriveStatus[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                Indicates the RAID status of the chassis drive.
+                raidUnknown(1)
+                raidDegraded(2)
+                raidRebuilding(3)
+                raidFailed(4)
+                raidInvalid(5)
+                raidGood(6)
+              valuemap:
+                name: chassisDriveStatus
+              tags:
+                - tag: component
+                  value: chassisDrive
+            - uuid: 9c41265e0a5542e8b866199a44221565
+              name: chassisDriveType
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.15.1.3.{#SNMPINDEX}'
+              key: 'chassisDriveType[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The device type for the chassis drive.
+              valuemap:
+                name: chassisDriveType
+              tags:
+                - tag: component
+                  value: chassisDrive
+            - uuid: 9521fbdcc4054033927753e30e376d90
+              name: chassisDriveUsed4kBlocks
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.15.1.7.{#SNMPINDEX}'
+              key: 'chassisDriveUsed4kBlocks[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                Used metric for chassis drive in 4k blocks.
+              tags:
+                - tag: component
+                  value: chassisDrive
+        - uuid: 2b38365db57d4140ae835eb3d7d4d992
+          name: 'Cluster VNode Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.1.2.5.11.1.1]'
+          key: Cluster.discovery
+          delay: 12h
+          description: |
+            MIB: BLUEARC-SERVER-MIB
+            The number of physical nodes in the cluster. A value of -1
+            indicates that this cannot be determined.
+          item_prototypes:
+            - uuid: 9a5aa0b456304bfd8c77a653fa5773df
+              name: 3.clusterConfig
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.11096.6.1.1.1.2.5.3.0
+              key: 'clusterConfig[{#SNMPINDEX}]'
+              delay: 1h
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The configuration of the cluster:
+                1 - single standalone node
+                2 - active / standby pair
+                3 - active / active cluster
+                4 - the configuration could not be determined.
+              valuemap:
+                name: clusterConfig
+              tags:
+                - tag: component
+                  value: cluster
+            - uuid: 618d90e00ba643cca0296230e1756dd6
+              name: 1.clusterName
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.11096.6.1.1.1.2.5.1.0
+              key: 'clusterName[{#SNMPINDEX}]'
+              delay: 1h
+              value_type: TEXT
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The cluster management name.
+              tags:
+                - tag: component
+                  value: cluster
+            - uuid: a4e9bde5a5fc4794a3592382b8c60806
+              name: 5.clusterQuorumDeviceIpAddr
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.11096.6.1.1.1.2.5.5.0
+              key: 'clusterQuorumDeviceIpAddr[{#SNMPINDEX}]'
+              delay: 1h
+              value_type: TEXT
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The quorum device IP address, or 0.0.0.0 if no quorum device
+                is present.
+              tags:
+                - tag: component
+                  value: cluster
+            - uuid: d2301b89087941afa3c11752448f298b
+              name: 4.clusterQuorumDeviceName
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.11096.6.1.1.1.2.5.4.0
+              key: 'clusterQuorumDeviceName[{#SNMPINDEX}]'
+              delay: 1h
+              value_type: TEXT
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The quorum device management name.
+              tags:
+                - tag: component
+                  value: cluster
+            - uuid: 644493b7fd3c4535a3a37390b769af36
+              name: 6.clusterQuorumDeviceOwnedByPNode
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.11096.6.1.1.1.2.5.6.0
+              key: 'clusterQuorumDeviceOwnedByPNode[{#SNMPINDEX}]'
+              delay: 1h
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The identification number of the physical node which
+                owns this quorum device. A value of -1 indicates that
+                this cannot be determined.
+              valuemap:
+                name: clusterConfig
+              tags:
+                - tag: component
+                  value: cluster
+            - uuid: 97d9555c00144e19a8188331d4aa332d
+              name: 7.clusterQuorumDeviceStatus
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.11096.6.1.1.1.2.5.7.0
+              key: 'clusterQuorumDeviceStatus[{#SNMPINDEX}]'
+              delay: 1h
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The status of the quorum device:
+                0 - unknown
+                1 - unconfigured
+                2 - off line
+                3 - owned
+                4 - configured
+                5 - granted
+                6 - cluster node being queried is not up
+                7 - quorum device does not have the correct
+                    UUID for the cluster
+              valuemap:
+                name: clusterQuorumDeviceStatus
+              tags:
+                - tag: component
+                  value: cluster
+            - uuid: bebf9db2fa0b42c7820de014669f2cfd
+              name: 2.clusterUuid
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.11096.6.1.1.1.2.5.8.0
+              key: 'clusterUuid[{#SNMPINDEX}]'
+              delay: 1h
+              value_type: TEXT
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                A unique identification number for the cluster.
+              tags:
+                - tag: component
+                  value: cluster
+            - uuid: cc8a030d8a6140fd8094191151421a17
+              name: 18.clusterVNodeAdmin
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.11.1.5.{#SNMPINDEX}'
+              key: 'clusterVNodeAdmin[{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                Whether the virtual node is the administrative virtual node:
+                0 - a service node (i.e. not the administrative virtual node)
+                1 - the administrative virtual node
+                2 - cannot be determined
+              valuemap:
+                name: clusterVNodeAdmin
+              tags:
+                - tag: component
+                  value: cluster
+            - uuid: 722871808dc14b44b5f0b36edb7fff9a
+              name: 19.clusterVNodeHostedBy
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.11.1.6.{#SNMPINDEX}'
+              key: 'clusterVNodeHostedBy[{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The identification number of the physical node hosting this
+                virtual node. A value of -1 indicates that this cannot be 
+                determined.
+              tags:
+                - tag: component
+                  value: cluster
+            - uuid: f889ff2211084d328927a46ce163502d
+              name: 14.clusterVNodeId
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.11.1.1.{#SNMPINDEX}'
+              key: 'clusterVNodeId[{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The identification number of the virtual node. A value of -1
+                indicates that this cannot be determined.
+              valuemap:
+                name: clusterPNodeStatus
+              tags:
+                - tag: component
+                  value: cluster
+            - uuid: a0fff1e6050b475ca5c9cd02335c14e3
+              name: 16.clusterVNodeIpAddr
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.11.1.3.{#SNMPINDEX}'
+              key: 'clusterVNodeIpAddr[{#SNMPINDEX}]'
+              delay: 1h
+              value_type: TEXT
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The IP address of the virtual node. A value of 0.0.0.0 indicates
+                that this cannot be determined.
+              tags:
+                - tag: component
+                  value: cluster
+            - uuid: 2ae25ba8eade4db69dfeba1eb507d9ac
+              name: 15.clusterVNodeName
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.11.1.2.{#SNMPINDEX}'
+              key: 'clusterVNodeName[{#SNMPINDEX}]'
+              delay: 1h
+              value_type: TEXT
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The management name of the virtual node.
+              tags:
+                - tag: component
+                  value: cluster
+            - uuid: 3ebc9a3c61064af3a459a7dec19499b4
+              name: 13.clusterVNodeNumber
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.11096.6.1.1.1.2.5.10.0
+              key: 'clusterVNodeNumber[{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of virtual nodes in the cluster. A value of -1
+                indicates that this cannot be determined.
+              tags:
+                - tag: component
+                  value: cluster
+            - uuid: f4003a25113c4af0bf8bbfcc4557deed
+              name: 17.clusterVNodeStatus
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.11.1.4.{#SNMPINDEX}'
+              key: 'clusterVNodeStatus[{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The status of the virtual node:
+                1 - unknown
+                2 - on line
+                3 - off line
+              valuemap:
+                name: clusterVNodeStatus
+              tags:
+                - tag: component
+                  value: cluster
+        - uuid: 1894836b8c3247f9bdb44b00ca395949
+          name: 'Cluster PNode Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.1.2.5.9.1.1]'
+          key: Cluster.PNode.discovery
+          delay: 12h
+          description: |
+            MIB: BLUEARC-SERVER-MIB
+            The number of physical nodes in the cluster. A value of -1
+            indicates that this cannot be determined.
+          item_prototypes:
+            - uuid: fb14a3d9f46341ca9baa80d130f025eb
+              name: 9.clusterPNodeId
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.9.1.1.{#SNMPINDEX}'
+              key: 'clusterPNodeId[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The identification number of the physical node. A value of -1
+                indicates that this cannot be determined.
+              tags:
+                - tag: component
+                  value: cluster
+            - uuid: b4154895732847ebbd0f8a883ed74247
+              name: 11.clusterPNodeIpAddr
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.9.1.3.{#SNMPINDEX}'
+              key: 'clusterPNodeIpAddr[{#SNMPINDEX}]'
+              value_type: TEXT
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The IP address of the physical node. A value of 0.0.0.0 indicates
+                that this cannot be determined.
+              tags:
+                - tag: component
+                  value: cluster
+            - uuid: aa3a03d374ec4b5dae511c062ba87b8d
+              name: 10.clusterPNodeName
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.9.1.2.{#SNMPINDEX}'
+              key: 'clusterPNodeName[{#SNMPINDEX}]'
+              value_type: TEXT
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The management name of the physical node.
+              tags:
+                - tag: component
+                  value: cluster
+            - uuid: a3c4a29b7a2d47989fef0bc6fcc6e01a
+              name: 8.clusterPNodeNumber
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.11096.6.1.1.1.2.5.8.0
+              key: 'clusterPNodeNumber[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of physical nodes in the cluster. A value of -1
+                indicates that this cannot be determined.
+              tags:
+                - tag: component
+                  value: cluster
+            - uuid: f71af66beae34c2a885024a1e40f65a9
+              name: 12.clusterPNodeStatus
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.9.1.4.{#SNMPINDEX}'
+              key: 'clusterPNodeStatus[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The status of the physical node:
+                1 - unknown
+                2 - up
+                3 - not up
+                4 - on line
+                5 - dead
+                6 - dormant
+              valuemap:
+                name: clusterPNodeStatus
+              tags:
+                - tag: component
+                  value: cluster
+        - uuid: 67cee165d45a44ceba691d1cf39379f1
+          name: 'ClusterNodeStats Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.6.7.4.1.1]'
+          key: clusterNodeStatsDiscovery
+          delay: 12h
+          lifetime_type: DELETE_IMMEDIATELY
+          description: 'MIB:BLUEARC-SERVER-MIB'
+          item_prototypes:
+            - uuid: 09579ea7c2c64aa699488bcb56f70194
+              name: clusterNodeStatsCnId
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.7.4.1.1.{#SNMPINDEX}'
+              key: 'clusterNodeStatsCnId[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The cluster node for this value.
+              tags:
+                - tag: component
+                  value: clusterStats
+            - uuid: e0df950017c44125ba745f8475499caf
+              name: mmbCPUEfficiency
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.7.4.1.5.{#SNMPINDEX}'
+              key: 'mmbCPUEfficiency[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                Percentage of sum of busy time of all MMB CPUs that  
+                are running on this cluster node or -1 if it
+                failed to get the value.(ex. cluster node status is INVALID)
+              tags:
+                - tag: component
+                  value: clusterStats
+            - uuid: 26d6b1bd22154282935f3ebb53f2924b
+              name: mmbCPULoad
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.7.4.1.4.{#SNMPINDEX}'
+              key: 'mmbCPULoad[{#SNMPINDEX}]'
+              units: '%'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                Percentage of busy time of MMB CPU that
+                are running on this cluster node or -1 if it
+                failed to get the value.(ex. cluster node status is INVALID)
+              tags:
+                - tag: component
+                  value: clusterStats
+            - uuid: d8b6695d07cf487383a3ef544c27198a
+              name: mmbCPUSMPEfficiency
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.7.4.1.7.{#SNMPINDEX}'
+              key: 'mmbCPUSMPEfficiency[{#SNMPINDEX}]'
+              units: '%'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                Percentage of sum of busy time of all MMB CPUs in SMP mode that
+                are running on this cluster node or -1 if it
+                failed to get the value.(ex. cluster node status is INVALID)
+              tags:
+                - tag: component
+                  value: clusterStats
+            - uuid: dbf1ff2848b64b1c8ee67093d0b82121
+              name: mmbCPUSMPLoad
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.7.4.1.6.{#SNMPINDEX}'
+              key: 'mmbCPUSMPLoad[{#SNMPINDEX}]'
+              units: '%'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                Percentage of processed in SMP mode of MMB CPU that
+                are running on this cluster node or -1 if it
+                failed to get the value.(ex. cluster node status is INVALID)
+              tags:
+                - tag: component
+                  value: clusterStats
+            - uuid: 7ea8f11e150d47b8bafcd0d34d0f5ba2
+              name: runningBossockFibers
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.7.4.1.2.{#SNMPINDEX}'
+              key: 'runningBossockFibers[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                Number of threads managing a network socket that
+                are running on this cluster node or -1 if it
+                failed to get the value.(ex. cluster node status is INVALID)
+              tags:
+                - tag: component
+                  value: clusterStats
+            - uuid: 286b7ba516834bc380c244f3442ff1d9
+              name: runningPiTcpSocketFibers
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.7.4.1.3.{#SNMPINDEX}'
+              key: 'runningPiTcpSocketFibers[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                Number of SMP threads managing a network socket that
+                are running on this cluster node or -1 if it
+                failed to get the value.(ex. cluster node status is INVALID)
+              tags:
+                - tag: component
+                  value: clusterStats
+        - uuid: 37251fecd84c418f839359925d78cf71
+          name: 'CPU Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.6.1.2.1.2]'
+          key: CpuDiscovery
+          delay: 12h
+          lifetime_type: DELETE_IMMEDIATELY
+          description: 'MIB:BLUEARC-SERVER-MIB'
+          item_prototypes:
+            - uuid: b2524573d38040449bb9d1d9b5471321
+              name: cpuIndex
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.1.2.1.2.{#SNMPINDEX}'
+              key: 'cpuIndex[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB 
+                CPU core index.
+              tags:
+                - tag: component
+                  value: CPU
+            - uuid: 675aae058a5b4451aff3b0e755ee3993
+              name: cpuUtilizationCnIndex
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.1.2.1.1.{#SNMPINDEX}'
+              key: 'cpuUtilizationCnIndex[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB 
+                The cluster node for this value.
+              tags:
+                - tag: component
+                  value: CPU
+            - uuid: 55d2d1cf534b4617bc0836376024f87a
+              name: cpuUtilizationNumber
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.11096.6.1.1.6.1.1.0
+              key: 'cpuUtilizationNumber[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of CPUs which may be present on this
+                system.
+              tags:
+                - tag: component
+                  value: CPU
+            - uuid: c4bd4654f7ce4427ad09b92bbedf0722
+              name: cpuUtilization
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.1.2.1.3.{#SNMPINDEX}'
+              key: 'cpuUtilization[{#SNMPINDEX}]'
+              units: '%'
+              description: |
+                MIB:BLUEARC-SERVER-MIB 
+                Current percentage usage of this CPU.
+              tags:
+                - tag: component
+                  value: CPU
+        - uuid: 7332d07f0d8342d8bb90526242f5f962
+          name: 'DKC Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.116.5.11.4.1.1.6.1.1]'
+          key: DKCDiscovery
+          delay: 12h
+          status: DISABLED
+          lifetime_type: DELETE_IMMEDIATELY
+          item_prototypes:
+            - uuid: 18cb68352e29408fae9ad481b5105c9b
+              name: 'DKC Battery Condition {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.6.1.7.{#SNMPINDEX}'
+              key: 'DKCBatteryCondition.[{#SNMPINDEX}]'
+              delay: 10m
+              history: 3d
+              trends: 0d
+              tags:
+                - tag: Application
+                  value: 'DKC Status'
+              trigger_prototypes:
+                - uuid: 9222a194f8bf4ab3b0cfc61998ba67d8
+                  expression: 'last(/Hitachi Cluster NAS 11096/DKCBatteryCondition.[{#SNMPINDEX}],#1)<>1'
+                  name: 'DKC Battery Abnormal'
+                  priority: HIGH
+                  type: MULTIPLE
+            - uuid: 6c7a6894376a4fea86d8528a3875971e
+              name: 'DKC Cache Condition {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.6.1.4.{#SNMPINDEX}'
+              key: 'DKCCacheCondition.[{#SNMPINDEX}]'
+              delay: 10m
+              history: 3d
+              trends: 0d
+              tags:
+                - tag: Application
+                  value: 'DKC Status'
+              trigger_prototypes:
+                - uuid: bb35cc2537a345e083bce2224010295a
+                  expression: 'last(/Hitachi Cluster NAS 11096/DKCCacheCondition.[{#SNMPINDEX}],#1)<>1'
+                  name: 'DKC Cache Abnormal'
+                  priority: HIGH
+                  type: MULTIPLE
+            - uuid: 3ffe527413ed499c82cf9d9656e6abf6
+              name: 'DKC Environment Condition {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.6.1.9.{#SNMPINDEX}'
+              key: 'DKCEnvironmentCondition.[{#SNMPINDEX}]'
+              delay: 10m
+              history: 3d
+              trends: 0d
+              tags:
+                - tag: Application
+                  value: 'DKC Status'
+              trigger_prototypes:
+                - uuid: 3440b9c3cbab472fbf7835fa82f55b48
+                  expression: 'last(/Hitachi Cluster NAS 11096/DKCEnvironmentCondition.[{#SNMPINDEX}],#1)<>1'
+                  name: 'DKC Environment Abnormal'
+                  priority: HIGH
+                  type: MULTIPLE
+            - uuid: 1b9f631202bf445682625beb074742dc
+              name: 'DKC Fan Condition {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.6.1.8.{#SNMPINDEX}'
+              key: 'DKCFanCondition.[{#SNMPINDEX}]'
+              delay: 10m
+              history: 3d
+              trends: 0d
+              tags:
+                - tag: Application
+                  value: 'DKC Status'
+              trigger_prototypes:
+                - uuid: cac89da064fb44b7adadfd96fbf07c2d
+                  expression: 'last(/Hitachi Cluster NAS 11096/DKCFanCondition.[{#SNMPINDEX}],#1)<>1'
+                  name: 'DKC Fan Abnormal'
+                  priority: HIGH
+                  type: MULTIPLE
+            - uuid: 74a296a1fd8f476fb7a04cc4c87431a4
+              name: 'DKC Internal Bus Condition {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.6.1.3.{#SNMPINDEX}'
+              key: 'DKCInternalBusCondition.[{#SNMPINDEX}]'
+              delay: 10m
+              history: 3d
+              trends: 0d
+              tags:
+                - tag: Application
+                  value: 'DKC Status'
+              trigger_prototypes:
+                - uuid: 6185aba2346e4ebb833b461a8d2b1f94
+                  expression: 'last(/Hitachi Cluster NAS 11096/DKCInternalBusCondition.[{#SNMPINDEX}],#1)<>1'
+                  name: 'DKC Internal Bus Abnormal'
+                  priority: HIGH
+                  type: MULTIPLE
+            - uuid: a37a982b3a7a4a4cb2efe01626f4bb08
+              name: 'DKC Power Supply Condition {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.6.1.6.{#SNMPINDEX}'
+              key: 'DKCPowerSupplyCondition.[{#SNMPINDEX}]'
+              delay: 10m
+              history: 3d
+              trends: 0d
+              tags:
+                - tag: Application
+                  value: 'DKC Status'
+              trigger_prototypes:
+                - uuid: 3ac3f26e6d9443179e5398533e8ba013
+                  expression: 'last(/Hitachi Cluster NAS 11096/DKCPowerSupplyCondition.[{#SNMPINDEX}],#1)<>1'
+                  name: 'DKC Power Supply Abnormal'
+                  priority: HIGH
+                  type: MULTIPLE
+            - uuid: 29e78df60b824dbd869fa831c4104d08
+              name: 'DKC Processor Condition {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.6.1.2.{#SNMPINDEX}'
+              key: 'DKCProcessorCondition.[{#SNMPINDEX}]'
+              delay: 10m
+              history: 3d
+              trends: 0d
+              tags:
+                - tag: Application
+                  value: 'DKC Status'
+              trigger_prototypes:
+                - uuid: 0712e9200a464b9c84d345c676297d97
+                  expression: 'last(/Hitachi Cluster NAS 11096/DKCProcessorCondition.[{#SNMPINDEX}],#1)<>1'
+                  name: 'DKC Processor Abnormal'
+                  priority: HIGH
+                  type: MULTIPLE
+            - uuid: da441aca1c424b84937bc6d6868f29ae
+              name: 'DKC Shared Memory Condition {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.6.1.5.{#SNMPINDEX}'
+              key: 'DKCSharedMemoryCondition.[{#SNMPINDEX}]'
+              delay: 10m
+              history: 3d
+              trends: 0d
+              tags:
+                - tag: Application
+                  value: 'DKC Status'
+              trigger_prototypes:
+                - uuid: 851fda209e6a4592ba018d36c4fe57a4
+                  expression: 'last(/Hitachi Cluster NAS 11096/DKCSharedMemoryCondition.[{#SNMPINDEX}],#1)<>1'
+                  name: 'DKC Shared Memory Abnormal'
+                  priority: HIGH
+                  type: MULTIPLE
+            - uuid: 96425b34e2214dc2bbf0328d61ad8f6a
+              name: 'DKU Drive Condition {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.7.1.5.{#SNMPINDEX}'
+              key: 'DKUDriveCondition.[{#SNMPINDEX}]'
+              delay: 10m
+              history: 3d
+              trends: 0d
+              tags:
+                - tag: Application
+                  value: 'DKU Status'
+              trigger_prototypes:
+                - uuid: ed80022dac1645a5b1ec78bad8ab1255
+                  expression: 'last(/Hitachi Cluster NAS 11096/DKUDriveCondition.[{#SNMPINDEX}],#1)<>1'
+                  name: 'DKU Drive Abnormal'
+                  priority: HIGH
+                  type: MULTIPLE
+            - uuid: dac35a2ad9e843468ecd9da5a70b03f0
+              name: 'DKU Environment Condition {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.7.1.4.{#SNMPINDEX}'
+              key: 'DKUEnvironmentCondition.[{#SNMPINDEX}]'
+              delay: 10m
+              history: 3d
+              trends: 0d
+              tags:
+                - tag: Application
+                  value: 'DKU Status'
+              trigger_prototypes:
+                - uuid: 166047f9533b4b81a4ede96f69ff5bf8
+                  expression: 'last(/Hitachi Cluster NAS 11096/DKUEnvironmentCondition.[{#SNMPINDEX}],#1)<>1'
+                  name: 'DKU Environment Abnormal'
+                  priority: HIGH
+                  type: MULTIPLE
+            - uuid: 5aacd49d4be545479f3693aa6e5367d3
+              name: 'DKU Power Supply Condition {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.7.1.2.{#SNMPINDEX}'
+              key: 'DKUPowerSupplyCondition.[{#SNMPINDEX}]'
+              delay: 10m
+              history: 3d
+              trends: 0d
+              tags:
+                - tag: Application
+                  value: 'DKU Status'
+              trigger_prototypes:
+                - uuid: 22978ded4b364d4086274ba830bd3cb6
+                  expression: 'last(/Hitachi Cluster NAS 11096/DKUPowerSupplyCondition.[{#SNMPINDEX}],#1)<>1'
+                  name: 'DKU Power Supply Abnormal'
+                  priority: HIGH
+                  type: MULTIPLE
+        - uuid: 10b7c4710d5b476eb30357f5ec2b370e
+          name: 'Fan Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.1.2.1.11.1.2]'
+          key: FanDiscovery
+          delay: 12h
+          lifetime_type: DELETE_IMMEDIATELY
+          description: |
+            MIB:BLUEARC-SERVER-MIB
+            A table containing information about the fans located in all 
+            silicon server units in the cluster.
+          item_prototypes:
+            - uuid: f17c9d65c4494942a7a1b70e3cb0e265
+              name: 'fanClusterNode {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.11.1.1.{#SNMPINDEX}'
+              key: 'fanClusterNode.[{#SNMPINDEX}]'
+              delay: 10m
+              history: 3d
+              trends: '0'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The ID of the Cluster Node in which the fan
+                is located.
+              tags:
+                - tag: component
+                  value: Fan
+            - uuid: a73cc745024d4cffa9d0157088ad7ced
+              name: 'fanFittedStatus {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.11.1.3.{#SNMPINDEX}'
+              key: 'fanFittedStatus.[{#SNMPINDEX}]'
+              delay: 10m
+              history: 3d
+              trends: '0'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                Indicates the 'fitted' status of the fan.
+                
+                ok(1)                  - the fan is fitted correctly.
+                okIdWrong(2)           - the fan is fitted correctly, but the
+                                         ID is wrong.
+                notFitted(3)           - the fan is not fitted.
+                unknown(4)             - the status could not be determined.
+              valuemap:
+                name: fanFittedStatus
+              tags:
+                - tag: component
+                  value: Fan
+            - uuid: b42f08a755f244af87d80c8e3f4e3b88
+              name: 'fanIndex {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.11.1.2.{#SNMPINDEX}'
+              key: 'fanIndex.[{#SNMPINDEX}]'
+              delay: 10m
+              history: 3d
+              trends: '0'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                A unique value for each fan on a
+                cluster node.
+              tags:
+                - tag: component
+                  value: Fan
+            - uuid: 9df97811dec846059af8f642770a4b16
+              name: fanNumber
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.11096.6.1.1.1.2.1.10.0
+              key: 'fanNumber.[{#SNMPINDEX}]'
+              delay: 10m
+              history: 3d
+              trends: '0'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of fans (regardless of their current state) present
+                in all cluster nodes in the cluster.
+              tags:
+                - tag: component
+                  value: Fan
+            - uuid: f75ef74b59054b1391a3cc1d98891629
+              name: 'fanSpeed {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.11.1.5.{#SNMPINDEX}'
+              key: 'fanSpeed.[{#SNMPINDEX}]'
+              delay: 10m
+              history: 3d
+              trends: '0'
+              units: RPM
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The speed of the fan.
+              valuemap:
+                name: fanFittedStatus
+              tags:
+                - tag: component
+                  value: Fan
+            - uuid: f358dabc44ce4bab989d02ea607315ac
+              name: 'fanSpeedStatus {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.11.1.4.{#SNMPINDEX}'
+              key: 'fanSpeedStatus.[{#SNMPINDEX}]'
+              delay: 10m
+              history: 3d
+              trends: '0'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                Indicates the 'speed' status of the fan.
+                
+                ok(1)                  - the fan speed is ok.
+                warning(2)             - the fan speed is at a warning level.
+                severe(3)              - the fan speed is at a severe level.
+                unknown(4)             - the fan speed status could not be
+                                         determined.
+              valuemap:
+                name: fanFittedStatus
+              tags:
+                - tag: component
+                  value: Fan
+        - uuid: 1931aef6dee949e0afed66a84c22f8b5
+          name: 'FileSystemStats Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.6.3.2.1.1]'
+          key: fileSystemStatsDiscovery
+          delay: 12h
+          lifetime_type: DELETE_IMMEDIATELY
+          description: 'MIB:BLUEARC-SERVER-MIB'
+          item_prototypes:
+            - uuid: e6de41c3952541e49fd93bb632f2537f
+              name: fileSystemStatsNumber
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.11096.6.1.1.6.3.1.0
+              key: 'fileSystemStatsNumber[{#SNMPVALUE}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of file systems for which statistics are available.
+            - uuid: ebd9075d11514ea99673d77037fc86b4
+              name: fsCapacitySnapshotLower
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.3.2.1.8.{#SNMPINDEX}'
+              key: 'fsCapacitySnapshotLower.[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The low order 32-bits representing the file system's used space
+                that is allocated to snapshots in bytes.
+                (see also fsCapacitySnapshotUpper)
+              tags:
+                - tag: component
+                  value: fileSystemStats
+            - uuid: 92e881c3c63b45f989f595e46bd41a32
+              name: fsCapacitySnapshotUpper
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.3.2.1.8.{#SNMPINDEX}'
+              key: 'fsCapacitySnapshotUpper.[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The high order 32-bits representing the file system's used space
+                that is allocated to snapshots in bytes.
+                (see also fsCapacitySnapshotLower)
+              tags:
+                - tag: component
+                  value: fileSystemStats
+            - uuid: e77975f907d24c4f986587758a134b15
+              name: fsCapacityTotalLower
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.3.2.1.4.{#SNMPINDEX}'
+              key: 'fsCapacityTotalLower.[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The low order 32-bits representing the file system's capacity
+                in bytes. (see also fsCapacityTotalUpper)
+              tags:
+                - tag: component
+                  value: fileSystemStats
+            - uuid: 6815031b4b404da9817f349e0099061b
+              name: fsCapacityTotalUpper
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.3.2.1.3.{#SNMPINDEX}'
+              key: 'fsCapacityTotalUpper.[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The high order 32-bits representing the file system's capacity
+                in bytes. (see also fsCapacityTotalLower)
+              tags:
+                - tag: component
+                  value: fileSystemStats
+            - uuid: 1a52935b243148a8aa8809b9dcd67791
+              name: fsCapacityUsedLower
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.3.2.1.6.{#SNMPINDEX}'
+              key: 'fsCapacityUsedLower.[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The low order 32-bits representing the file system's used space
+                in bytes. (see also fsCapacityUsedUpper)
+              tags:
+                - tag: component
+                  value: fileSystemStats
+            - uuid: abd138e8fba14059820d2f31ea423ad3
+              name: fsCapacityUsedUpper
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.3.2.1.5.{#SNMPINDEX}'
+              key: 'fsCapacityUsedUpper.[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The high order 32-bits representing the file system's used space
+                in bytes. (see also fsCapacityUsedLower)
+              tags:
+                - tag: component
+                  value: fileSystemStats
+            - uuid: ff085b750e79467399a8921c039f18ac
+              name: fsNvramWaitedAllocs
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.3.2.1.9.{#SNMPINDEX}'
+              key: 'fsNvramWaitedAllocs.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of waited allocations for nvram that have caused a 
+                delay to a file system operation.
+              tags:
+                - tag: component
+                  value: fileSystemStats
+            - uuid: 69be26821bf9462282cdb1559788ad58
+              name: fsStatsFsId
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.3.2.1.1.{#SNMPINDEX}'
+              key: 'fsStatsFsId.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The device identifier for this file system.
+              tags:
+                - tag: component
+                  value: fileSystemStats
+            - uuid: 4ad39016836b4caaaa38199d221071e6
+              name: fsStatsFsLabel
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.3.2.1.2.{#SNMPINDEX}'
+              key: 'fsStatsFsLabel.[{#SNMPINDEX}]'
+              value_type: TEXT
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The label for the file system.
+              tags:
+                - tag: component
+                  value: fileSystemStats
+            - uuid: ec4e7041f7814be3a25dbdbfb73efbcb
+              name: fsWriteSmoothing
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.3.2.1.10.{#SNMPINDEX}'
+              key: 'fsWriteSmoothing.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of times the file system had to wait for write
+                smoothing.
+              tags:
+                - tag: component
+                  value: fileSystemStats
+        - uuid: 85d2c654950d4e53ad0f1095d91f92df
+          name: 'FileSystemTierStats Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.6.3.4.1.1]'
+          key: fileSystemTierStatsDiscovery
+          delay: 12h
+          lifetime_type: DELETE_IMMEDIATELY
+          description: 'MIB:BLUEARC-SERVER-MIB'
+          item_prototypes:
+            - uuid: bf819c7793f9476782a88dcc8aff6db5
+              name: fileSystemTierStatsNumber
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.11096.6.1.1.6.3.3.0
+              key: 'fileSystemTierStatsNumber[{#SNMPINDEX}]'
+              trends: '0'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of tiered file system for which
+                statistics are available.
+              tags:
+                - tag: component
+                  value: fileSystemTierStats
+            - uuid: 07a174607e544131814401f8ca3c0ad2
+              name: fsTierCapacitySnapshotLower
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.3.4.1.9.{#SNMPINDEX}'
+              key: 'fsTierCapacitySnapshotLower[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                The low order 32-bits representing the file system's used space
+                that is allocated to snapshots in this tier in bytes.
+                (see also fsCapacitySnapshotUpper)
+              tags:
+                - tag: component
+                  value: fileSystemTierStats
+            - uuid: 69e4310829b6442e8eb3bd5fde1a13cf
+              name: fsTierCapacitySnapshotUpper
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.3.4.1.8.{#SNMPINDEX}'
+              key: 'fsTierCapacitySnapshotUpper[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The high order 32-bits representing the file system's used space
+                that is allocated to snapshots in this tier in bytes.
+                (see also fsCapacitySnapshotLower)
+              tags:
+                - tag: component
+                  value: fileSystemTierStats
+            - uuid: b981a907c4bc4f7bb760c9d551707001
+              name: fsTierCapacityTotalLower
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.3.4.1.5.{#SNMPINDEX}'
+              key: 'fsTierCapacityTotalLower[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The low order 32-bits representing the file system's capacity
+                in this tier in bytes. (see also fsCapacityTotalUpper)
+              tags:
+                - tag: component
+                  value: fileSystemTierStats
+            - uuid: 42c2fea381fb4f5f98a6e01cc4353dca
+              name: fsTierCapacityTotalUpper
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.3.4.1.4.{#SNMPINDEX}'
+              key: 'fsTierCapacityTotalUpper[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The high order 32-bits representing the file system's capacity
+                in this tier in bytes. (see also fsCapacityTotalLower)
+              tags:
+                - tag: component
+                  value: fileSystemTierStats
+            - uuid: 6eaea7a7dc194b95abb3029f343050a5
+              name: fsTierCapacityUsedLower
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.3.4.1.7.{#SNMPINDEX}'
+              key: 'fsTierCapacityUsedLower[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The low order 32-bits representing the file system's used space
+                in this tier in bytes. (see also fsCapacityUsedUpper)
+              tags:
+                - tag: component
+                  value: fileSystemTierStats
+            - uuid: 97bfb126f8f5438ab83aafd8b76f4ddb
+              name: fsTierCapacityUsedUpper
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.3.4.1.6.{#SNMPINDEX}'
+              key: 'fsTierCapacityUsedUpper[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The high order 32-bits representing the file system's used space
+                in this tier in bytes. (see also fsCapacityUsedLower)
+              tags:
+                - tag: component
+                  value: fileSystemTierStats
+            - uuid: 0ab9c229c2b949aead52c497d0f29ad1
+              name: fsTierStatsFsId
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.3.4.1.1.{#SNMPINDEX}'
+              key: 'fsTierStatsFsId[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The permanent identifier for this file system.
+              tags:
+                - tag: component
+                  value: fileSystemTierStats
+            - uuid: 98610c9bbffc4998a7c3bd61e402d32c
+              name: fsTierStatsFsLabel
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.3.4.1.2.{#SNMPINDEX}'
+              key: 'fsTierStatsFsLabel[{#SNMPINDEX}]'
+              value_type: TEXT
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The label for the file system.
+              tags:
+                - tag: component
+                  value: fileSystemTierStats
+            - uuid: 713547d558144966a7070245c09ce691
+              name: fsTier
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.3.4.1.2.{#SNMPINDEX}'
+              key: 'fsTier[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The tier type of this entry.
+              tags:
+                - tag: component
+                  value: fileSystemTierStats
+        - uuid: b12da00e0d6543608589ea746de85e8b
+          name: 'Fpga Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.6.1.4.1.1]'
+          key: FpgaDiscovery
+          delay: 12h
+          lifetime_type: DELETE_IMMEDIATELY
+          description: 'MIB:BLUEARC-SERVER-MIB'
+          item_prototypes:
+            - uuid: 653c53ad288a4d6697758e2ccdf431d1
+              name: fpgaUtilizationCnIndex
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.1.4.1.1.{#SNMPINDEX}'
+              key: 'fpgaUtilizationCnIndex[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The cluster node for this value.
+              tags:
+                - tag: component
+                  value: Fpga
+            - uuid: a2ab618e919a481dacf5d1189129f341
+              name: fpgaUtilizationFpgaIndex
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.1.4.1.2.{#SNMPINDEX}'
+              key: 'fpgaUtilizationFpgaIndex[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The index of the Field Programmable Gate Array for this value.
+              tags:
+                - tag: component
+                  value: Fpga
+            - uuid: b7ffc93a02e04fb483da9e164b4fbb96
+              name: fpgaUtilizationFpgaName
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.1.4.1.3.{#SNMPINDEX}'
+              key: 'fpgaUtilizationFpgaName[{#SNMPINDEX}]'
+              value_type: TEXT
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The name of the Field Programmable Gate Array for this value.
+              tags:
+                - tag: component
+                  value: Fpga
+            - uuid: e007dd238ba2430998161c7cc411919e
+              name: fpgaUtilization
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.1.4.1.4.{#SNMPINDEX}'
+              key: 'fpgaUtilization[{#SNMPINDEX}]'
+              units: '%'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                Current percentage usage averaged over the last second of
+                this Field Programmable Gate Array.
+              tags:
+                - tag: component
+                  value: Fpga
+        - uuid: 54bf1f7aaef444378129618b51dd1bac
+          name: 'FPGU Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.6.1.4]'
+          key: FpguDiscovery
+          delay: 12h
+          lifetime_type: DELETE_IMMEDIATELY
+          description: |
+            MIB:BLUEARC-SERVER-MIB
+            A table of usage information relevant to each Field Programmable
+            Gate Array which may be present on this system.
+            
+            The number of entries in this table is given by the value of
+            fpgaUtilizationNumber.
+        - uuid: 121f7facec574487a230ad664cbb6e94
+          name: 'IntraClusterPortError Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.6.7.2.1.1]'
+          key: intraClusterPortErrorDiscovery
+          delay: 12h
+          lifetime_type: DELETE_IMMEDIATELY
+          description: 'MIB:BLUEARC-SERVER-MIB'
+          item_prototypes:
+            - uuid: 3393d96d0c7645779d263850357e8439
+              name: cnsRetransmits
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.7.2.1.3.{#SNMPINDEX}'
+              key: 'cnsRetransmits[{#SNMPONDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of retransmits of redirected
+                CNS packets. If this value is
+                not available for the server series,
+                it will be reported as zero.
+              tags:
+                - tag: component
+                  value: clusterStats
+            - uuid: 2366b3eaf1ee427dbfe1d4f6d640bfa6
+              name: intraClusterPortErrorNumber
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.11096.6.1.1.6.7.1.0
+              key: 'intraClusterPortErrorNumber[{#SNMPONDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of cluster network errors
+                in the table.
+              tags:
+                - tag: component
+                  value: clusterStats
+            - uuid: f681dd50f2a54fdd827f06f7e7722cb9
+              name: intraClusterPortErrsCnId
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.7.2.1.1.{#SNMPINDEX}'
+              key: 'intraClusterPortErrsCnId[{#SNMPONDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The ID of a cluster node for
+                which intra-cluster errors are
+                recorded.
+              tags:
+                - tag: component
+                  value: clusterStats
+            - uuid: e9f5ff96fd7d4b11a0a3c10e945e3962
+              name: mirroringRetransmits
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.7.2.1.2.{#SNMPINDEX}'
+              key: 'mirroringRetransmits[{#SNMPONDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of retransmits of NVRAM
+                mirroring packets. If this value is
+                not available for the server series,
+                it will be reported as zero.
+              tags:
+                - tag: component
+                  value: clusterStats
+            - uuid: 42c1b362b7f346b2844de0da3fbc9389
+              name: totalRetransmits
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.7.2.1.3.{#SNMPINDEX}'
+              key: 'totalRetransmits[{#SNMPONDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The total number of retransmits for the
+                cluster node.
+              tags:
+                - tag: component
+                  value: clusterStats
+        - uuid: b4e36b9bd8374c24929b25b0105b8e03
+          name: 'PSU Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.1.2.1.13.1.2]'
+          key: PsuDiscovery
+          delay: 12h
+          lifetime_type: DELETE_IMMEDIATELY
+          item_prototypes:
+            - uuid: c89129c671944a2a9f797e86e11b12b7
+              name: psuClusterNode
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.13.1.1.{#SNMPINDEX}'
+              key: 'psuClusterNode[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The ID of the Cluster Node in which the psu
+                is located.
+              tags:
+                - tag: componnent
+                  value: psu
+            - uuid: 81c6f9103eee42f4a170b9a5ce254c19
+              name: psuIndex
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.13.1.2.{#SNMPINDEX}'
+              key: 'psuIndex[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                A unique value for each psu on a
+                cluster node.
+              tags:
+                - tag: component
+                  value: psu
+            - uuid: b520880b1f9044ecbed96a538dfb145d
+              name: psuStatus
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.13.1.3.{#SNMPINDEX}'
+              key: 'psuStatus[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                Indicates the status of the psu.
+                
+                ok(1)                  - the psu is ok.
+                failed(2)              - the psu has failed.
+                notFitted(3)           - the psu is not fitted.
+                unknown(4)             - the status could not be determined.
+              valuemap:
+                name: psuStatus
+              tags:
+                - tag: componnent
+                  value: psu
+        - uuid: 79945bf0a81e4a299203d1bfa111c1be
+          name: 'Sensor Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.1.2.1.9.1.2]'
+          key: SensorDiscovery
+          delay: 12h
+          lifetime_type: DELETE_IMMEDIATELY
+          description: |
+            MIB:BLUEARC-SERVER-MIB
+            A unique value for each temperature sensor on a
+            cluster node.
+          item_prototypes:
+            - uuid: 9a6ffea5b26d4f3b916e61b9e69663a7
+              name: temperatureSensorCReading
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.9.1.4.{#SNMPINDEX}'
+              key: 'temperatureSensorCReading[{#SNMPINDEX}]'
+              units: °C
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                A measurement of the temperature taken by the sensor in degrees
+                Celsius.
+              valuemap:
+                name: temperatureSensorStatus
+              tags:
+                - tag: component
+                  value: Sensor
+            - uuid: 8b5693cdbab4469c9df01e63fc0a7104
+              name: temperatureSensorFReading
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.9.1.5.{#SNMPINDEX}'
+              key: 'temperatureSensorFReading[{#SNMPINDEX}]'
+              units: °F
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                A measurement of the temperature taken by the sensor in degrees
+                Fahrenheit.
+              valuemap:
+                name: temperatureSensorStatus
+              tags:
+                - tag: component
+                  value: Sensor
+            - uuid: 53fbeb45fbda466e9c6ca261c1e451e9
+              name: temperatureSensorStatus
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.9.1.3.{#SNMPINDEX}'
+              key: 'temperatureSensorStatus[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                Indicates whether the temperature measurement is within the
+                expected range.
+                ok(1)                  - the reading is within the expected range.
+                tempWarning(2)         - the reading is outside of the expected
+                                         range, but not severe.
+                tempSevere(3)          - The reading is severely outside the
+                                         expected range.
+                tempSensoreFailed(4)   - the sensor unit has failed. The measured
+                                         temperature is invalid
+                tempSensorWarning(5)   - the sensor unit is in a warning condition.
+                unknown(6)             - the status of the sensor could not be
+                                         determined.
+              valuemap:
+                name: temperatureSensorStatus
+              tags:
+                - tag: component
+                  value: Sensor
+        - uuid: d6be2ca18cea4af5a92cc98f91bffd95
+          name: 'SerialNumbers Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.1.2.6.1.1.3]'
+          key: 'serialNumbers[{#SNMPVALUE}]'
+          delay: 12h
+          description: |
+            MIB:BLUEARC-SERVER-MIB
+            Serial numbers for server components.
+          item_prototypes:
+            - uuid: 3a89bbed93014788a671381b3b1dfd93
+              name: clusterNode
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.6.1.1.3.{#SNMPINDEX}'
+              key: 'clusterNode.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The identification number of the cluster node hosting this 
+                component. A value of -1 indicates that this cannot be 
+                determined.
+              tags:
+                - tag: component
+                  value: serial
+            - uuid: ab1c687b2f894c8a8fd4b1c26ebcaa22
+              name: componentType
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.6.1.1.1.{#SNMPINDEX}'
+              key: 'componentType.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The type of component:
+                1 - a chassis
+                2 - a blade, such as NIM2
+                3 - a power supply unit
+              valuemap:
+                name: componentType
+              tags:
+                - tag: component
+                  value: serial
+            - uuid: 6e073940c3274ce7bdc133aeaefdc609
+              name: serialNumber
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.6.1.1.4.{#SNMPINDEX}'
+              key: 'serialNumber.[{#SNMPINDEX}]'
+              delay: 12h
+              value_type: TEXT
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The serial number of the component.
+              tags:
+                - tag: component
+                  value: serial
+            - uuid: dd65f98f4f3a4dc594c954b51216bc39
+              name: subComponentType
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.6.1.1.2.{#SNMPINDEX}'
+              key: 'subComponentType.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The type of subcomponent:
+                unknown (0)
+                nim1 (1)
+                nim2 (2)
+                nim3 (3)
+                fsa17455 (4)
+                fsa1 (5)
+                fsa2 (6)
+                fsx1 (7)
+                fsb1 (8)
+                fsb2 (9)
+                sim1 (10)
+                sim2 (11)
+                chassis (12)
+                psu1 (13)
+                psu2 (14)
+                fsb3 (15)
+                sim3 (16)
+                mcp1 (17)
+                mmb1 (18)
+                mfb1 (19)
+                mcp2 (20)
+                mfb2 (21)
+                tfb4 (22)
+                mcp3 (23)
+                lpar1 (24)
+                hfb1 (25)
+              valuemap:
+                name: subComponentType
+              tags:
+                - tag: component
+                  value: serial
+        - uuid: 373a5010ca5a41ceae21d512f2e63928
+          name: 'SpanStats Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.6.4.2.1.1]'
+          key: spanStatsDiscovery
+          delay: 12h
+          lifetime_type: DELETE_IMMEDIATELY
+          description: 'MIB:BLUEARC-SERVER-MIB'
+          item_prototypes:
+            - uuid: 8e83a3fdf9dc45928f0d48d8e73d2f0a
+              name: spanCapacityTotalLower
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.4.2.1.4.{#SNMPINDEX}'
+              key: 'spanCapacityTotalLower[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The low order 32-bits representing the span's capacity in bytes.
+                (see also spanCapacityTotalUpper)
+              tags:
+                - tag: component
+                  value: spanStats
+            - uuid: f29e35583e6048b38ceb9e02be8c889c
+              name: spanCapacityTotalUpper
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.4.2.1.3.{#SNMPINDEX}'
+              key: 'spanCapacityTotalUpper[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The high order 32-bits representing the span's capacity in bytes.
+                (see also spanCapacityTotalLower)
+              tags:
+                - tag: component
+                  value: spanStats
+            - uuid: cf3e0b2e96cc436dbed7741ac578c51c
+              name: spanCapacityUsedLower
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.4.2.1.6.{#SNMPINDEX}'
+              key: 'spanCapacityUsedLower[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The low order 32-bits representing the span's used space in bytes.
+                (see also spanCapacityUsedUpper)
+              tags:
+                - tag: component
+                  value: spanStats
+            - uuid: 6644e0c3d6664c30a56ec20ce8035b40
+              name: spanCapacityUsedUpper
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.4.2.1.5.{#SNMPINDEX}'
+              key: 'spanCapacityUsedUpper[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The high order 32-bits representing the span's used space in bytes.
+                (see also spanCapacityUsedLower)
+              tags:
+                - tag: component
+                  value: spanStats
+            - uuid: 787ebec11c0f4196b9dd165a1053a848
+              name: spanLabel
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.4.2.1.2.{#SNMPINDEX}'
+              key: 'spanLabel[{#SNMPINDEX}]'
+              value_type: TEXT
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The label for a span.
+              tags:
+                - tag: component
+                  value: spanStats
+            - uuid: cc32af0773864c24a6c51971fe730de1
+              name: spanStatsNumber
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.11096.6.1.1.6.4.1.0
+              key: 'spanStatsNumber[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of spans for which statistics are available.
+              tags:
+                - tag: component
+                  value: spanStats
+            - uuid: 6a73b2cc05294465a2e1fad0c0e90364
+              name: spanStatsSpanId
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.4.2.1.1.{#SNMPINDEX}'
+              key: 'spanStatsSpanId[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The unique identifier for this span, generated from the first
+                system drive in the span.
+              tags:
+                - tag: component
+                  value: spanStats
+        - uuid: 2433bf443c5b4753beae07a1e07f7f5d
+          name: 'SpanTierStats Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.6.4.4.1.1]'
+          key: spanTierStatsDiscovery
+          delay: 12h
+          lifetime_type: DELETE_IMMEDIATELY
+          description: 'MIB:BLUEARC-SERVER-MIB'
+          item_prototypes:
+            - uuid: 2304bb657adb4b57bd8297b75ece8122
+              name: spanTierCapacityTotalLower
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.4.4.1.5.{#SNMPINDEX}'
+              key: 'spanTierCapacityTotalLower[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The low order 32-bits representing the tier's capacity in bytes.
+                (see also spanTierCapacityTotalUpper)
+              tags:
+                - tag: component
+                  value: spanTierStats
+            - uuid: 25bc37b9c0af470da574e9eba1bae0e8
+              name: spanTierCapacityTotalUpper
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.4.4.1.4.{#SNMPINDEX}'
+              key: 'spanTierCapacityTotalUpper[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The high order 32-bits representing the tier's used space in bytes.
+                (see also spanTierCapacityUsedLower)
+              tags:
+                - tag: component
+                  value: spanTierStats
+            - uuid: 69152b5b831a450da87d69e8860d00a9
+              name: spanTierCapacityUsedLower
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.4.4.1.7.{#SNMPINDEX}'
+              key: 'spanTierCapacityUsedLower[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The low order 32-bits representing the tier's used space in bytes.
+                (see also spanTierCapacityUsedUpper)
+              tags:
+                - tag: component
+                  value: spanTierStats
+            - uuid: b7b9c1b102b34d79a61a54b4d03b21e6
+              name: spanTierCapacityUsedUpper
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.4.4.1.6.{#SNMPINDEX}'
+              key: 'spanTierCapacityUsedUpper[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The high order 32-bits representing the tier's used space in bytes.
+                (see also spanTierCapacityUsedLower)
+              tags:
+                - tag: component
+                  value: spanTierStats
+            - uuid: d78139e423274083bfcdd16228e68766
+              name: spanTierLabel
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.4.4.1.3.{#SNMPINDEX}'
+              key: 'spanTierLabel[{#SNMPINDEX}]'
+              value_type: TEXT
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The label for the span.
+              tags:
+                - tag: component
+                  value: spanTierStats
+            - uuid: c0a92ef29d7047909e4a80c9583d4662
+              name: spanTierStatsNumber
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.11096.6.1.1.6.4.3.0
+              key: 'spanTierStatsNumber[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of spans using tiered storage for which
+                statistics are available.
+              tags:
+                - tag: component
+                  value: spanTierStats
+            - uuid: 8cf77f142e684d2eb5ceb338216bb8ca
+              name: spanTierStatsSpanId
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.4.4.1.1.{#SNMPINDEX}'
+              key: 'spanTierStatsSpanId[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The permanent identifier for this span.
+              tags:
+                - tag: component
+                  value: spanTierStats
+            - uuid: 9d8d25fade474f20b3c69b3d1f515659
+              name: spanTier
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.6.4.4.1.2.{#SNMPINDEX}'
+              key: 'spanTier[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The tier type for this entry.
+              tags:
+                - tag: component
+                  value: spanTierStats
+      tags:
+        - tag: class
+          value: hardware
+        - tag: target
+          value: hitachi
+      macros:
+        - macro: '{$NODES}'
+          value: '2'
+          description: 'set number of your nodes'
+      valuemaps:
+        - uuid: d4a36b6239ba49baa00f0aeefe07aa0c
+          name: batteryStatus
+          mappings:
+            - value: '1'
+              newvalue: ok
+            - value: '2'
+              newvalue: fault
+            - value: '3'
+              newvalue: notFitted
+            - value: '4'
+              newvalue: initializing
+            - value: '5'
+              newvalue: normalCharging
+            - value: '6'
+              newvalue: discharged
+            - value: '7'
+              newvalue: cellTesting
+            - value: '8'
+              newvalue: notResponding
+            - value: '9'
+              newvalue: low
+            - value: '10'
+              newvalue: veryLow
+            - value: '11'
+              newvalue: ignore
+        - uuid: 5b88bb353cd24491923bb604aec34b87
+          name: chassisDriveStatus
+          mappings:
+            - value: '1'
+              newvalue: raidUnknown
+            - value: '2'
+              newvalue: raidDegraded
+            - value: '3'
+              newvalue: raidRebuilding
+            - value: '4'
+              newvalue: raidFailed
+            - value: '5'
+              newvalue: raidInvalid
+            - value: '6'
+              newvalue: raidGood
+        - uuid: 993f61bdc461458f8a7cc3c9de02d14e
+          name: chassisDriveType
+          mappings:
+            - value: '1'
+              newvalue: unknown
+            - value: '2'
+              newvalue: volume
+            - value: '3'
+              newvalue: swap
+        - uuid: 7eec9b8b70444c19be2a42df01eee158
+          name: clusterConfig
+          mappings:
+            - value: '1'
+              newvalue: 'single standalone node'
+            - value: '2'
+              newvalue: 'active / standby pair'
+            - value: '3'
+              newvalue: 'active / active cluster'
+            - value: '4'
+              newvalue: 'the configuration could not be determined.'
+        - uuid: 48f1151ee69d4c6e96416da02f5c2649
+          name: clusterPNodeStatus
+          mappings:
+            - value: '1'
+              newvalue: unknown
+            - value: '2'
+              newvalue: up
+            - value: '3'
+              newvalue: 'not up'
+            - value: '4'
+              newvalue: 'on line'
+            - value: '5'
+              newvalue: dead
+            - value: '6'
+              newvalue: dormant
+        - uuid: 516559273c484bf3b6577f1f5bc8bb6e
+          name: clusterQuorumDeviceStatus
+          mappings:
+            - value: '0'
+              newvalue: unknown
+            - value: '1'
+              newvalue: unconfigured
+            - value: '2'
+              newvalue: 'off line'
+            - value: '3'
+              newvalue: owned
+            - value: '4'
+              newvalue: configured
+            - value: '5'
+              newvalue: granted
+            - value: '6'
+              newvalue: 'cluster node being queried is not up'
+            - value: '7'
+              newvalue: 'quorum device does not have the correct'
+        - uuid: 3cd1345da0db4f37a3b7c0c5a24e5dbc
+          name: clusterVNodeAdmin
+          mappings:
+            - value: '0'
+              newvalue: 'false'
+            - value: '1'
+              newvalue: 'true'
+            - value: '2'
+              newvalue: unknown
+        - uuid: d24d6603653b48e69048b39b0f8e06a3
+          name: clusterVNodeStatus
+          mappings:
+            - value: '1'
+              newvalue: unknown
+            - value: '2'
+              newvalue: 'on line'
+            - value: '3'
+              newvalue: 'off line'
+        - uuid: 74af57176d5440b6a508e844091805e2
+          name: componentType
+          mappings:
+            - value: '1'
+              newvalue: 'a chassis'
+            - value: '2'
+              newvalue: 'a blade, such as NIM2'
+            - value: '3'
+              newvalue: 'a power supply unit'
+        - uuid: 73f84038d1b443d183f33f0253d55950
+          name: fanFittedStatus
+          mappings:
+            - value: '1'
+              newvalue: ok
+            - value: '2'
+              newvalue: okIdWrong
+            - value: '3'
+              newvalue: notFitted
+            - value: '4'
+              newvalue: unknown
+        - uuid: de30dbc2c370410ebbd20d22b4e12ec7
+          name: fanSpeedStatus
+          mappings:
+            - value: '1'
+              newvalue: ok
+            - value: '2'
+              newvalue: warning
+            - value: '3'
+              newvalue: severe
+            - value: '4'
+              newvalue: unknown
+        - uuid: 59a7143355ef4638b76914c882e7c807
+          name: psuStatus
+          mappings:
+            - value: '1'
+              newvalue: ok
+            - value: '2'
+              newvalue: failed
+            - value: '3'
+              newvalue: notFitted
+            - value: '4'
+              newvalue: unknown
+        - uuid: 0d94b7fcc6414d06a36973648f1919d9
+          name: subComponentType
+          mappings:
+            - value: '0'
+              newvalue: unknown
+            - value: '1'
+              newvalue: nim1
+            - value: '2'
+              newvalue: nim2
+            - value: '3'
+              newvalue: nim3
+            - value: '4'
+              newvalue: fsa17455
+            - value: '5'
+              newvalue: fsa1
+            - value: '6'
+              newvalue: fsa2
+            - value: '7'
+              newvalue: fsx1
+            - value: '8'
+              newvalue: fsb1
+            - value: '9'
+              newvalue: fsb2
+            - value: '10'
+              newvalue: sim1
+            - value: '11'
+              newvalue: sim2
+            - value: '12'
+              newvalue: chassis
+            - value: '13'
+              newvalue: psu1
+            - value: '14'
+              newvalue: psu2
+            - value: '15'
+              newvalue: fsb3
+            - value: '16'
+              newvalue: sim3
+            - value: '17'
+              newvalue: mcp1
+            - value: '18'
+              newvalue: mmb1
+            - value: '19'
+              newvalue: mfb1
+            - value: '20'
+              newvalue: mcp2
+            - value: '21'
+              newvalue: mfb2
+            - value: '22'
+              newvalue: tfb4
+            - value: '23'
+              newvalue: mcp3
+            - value: '24'
+              newvalue: lpar1
+            - value: '25'
+              newvalue: hfb1
+        - uuid: dac7757761cc4186872e7930df4093ad
+          name: temperatureSensorStatus
+          mappings:
+            - value: '1'
+              newvalue: ok
+            - value: '2'
+              newvalue: tempWarning
+            - value: '3'
+              newvalue: tempSevere
+            - value: '4'
+              newvalue: tempSensoreFailed
+            - value: '5'
+              newvalue: tempSensorWarning
+            - value: '6'
+              newvalue: unknown
