@@ -1,4 +1,3 @@
-
 zabbix_export:
   version: '7.4'
   template_groups:
@@ -11,7 +10,7 @@ zabbix_export:
       description: |
         ## Description
         
-        Hitachi NAS 11096 ver 0.8
+        Hitachi NAS 11096
         
         ## Overview
         
@@ -89,7 +88,7 @@ zabbix_export:
               trigger_prototypes:
                 - uuid: f732ef367bf84038a0f78df925d022a0
                   expression: 'last(/Hitachi Cluster NAS 11096/batteryStatus.[{#SNMPINDEX}])<>1'
-                  name: 'Hitachu :Battery [{#BATTERY_NAME}]: Critical state'
+                  name: 'Hitachu :Battery [{#batteryClusterNode}]: Critical state'
                   opdata: 'Current state: {ITEM.LASTVALUE1}'
                   priority: AVERAGE
                   description: 'Please check the device battery for faults.'
@@ -162,6 +161,11 @@ zabbix_export:
               tags:
                 - tag: component
                   value: chassisDrive
+              trigger_prototypes:
+                - uuid: a3fb85613310400b8f387dc40bb2b148
+                  expression: 'last(/Hitachi Cluster NAS 11096/chassisDrivePercentUsed[{#SNMPINDEX}])>90'
+                  name: '{#SNMPVALUE} Used Drive {HOST.NAME} > 90%'
+                  priority: WARNING
             - uuid: cc1edf69d39a4ecc8c8003dcfa4295a9
               name: chassisDriveSize4kBlocks
               type: SNMP_AGENT
@@ -192,6 +196,11 @@ zabbix_export:
               tags:
                 - tag: component
                   value: chassisDrive
+              trigger_prototypes:
+                - uuid: 2ffe84ddc37a42159b4d377123263fcb
+                  expression: 'last(/Hitachi Cluster NAS 11096/chassisDriveStatus[{#SNMPINDEX}])<>6'
+                  name: '{#SNMPVALUE} raid on {HOST.NAME} error'
+                  priority: HIGH
             - uuid: 9c41265e0a5542e8b866199a44221565
               name: chassisDriveType
               type: SNMP_AGENT
@@ -228,7 +237,7 @@ zabbix_export:
             indicates that this cannot be determined.
           item_prototypes:
             - uuid: 9a5aa0b456304bfd8c77a653fa5773df
-              name: 3.clusterConfig
+              name: clusterConfig
               type: SNMP_AGENT
               snmp_oid: 1.3.6.1.4.1.11096.6.1.1.1.2.5.3.0
               key: 'clusterConfig[{#SNMPINDEX}]'
@@ -246,7 +255,7 @@ zabbix_export:
                 - tag: component
                   value: cluster
             - uuid: 618d90e00ba643cca0296230e1756dd6
-              name: 1.clusterName
+              name: clusterName
               type: SNMP_AGENT
               snmp_oid: 1.3.6.1.4.1.11096.6.1.1.1.2.5.1.0
               key: 'clusterName[{#SNMPINDEX}]'
@@ -259,7 +268,7 @@ zabbix_export:
                 - tag: component
                   value: cluster
             - uuid: a4e9bde5a5fc4794a3592382b8c60806
-              name: 5.clusterQuorumDeviceIpAddr
+              name: clusterQuorumDeviceIpAddr
               type: SNMP_AGENT
               snmp_oid: 1.3.6.1.4.1.11096.6.1.1.1.2.5.5.0
               key: 'clusterQuorumDeviceIpAddr[{#SNMPINDEX}]'
@@ -273,7 +282,7 @@ zabbix_export:
                 - tag: component
                   value: cluster
             - uuid: d2301b89087941afa3c11752448f298b
-              name: 4.clusterQuorumDeviceName
+              name: clusterQuorumDeviceName
               type: SNMP_AGENT
               snmp_oid: 1.3.6.1.4.1.11096.6.1.1.1.2.5.4.0
               key: 'clusterQuorumDeviceName[{#SNMPINDEX}]'
@@ -286,7 +295,7 @@ zabbix_export:
                 - tag: component
                   value: cluster
             - uuid: 644493b7fd3c4535a3a37390b769af36
-              name: 6.clusterQuorumDeviceOwnedByPNode
+              name: clusterQuorumDeviceOwnedByPNode
               type: SNMP_AGENT
               snmp_oid: 1.3.6.1.4.1.11096.6.1.1.1.2.5.6.0
               key: 'clusterQuorumDeviceOwnedByPNode[{#SNMPINDEX}]'
@@ -302,7 +311,7 @@ zabbix_export:
                 - tag: component
                   value: cluster
             - uuid: 97d9555c00144e19a8188331d4aa332d
-              name: 7.clusterQuorumDeviceStatus
+              name: clusterQuorumDeviceStatus
               type: SNMP_AGENT
               snmp_oid: 1.3.6.1.4.1.11096.6.1.1.1.2.5.7.0
               key: 'clusterQuorumDeviceStatus[{#SNMPINDEX}]'
@@ -325,7 +334,7 @@ zabbix_export:
                 - tag: component
                   value: cluster
             - uuid: bebf9db2fa0b42c7820de014669f2cfd
-              name: 2.clusterUuid
+              name: clusterUuid
               type: SNMP_AGENT
               snmp_oid: 1.3.6.1.4.1.11096.6.1.1.1.2.5.8.0
               key: 'clusterUuid[{#SNMPINDEX}]'
@@ -338,7 +347,7 @@ zabbix_export:
                 - tag: component
                   value: cluster
             - uuid: cc8a030d8a6140fd8094191151421a17
-              name: 18.clusterVNodeAdmin
+              name: clusterVNodeAdmin
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.11.1.5.{#SNMPINDEX}'
               key: 'clusterVNodeAdmin[{#SNMPINDEX}]'
@@ -356,7 +365,7 @@ zabbix_export:
                 - tag: component
                   value: cluster
             - uuid: 722871808dc14b44b5f0b36edb7fff9a
-              name: 19.clusterVNodeHostedBy
+              name: clusterVNodeHostedBy
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.11.1.6.{#SNMPINDEX}'
               key: 'clusterVNodeHostedBy[{#SNMPINDEX}]'
@@ -371,7 +380,7 @@ zabbix_export:
                 - tag: component
                   value: cluster
             - uuid: f889ff2211084d328927a46ce163502d
-              name: 14.clusterVNodeId
+              name: clusterVNodeId
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.11.1.1.{#SNMPINDEX}'
               key: 'clusterVNodeId[{#SNMPINDEX}]'
@@ -387,7 +396,7 @@ zabbix_export:
                 - tag: component
                   value: cluster
             - uuid: a0fff1e6050b475ca5c9cd02335c14e3
-              name: 16.clusterVNodeIpAddr
+              name: clusterVNodeIpAddr
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.11.1.3.{#SNMPINDEX}'
               key: 'clusterVNodeIpAddr[{#SNMPINDEX}]'
@@ -401,7 +410,7 @@ zabbix_export:
                 - tag: component
                   value: cluster
             - uuid: 2ae25ba8eade4db69dfeba1eb507d9ac
-              name: 15.clusterVNodeName
+              name: clusterVNodeName
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.11.1.2.{#SNMPINDEX}'
               key: 'clusterVNodeName[{#SNMPINDEX}]'
@@ -414,7 +423,7 @@ zabbix_export:
                 - tag: component
                   value: cluster
             - uuid: 3ebc9a3c61064af3a459a7dec19499b4
-              name: 13.clusterVNodeNumber
+              name: clusterVNodeNumber
               type: SNMP_AGENT
               snmp_oid: 1.3.6.1.4.1.11096.6.1.1.1.2.5.10.0
               key: 'clusterVNodeNumber[{#SNMPINDEX}]'
@@ -428,7 +437,7 @@ zabbix_export:
                 - tag: component
                   value: cluster
             - uuid: f4003a25113c4af0bf8bbfcc4557deed
-              name: 17.clusterVNodeStatus
+              name: clusterVNodeStatus
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.11.1.4.{#SNMPINDEX}'
               key: 'clusterVNodeStatus[{#SNMPINDEX}]'
@@ -445,6 +454,11 @@ zabbix_export:
               tags:
                 - tag: component
                   value: cluster
+              trigger_prototypes:
+                - uuid: 2ea176f7679140bebbd9be5ce90b48b5
+                  expression: 'last(/Hitachi Cluster NAS 11096/clusterVNodeStatus[{#SNMPINDEX}])<>2'
+                  name: '{#SNMPVALUE} cluster status on {HOST.NAME}  error'
+                  priority: AVERAGE
         - uuid: 1894836b8c3247f9bdb44b00ca395949
           name: 'Cluster PNode Discovery'
           type: SNMP_AGENT
@@ -457,7 +471,7 @@ zabbix_export:
             indicates that this cannot be determined.
           item_prototypes:
             - uuid: fb14a3d9f46341ca9baa80d130f025eb
-              name: 9.clusterPNodeId
+              name: clusterPNodeId
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.9.1.1.{#SNMPINDEX}'
               key: 'clusterPNodeId[{#SNMPINDEX}]'
@@ -469,7 +483,7 @@ zabbix_export:
                 - tag: component
                   value: cluster
             - uuid: b4154895732847ebbd0f8a883ed74247
-              name: 11.clusterPNodeIpAddr
+              name: clusterPNodeIpAddr
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.9.1.3.{#SNMPINDEX}'
               key: 'clusterPNodeIpAddr[{#SNMPINDEX}]'
@@ -482,7 +496,7 @@ zabbix_export:
                 - tag: component
                   value: cluster
             - uuid: aa3a03d374ec4b5dae511c062ba87b8d
-              name: 10.clusterPNodeName
+              name: clusterPNodeName
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.9.1.2.{#SNMPINDEX}'
               key: 'clusterPNodeName[{#SNMPINDEX}]'
@@ -494,7 +508,7 @@ zabbix_export:
                 - tag: component
                   value: cluster
             - uuid: a3c4a29b7a2d47989fef0bc6fcc6e01a
-              name: 8.clusterPNodeNumber
+              name: clusterPNodeNumber
               type: SNMP_AGENT
               snmp_oid: 1.3.6.1.4.1.11096.6.1.1.1.2.5.8.0
               key: 'clusterPNodeNumber[{#SNMPINDEX}]'
@@ -506,7 +520,7 @@ zabbix_export:
                 - tag: component
                   value: cluster
             - uuid: f71af66beae34c2a885024a1e40f65a9
-              name: 12.clusterPNodeStatus
+              name: clusterPNodeStatus
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.5.9.1.4.{#SNMPINDEX}'
               key: 'clusterPNodeStatus[{#SNMPINDEX}]'
@@ -524,6 +538,11 @@ zabbix_export:
               tags:
                 - tag: component
                   value: cluster
+              trigger_prototypes:
+                - uuid: 900afe4f0c094e948dfc0fb895b0fc57
+                  expression: 'last(/Hitachi Cluster NAS 11096/clusterPNodeStatus[{#SNMPINDEX}])<>4'
+                  name: '{#SNMPVALUE} cluster PNode status on {HOST.NAME} error'
+                  priority: AVERAGE
         - uuid: 67cee165d45a44ceba691d1cf39379f1
           name: 'ClusterNodeStats Discovery'
           type: SNMP_AGENT
@@ -680,202 +699,16 @@ zabbix_export:
               tags:
                 - tag: component
                   value: CPU
-        - uuid: 7332d07f0d8342d8bb90526242f5f962
-          name: 'DKC Discovery'
-          type: SNMP_AGENT
-          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.116.5.11.4.1.1.6.1.1]'
-          key: DKCDiscovery
-          delay: 12h
-          status: DISABLED
-          lifetime_type: DELETE_IMMEDIATELY
-          item_prototypes:
-            - uuid: 18cb68352e29408fae9ad481b5105c9b
-              name: 'DKC Battery Condition {#SNMPVALUE}'
-              type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.6.1.7.{#SNMPINDEX}'
-              key: 'DKCBatteryCondition.[{#SNMPINDEX}]'
-              delay: 10m
-              history: 3d
-              trends: 0d
-              tags:
-                - tag: Application
-                  value: 'DKC Status'
-              trigger_prototypes:
-                - uuid: 9222a194f8bf4ab3b0cfc61998ba67d8
-                  expression: 'last(/Hitachi Cluster NAS 11096/DKCBatteryCondition.[{#SNMPINDEX}],#1)<>1'
-                  name: 'DKC Battery Abnormal'
-                  priority: HIGH
-                  type: MULTIPLE
-            - uuid: 6c7a6894376a4fea86d8528a3875971e
-              name: 'DKC Cache Condition {#SNMPVALUE}'
-              type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.6.1.4.{#SNMPINDEX}'
-              key: 'DKCCacheCondition.[{#SNMPINDEX}]'
-              delay: 10m
-              history: 3d
-              trends: 0d
-              tags:
-                - tag: Application
-                  value: 'DKC Status'
-              trigger_prototypes:
-                - uuid: bb35cc2537a345e083bce2224010295a
-                  expression: 'last(/Hitachi Cluster NAS 11096/DKCCacheCondition.[{#SNMPINDEX}],#1)<>1'
-                  name: 'DKC Cache Abnormal'
-                  priority: HIGH
-                  type: MULTIPLE
-            - uuid: 3ffe527413ed499c82cf9d9656e6abf6
-              name: 'DKC Environment Condition {#SNMPVALUE}'
-              type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.6.1.9.{#SNMPINDEX}'
-              key: 'DKCEnvironmentCondition.[{#SNMPINDEX}]'
-              delay: 10m
-              history: 3d
-              trends: 0d
-              tags:
-                - tag: Application
-                  value: 'DKC Status'
-              trigger_prototypes:
-                - uuid: 3440b9c3cbab472fbf7835fa82f55b48
-                  expression: 'last(/Hitachi Cluster NAS 11096/DKCEnvironmentCondition.[{#SNMPINDEX}],#1)<>1'
-                  name: 'DKC Environment Abnormal'
-                  priority: HIGH
-                  type: MULTIPLE
-            - uuid: 1b9f631202bf445682625beb074742dc
-              name: 'DKC Fan Condition {#SNMPVALUE}'
-              type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.6.1.8.{#SNMPINDEX}'
-              key: 'DKCFanCondition.[{#SNMPINDEX}]'
-              delay: 10m
-              history: 3d
-              trends: 0d
-              tags:
-                - tag: Application
-                  value: 'DKC Status'
-              trigger_prototypes:
-                - uuid: cac89da064fb44b7adadfd96fbf07c2d
-                  expression: 'last(/Hitachi Cluster NAS 11096/DKCFanCondition.[{#SNMPINDEX}],#1)<>1'
-                  name: 'DKC Fan Abnormal'
-                  priority: HIGH
-                  type: MULTIPLE
-            - uuid: 74a296a1fd8f476fb7a04cc4c87431a4
-              name: 'DKC Internal Bus Condition {#SNMPVALUE}'
-              type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.6.1.3.{#SNMPINDEX}'
-              key: 'DKCInternalBusCondition.[{#SNMPINDEX}]'
-              delay: 10m
-              history: 3d
-              trends: 0d
-              tags:
-                - tag: Application
-                  value: 'DKC Status'
-              trigger_prototypes:
-                - uuid: 6185aba2346e4ebb833b461a8d2b1f94
-                  expression: 'last(/Hitachi Cluster NAS 11096/DKCInternalBusCondition.[{#SNMPINDEX}],#1)<>1'
-                  name: 'DKC Internal Bus Abnormal'
-                  priority: HIGH
-                  type: MULTIPLE
-            - uuid: a37a982b3a7a4a4cb2efe01626f4bb08
-              name: 'DKC Power Supply Condition {#SNMPVALUE}'
-              type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.6.1.6.{#SNMPINDEX}'
-              key: 'DKCPowerSupplyCondition.[{#SNMPINDEX}]'
-              delay: 10m
-              history: 3d
-              trends: 0d
-              tags:
-                - tag: Application
-                  value: 'DKC Status'
-              trigger_prototypes:
-                - uuid: 3ac3f26e6d9443179e5398533e8ba013
-                  expression: 'last(/Hitachi Cluster NAS 11096/DKCPowerSupplyCondition.[{#SNMPINDEX}],#1)<>1'
-                  name: 'DKC Power Supply Abnormal'
-                  priority: HIGH
-                  type: MULTIPLE
-            - uuid: 29e78df60b824dbd869fa831c4104d08
-              name: 'DKC Processor Condition {#SNMPVALUE}'
-              type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.6.1.2.{#SNMPINDEX}'
-              key: 'DKCProcessorCondition.[{#SNMPINDEX}]'
-              delay: 10m
-              history: 3d
-              trends: 0d
-              tags:
-                - tag: Application
-                  value: 'DKC Status'
-              trigger_prototypes:
-                - uuid: 0712e9200a464b9c84d345c676297d97
-                  expression: 'last(/Hitachi Cluster NAS 11096/DKCProcessorCondition.[{#SNMPINDEX}],#1)<>1'
-                  name: 'DKC Processor Abnormal'
-                  priority: HIGH
-                  type: MULTIPLE
-            - uuid: da441aca1c424b84937bc6d6868f29ae
-              name: 'DKC Shared Memory Condition {#SNMPVALUE}'
-              type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.6.1.5.{#SNMPINDEX}'
-              key: 'DKCSharedMemoryCondition.[{#SNMPINDEX}]'
-              delay: 10m
-              history: 3d
-              trends: 0d
-              tags:
-                - tag: Application
-                  value: 'DKC Status'
-              trigger_prototypes:
-                - uuid: 851fda209e6a4592ba018d36c4fe57a4
-                  expression: 'last(/Hitachi Cluster NAS 11096/DKCSharedMemoryCondition.[{#SNMPINDEX}],#1)<>1'
-                  name: 'DKC Shared Memory Abnormal'
-                  priority: HIGH
-                  type: MULTIPLE
-            - uuid: 96425b34e2214dc2bbf0328d61ad8f6a
-              name: 'DKU Drive Condition {#SNMPVALUE}'
-              type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.7.1.5.{#SNMPINDEX}'
-              key: 'DKUDriveCondition.[{#SNMPINDEX}]'
-              delay: 10m
-              history: 3d
-              trends: 0d
-              tags:
-                - tag: Application
-                  value: 'DKU Status'
-              trigger_prototypes:
-                - uuid: ed80022dac1645a5b1ec78bad8ab1255
-                  expression: 'last(/Hitachi Cluster NAS 11096/DKUDriveCondition.[{#SNMPINDEX}],#1)<>1'
-                  name: 'DKU Drive Abnormal'
-                  priority: HIGH
-                  type: MULTIPLE
-            - uuid: dac35a2ad9e843468ecd9da5a70b03f0
-              name: 'DKU Environment Condition {#SNMPVALUE}'
-              type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.7.1.4.{#SNMPINDEX}'
-              key: 'DKUEnvironmentCondition.[{#SNMPINDEX}]'
-              delay: 10m
-              history: 3d
-              trends: 0d
-              tags:
-                - tag: Application
-                  value: 'DKU Status'
-              trigger_prototypes:
-                - uuid: 166047f9533b4b81a4ede96f69ff5bf8
-                  expression: 'last(/Hitachi Cluster NAS 11096/DKUEnvironmentCondition.[{#SNMPINDEX}],#1)<>1'
-                  name: 'DKU Environment Abnormal'
-                  priority: HIGH
-                  type: MULTIPLE
-            - uuid: 5aacd49d4be545479f3693aa6e5367d3
-              name: 'DKU Power Supply Condition {#SNMPVALUE}'
-              type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.116.5.11.4.1.1.7.1.2.{#SNMPINDEX}'
-              key: 'DKUPowerSupplyCondition.[{#SNMPINDEX}]'
-              delay: 10m
-              history: 3d
-              trends: 0d
-              tags:
-                - tag: Application
-                  value: 'DKU Status'
-              trigger_prototypes:
-                - uuid: 22978ded4b364d4086274ba830bd3cb6
-                  expression: 'last(/Hitachi Cluster NAS 11096/DKUPowerSupplyCondition.[{#SNMPINDEX}],#1)<>1'
-                  name: 'DKU Power Supply Abnormal'
-                  priority: HIGH
-                  type: MULTIPLE
+          graph_prototypes:
+            - uuid: 921cd2759c1c456f8486aced053fcd8a
+              name: 'Cpu temp'
+              yaxismax: '0'
+              graph_items:
+                - color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'Hitachi Cluster NAS 11096'
+                    key: 'cpuUtilizationCnIndex[{#SNMPINDEX}]'
         - uuid: 10b7c4710d5b476eb30357f5ec2b370e
           name: 'Fan Discovery'
           type: SNMP_AGENT
@@ -972,6 +805,11 @@ zabbix_export:
               tags:
                 - tag: component
                   value: Fan
+              trigger_prototypes:
+                - uuid: 3ab2877ba39a43a2a66f98a4e597c9ad
+                  expression: 'max(/Hitachi Cluster NAS 11096/fanSpeed.[{#SNMPINDEX}],60s)=0'
+                  name: '{#SNMPVALUE} fan on {HOST.NAME} possibly is stopped'
+                  priority: WARNING
             - uuid: f358dabc44ce4bab989d02ea607315ac
               name: 'fanSpeedStatus {#SNMPVALUE}'
               type: SNMP_AGENT
@@ -994,6 +832,21 @@ zabbix_export:
               tags:
                 - tag: component
                   value: Fan
+              trigger_prototypes:
+                - uuid: b9539c9c2f8c4700bbd406df08f93aa6
+                  expression: 'last(/Hitachi Cluster NAS 11096/fanSpeedStatus.[{#SNMPINDEX}])<>1'
+                  name: '{#SNMPVALUE} fan on {HOST.NAME} error'
+                  priority: WARNING
+          graph_prototypes:
+            - uuid: 843aabc837da4a9cb40eee213b82e167
+              name: Fan
+              yaxismax: '0'
+              graph_items:
+                - color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'Hitachi Cluster NAS 11096'
+                    key: 'fanSpeed.[{#SNMPINDEX}]'
         - uuid: 1931aef6dee949e0afed66a84c22f8b5
           name: 'FileSystemStats Discovery'
           type: SNMP_AGENT
@@ -1435,7 +1288,7 @@ zabbix_export:
                 The ID of the Cluster Node in which the psu
                 is located.
               tags:
-                - tag: componnent
+                - tag: component
                   value: psu
             - uuid: 81c6f9103eee42f4a170b9a5ce254c19
               name: psuIndex
@@ -1467,6 +1320,11 @@ zabbix_export:
               tags:
                 - tag: componnent
                   value: psu
+              trigger_prototypes:
+                - uuid: 76eecc66add541d398cfedcd3f8f5abe
+                  expression: 'last(/Hitachi Cluster NAS 11096/psuStatus[{#SNMPINDEX}])<>1'
+                  name: '{#SNMPVALUE} psu status on {HOST.NAME} error'
+                  priority: HIGH
         - uuid: 79945bf0a81e4a299203d1bfa111c1be
           name: 'Sensor Discovery'
           type: SNMP_AGENT
@@ -1494,6 +1352,11 @@ zabbix_export:
               tags:
                 - tag: component
                   value: Sensor
+              trigger_prototypes:
+                - uuid: f9c0b2a5676745ca89514d0c53f62b31
+                  expression: 'last(/Hitachi Cluster NAS 11096/temperatureSensorCReading[{#SNMPINDEX}])>35'
+                  name: '{#SNMPVALUE} temperature on {HOST.NAME} > 35 °C'
+                  priority: WARNING
             - uuid: 8b5693cdbab4469c9df01e63fc0a7104
               name: temperatureSensorFReading
               type: SNMP_AGENT
@@ -1533,6 +1396,21 @@ zabbix_export:
               tags:
                 - tag: component
                   value: Sensor
+              trigger_prototypes:
+                - uuid: 2bdb8694a2454b158e82effd75473cc6
+                  expression: 'last(/Hitachi Cluster NAS 11096/temperatureSensorStatus[{#SNMPINDEX}])<>1'
+                  name: '{#SNMPVALUE} sensor status {HOST.NAME} error'
+                  priority: AVERAGE
+          graph_prototypes:
+            - uuid: 1d0e6138e69040b2a1c527f01cff1357
+              name: 'Sensor temperature'
+              yaxismax: '0'
+              graph_items:
+                - color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'Hitachi Cluster NAS 11096'
+                    key: 'temperatureSensorCReading[{#SNMPINDEX}]'
         - uuid: d6be2ca18cea4af5a92cc98f91bffd95
           name: 'SerialNumbers Discovery'
           type: SNMP_AGENT
