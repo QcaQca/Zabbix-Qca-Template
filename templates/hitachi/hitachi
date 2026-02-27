@@ -859,8 +859,8 @@ zabbix_export:
             - uuid: beb4ae78ea0642ed8d2dd1cd07f44529
               name: fcStatsBadCRCErrors
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.19.{#SNMPVALUE}'
-              key: 'fcStatsBadCRCErrors[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.19.{#SNMPINDEX}'
+              key: 'fcStatsBadCRCErrors[{#SNMPINDEX}]'
               description: |
                 MIB:BLUEARC-SERVER-MIB
                 The number of framing errors due to bad cyclic redundancy
@@ -871,8 +871,8 @@ zabbix_export:
             - uuid: 540e71ea35614957a4cbb56f4edfdcf8
               name: fcStatsBadRXCharErrors
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.14.{#SNMPVALUE}'
-              key: 'fcStatsBadRXCharErrors[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.14.{#SNMPINDEX}'
+              key: 'fcStatsBadRXCharErrors[{#SNMPINDEX}]'
               description: |
                 MIB:BLUEARC-SERVER-MIB
                 The number of bad receive character errors at a fibre
@@ -883,8 +883,8 @@ zabbix_export:
             - uuid: 85bb02752173407ebc525f647844ed19
               name: fcStatsClusterNode
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.1.{#SNMPVALUE}'
-              key: 'fcStatsClusterNode[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.1.{#SNMPINDEX}'
+              key: 'fcStatsClusterNode[{#SNMPINDEX}]'
               description: |
                 MIB:BLUEARC-SERVER-MIB
                 The Cluster Node to which this row applies.
@@ -894,8 +894,8 @@ zabbix_export:
             - uuid: aa6ae5e8787144cea17d6446d305205b
               name: fcStatsDiscardedFrameErrors
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.18.{#SNMPVALUE}'
-              key: 'fcStatsDiscardedFrameErrors[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.18.{#SNMPINDEX}'
+              key: 'fcStatsDiscardedFrameErrors[{#SNMPINDEX}]'
               description: |
                 MIB:BLUEARC-SERVER-MIB
                 The number of discarded frame errors at a fibre channel
@@ -906,8 +906,8 @@ zabbix_export:
             - uuid: 0d6e91c43fb547ca9d57ec8bd88ecc61
               name: fcStatsInstantaneousInRate
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.7.{#SNMPVALUE}'
-              key: 'fcStatsInstantaneousInRate[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.7.{#SNMPINDEX}'
+              key: 'fcStatsInstantaneousInRate[{#SNMPINDEX}]'
               units: byte
               description: |
                 MIB:BLUEARC-SERVER-MIB
@@ -919,8 +919,8 @@ zabbix_export:
             - uuid: 0d95977b92d34601a0b9c0ec7307a281
               name: fcStatsInstantaneousOutRate
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.8.{#SNMPVALUE}'
-              key: 'fcStatsInstantaneousOutRate[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.8.{#SNMPINDEX}'
+              key: 'fcStatsInstantaneousOutRate[{#SNMPINDEX}]'
               units: byte
               description: |
                 MIB:BLUEARC-SERVER-MIB
@@ -932,8 +932,8 @@ zabbix_export:
             - uuid: bb5c9bb988754eee81312910d5c77ccb
               name: fcStatsInterfaceEnabled
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.3.{#SNMPVALUE}'
-              key: 'fcStatsInterfaceEnabled[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.3.{#SNMPINDEX}'
+              key: 'fcStatsInterfaceEnabled[{#SNMPINDEX}]'
               description: |
                 MIB:BLUEARC-SERVER-MIB
                 Whether the fibre interface is enabled or not.
@@ -948,8 +948,8 @@ zabbix_export:
             - uuid: 2b6a3982405049ea811545a02f72ed6e
               name: fcStatsInterfaceIndex
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.2.{#SNMPVALUE}'
-              key: 'fcStatsInterfaceIndex[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.2.{#SNMPINDEX}'
+              key: 'fcStatsInterfaceIndex[{#SNMPINDEX}]'
               description: |
                 MIB:BLUEARC-SERVER-MIB
                 The index of the fibre channel interface to which
@@ -960,8 +960,8 @@ zabbix_export:
             - uuid: fa27912c595c42d78fda482cd1ddd152
               name: fcStatsInterfaceLinkSpeed
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.5.{#SNMPVALUE}'
-              key: 'fcStatsInterfaceLinkSpeed[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.5.{#SNMPINDEX}'
+              key: 'fcStatsInterfaceLinkSpeed[{#SNMPINDEX}]'
               units: Gpbs
               description: |
                 MIB:BLUEARC-SERVER-MIB
@@ -972,8 +972,8 @@ zabbix_export:
             - uuid: 8670008967884c52b7b84c475aefe79e
               name: fcStatsInterfaceLinkType
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.6.{#SNMPVALUE}'
-              key: 'fcStatsInterfaceLinkType[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.6.{#SNMPINDEX}'
+              key: 'fcStatsInterfaceLinkType[{#SNMPINDEX}]'
               description: |
                 MIB:BLUEARC-SERVER-MIB
                 The link-type of the fibre interface.
@@ -988,8 +988,8 @@ zabbix_export:
             - uuid: b5743d0c6f8e49cdb95086e27ed667de
               name: fcStatsInterfaceStatus
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.4.{#SNMPVALUE}'
-              key: 'fcStatsInterfaceStatus[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.4.{#SNMPINDEX}'
+              key: 'fcStatsInterfaceStatus[{#SNMPINDEX}]'
               description: |
                 MIB:BLUEARC-SERVER-MIB
                 The status of the fibre interface.
@@ -1005,8 +1005,8 @@ zabbix_export:
             - uuid: bd1b0640b46e45808f3313efa9edefe6
               name: fcStatsLinkFailErrors
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.16.{#SNMPVALUE}'
-              key: 'fcStatsLinkFailErrors[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.16.{#SNMPINDEX}'
+              key: 'fcStatsLinkFailErrors[{#SNMPINDEX}]'
               description: |
                 MIB:BLUEARC-SERVER-MIB
                 The number of link fail errors at a fibre channel interface.
@@ -1016,20 +1016,20 @@ zabbix_export:
             - uuid: b8bd27779dfd49bba70da348556363c9
               name: fcStatsLossSyncErrors
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.15.{#SNMPVALUE}'
-              key: 'fcStatsLossSyncErrors[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.15.{#SNMPINDEX}'
+              key: 'fcStatsLossSyncErrors[{#SNMPINDEX}]'
               description: |
                 MIB:BLUEARC-SERVER-MIB
                 The number of loss of synchronisation errors at a fibre
                 channel interface.
               tags:
                 - tag: component
-                  value: fcStatisticsEntry
+                  value: fcStatistics
             - uuid: d48eef84fb8b479183fb4354afc2e760
               name: fcStatsPeakInRate
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.9.{#SNMPVALUE}'
-              key: 'fcStatsPeakInRate[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.9.{#SNMPINDEX}'
+              key: 'fcStatsPeakInRate[{#SNMPINDEX}]'
               units: byte
               description: |
                 MIB:BLUEARC-SERVER-MIB
@@ -1041,8 +1041,8 @@ zabbix_export:
             - uuid: 11aa680ca38e40ea871874832220570e
               name: fcStatsPeakOutRate
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.10.{#SNMPVALUE}'
-              key: 'fcStatsPeakOutRate[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.10.{#SNMPINDEX}'
+              key: 'fcStatsPeakOutRate[{#SNMPINDEX}]'
               units: byte
               description: |
                 MIB:BLUEARC-SERVER-MIB
@@ -1054,8 +1054,8 @@ zabbix_export:
             - uuid: 7f73005103f54702b21e455ef9098e81
               name: fcStatsProtocolErrors
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.20.{#SNMPVALUE}'
-              key: 'fcStatsProtocolErrors[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.20.{#SNMPINDEX}'
+              key: 'fcStatsProtocolErrors[{#SNMPINDEX}]'
               description: |
                 MIB:BLUEARC-SERVER-MIB
                 The number of fibre channel protocol errors at a fibre
@@ -1066,8 +1066,8 @@ zabbix_export:
             - uuid: ef589e2994924233bb6655a11c3de607
               name: fcStatsRXEOFErrors
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.17.{#SNMPVALUE}'
-              key: 'fcStatsRXEOFErrors[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.17.{#SNMPINDEX}'
+              key: 'fcStatsRXEOFErrors[{#SNMPINDEX}]'
               description: |
                 MIB:BLUEARC-SERVER-MIB
                 The number of messages received at a fibre channel interface
@@ -1079,8 +1079,8 @@ zabbix_export:
             - uuid: 90276a7130014ebe861996015ea9b6c8
               name: fcStatsSignalLossErrors
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.13.{#SNMPVALUE}'
-              key: 'fcStatsSignalLossErrors[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.13.{#SNMPINDEX}'
+              key: 'fcStatsSignalLossErrors[{#SNMPINDEX}]'
               description: |
                 MIB:BLUEARC-SERVER-MIB
                 The total number of loss of signal errors by a fibre channel
@@ -1091,8 +1091,8 @@ zabbix_export:
             - uuid: 9b98e0c1698e437f91642d1a50f590ec
               name: fcStatsTotalRxBytes
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.11.{#SNMPVALUE}'
-              key: 'fcStatsTotalRxBytes[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.11.{#SNMPINDEX}'
+              key: 'fcStatsTotalRxBytes[{#SNMPINDEX}]'
               units: byte
               description: |
                 MIB:BLUEARC-SERVER-MIB
@@ -1103,8 +1103,8 @@ zabbix_export:
             - uuid: a2c5dd7b56d3403ca50fafee90ac8db7
               name: fcStatsTotalTxBytes
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.12.{#SNMPVALUE}'
-              key: 'fcStatsTotalTxBytes[{#SNMPVALUE}]'
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.12.{#SNMPINDEX}'
+              key: 'fcStatsTotalTxBytes[{#SNMPINDEX}]'
               units: byte
               description: |
                 MIB:BLUEARC-SERVER-MIB
@@ -1536,10 +1536,10 @@ zabbix_export:
                 - tag: component
                   value: clusterStats
         - uuid: c1271a662fc44183bd1609368f9b4055
-          name: 'NvramPoolStatsTable Discovery'
+          name: 'NvramPool Discovery'
           type: SNMP_AGENT
           snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.1.3.9.6.1.1]'
-          key: NvramPoolStatsTable
+          key: NvramPool
           delay: 12h
           lifetime_type: DELETE_IMMEDIATELY
           description: 'MIB:BLUEARC-SERVER-MIB'
@@ -1554,7 +1554,7 @@ zabbix_export:
                 The ID of the cluster node for which these pool
                 statistics are reported.
               tags:
-                - tag: compoonent
+                - tag: component
                   value: nvramPool
             - uuid: 6d9cea16ee1546d28cb27ad92a769d30
               name: nvramPoolStatsMaximumUsed
@@ -1567,7 +1567,7 @@ zabbix_export:
                 file system is found, or if nvram is not supported, this value 
                 will be reported as zero.
               tags:
-                - tag: compoonent
+                - tag: component
                   value: nvramPool
             - uuid: 339455a05aad467fbf78ababfdea1341
               name: nvramPoolStatsSize
@@ -1580,7 +1580,7 @@ zabbix_export:
                 is found, or if nvram is not supported, this value will be reported
                 as zero.
               tags:
-                - tag: compoonent
+                - tag: component
                   value: nvramPool
             - uuid: 789e8afba18d464b86ed7fba8d79226c
               name: nvramPoolStatsTotalCurrentUsage
@@ -1593,7 +1593,7 @@ zabbix_export:
                 file system is found, or if nvram is not supported, this value 
                 will be reported as zero.
               tags:
-                - tag: compoonent
+                - tag: component
                   value: nvramPool
             - uuid: 28fb3f9f8ecb4a919d11377dce08d896
               name: nvramPoolStatsWaitedAllocs
@@ -1605,7 +1605,7 @@ zabbix_export:
                 The number of allocations, for the entire NVRAM pool, for which 
                 a wait has occurred.
               tags:
-                - tag: compoonent
+                - tag: component
                   value: nvramPool
             - uuid: 744427c167a349a0b3fa4bae27e239f0
               name: nvramPoolStatsWaitingAllocs
@@ -1617,7 +1617,7 @@ zabbix_export:
                 The number of allocations, for the entire NVRAM pool, for which 
                 a wait is occurring.
               tags:
-                - tag: compoonent
+                - tag: component
                   value: nvramPool
         - uuid: b4e36b9bd8374c24929b25b0105b8e03
           name: 'PSU Discovery'
@@ -1667,7 +1667,7 @@ zabbix_export:
               valuemap:
                 name: psuStatus
               tags:
-                - tag: componnent
+                - tag: component
                   value: psu
               trigger_prototypes:
                 - uuid: 76eecc66add541d398cfedcd3f8f5abe
@@ -2174,6 +2174,7 @@ zabbix_export:
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.4.2.1.2.{#SNMPINDEX}'
               key: 'sysDriveWWN.[{#SNMPINDEX}]'
+              value_type: TEXT
               description: |
                 MIB:BLUEARC-SERVER-MIB
                 The world wide name (WWN) of the system drive.
