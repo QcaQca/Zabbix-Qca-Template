@@ -88,7 +88,7 @@ zabbix_export:
               trigger_prototypes:
                 - uuid: f732ef367bf84038a0f78df925d022a0
                   expression: 'last(/Hitachi Cluster NAS 11096/batteryStatus.[{#SNMPINDEX}])<>1'
-                  name: 'Hitachu :Battery [{#batteryClusterNode}]: Critical state'
+                  name: 'Hitachi :Battery [{#batteryClusterNode}]: Critical state'
                   opdata: 'Current state: {ITEM.LASTVALUE1}'
                   priority: AVERAGE
                   description: 'Please check the device battery for faults.'
@@ -96,10 +96,10 @@ zabbix_export:
                     - tag: scope
                       value: availability
         - uuid: d4ae5066ad4a4849b5ba6ab0417a6e82
-          name: 'chassisDrive Discovery'
+          name: 'ChassisDrive Discovery'
           type: SNMP_AGENT
           snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.1.2.1.15.1.2]'
-          key: chassisDriveDiscovery
+          key: ChassisDriveDiscovery
           delay: 12h
           lifetime_type: DELETE_IMMEDIATELY
           description: |
@@ -164,7 +164,7 @@ zabbix_export:
               trigger_prototypes:
                 - uuid: a3fb85613310400b8f387dc40bb2b148
                   expression: 'last(/Hitachi Cluster NAS 11096/chassisDrivePercentUsed[{#SNMPINDEX}])>90'
-                  name: '{#SNMPVALUE} Used Drive {HOST.NAME} > 90%'
+                  name: 'cluster {#SNMPVALUE} Used Drive {HOST.NAME} > 90%'
                   priority: WARNING
             - uuid: cc1edf69d39a4ecc8c8003dcfa4295a9
               name: chassisDriveSize4kBlocks
@@ -199,7 +199,7 @@ zabbix_export:
               trigger_prototypes:
                 - uuid: 2ffe84ddc37a42159b4d377123263fcb
                   expression: 'last(/Hitachi Cluster NAS 11096/chassisDriveStatus[{#SNMPINDEX}])<>6'
-                  name: '{#SNMPVALUE} raid on {HOST.NAME} error'
+                  name: 'cluster {#SNMPVALUE} raid on {HOST.NAME} error'
                   priority: HIGH
             - uuid: 9c41265e0a5542e8b866199a44221565
               name: chassisDriveType
@@ -457,7 +457,7 @@ zabbix_export:
               trigger_prototypes:
                 - uuid: 2ea176f7679140bebbd9be5ce90b48b5
                   expression: 'last(/Hitachi Cluster NAS 11096/clusterVNodeStatus[{#SNMPINDEX}])<>2'
-                  name: '{#SNMPVALUE} cluster status on {HOST.NAME}  error'
+                  name: 'cluster {#SNMPVALUE} cluster status on {HOST.NAME}  error'
                   priority: AVERAGE
         - uuid: 1894836b8c3247f9bdb44b00ca395949
           name: 'Cluster PNode Discovery'
@@ -808,7 +808,7 @@ zabbix_export:
               trigger_prototypes:
                 - uuid: 3ab2877ba39a43a2a66f98a4e597c9ad
                   expression: 'max(/Hitachi Cluster NAS 11096/fanSpeed.[{#SNMPINDEX}],60s)=0'
-                  name: '{#SNMPVALUE} fan on {HOST.NAME} possibly is stopped'
+                  name: 'cluster {#SNMPVALUE} fan on {HOST.NAME} possibly is stopped'
                   priority: WARNING
             - uuid: f358dabc44ce4bab989d02ea607315ac
               name: 'fanSpeedStatus {#SNMPVALUE}'
@@ -835,7 +835,7 @@ zabbix_export:
               trigger_prototypes:
                 - uuid: b9539c9c2f8c4700bbd406df08f93aa6
                   expression: 'last(/Hitachi Cluster NAS 11096/fanSpeedStatus.[{#SNMPINDEX}])<>1'
-                  name: '{#SNMPVALUE} fan on {HOST.NAME} error'
+                  name: 'cluster {#SNMPVALUE} fan on {HOST.NAME} error'
                   priority: WARNING
           graph_prototypes:
             - uuid: 843aabc837da4a9cb40eee213b82e167
@@ -847,6 +847,271 @@ zabbix_export:
                   item:
                     host: 'Hitachi Cluster NAS 11096'
                     key: 'fanSpeed.[{#SNMPINDEX}]'
+        - uuid: fda722019dc54ef2a12a90be2c5dd84d
+          name: 'FcStats Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.2]'
+          key: FcStatsDiscovery
+          delay: 12h
+          lifetime_type: DELETE_IMMEDIATELY
+          description: 'MIB:BLUEARC-SERVER-MIB'
+          item_prototypes:
+            - uuid: beb4ae78ea0642ed8d2dd1cd07f44529
+              name: fcStatsBadCRCErrors
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.19.{#SNMPVALUE}'
+              key: 'fcStatsBadCRCErrors[{#SNMPVALUE}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of framing errors due to bad cyclic redundancy
+                codes, at a fibre channel interface.
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
+            - uuid: 540e71ea35614957a4cbb56f4edfdcf8
+              name: fcStatsBadRXCharErrors
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.14.{#SNMPVALUE}'
+              key: 'fcStatsBadRXCharErrors[{#SNMPVALUE}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of bad receive character errors at a fibre
+                channel interface.
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
+            - uuid: 85bb02752173407ebc525f647844ed19
+              name: fcStatsClusterNode
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.1.{#SNMPVALUE}'
+              key: 'fcStatsClusterNode[{#SNMPVALUE}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The Cluster Node to which this row applies.
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
+            - uuid: aa6ae5e8787144cea17d6446d305205b
+              name: fcStatsDiscardedFrameErrors
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.18.{#SNMPVALUE}'
+              key: 'fcStatsDiscardedFrameErrors[{#SNMPVALUE}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of discarded frame errors at a fibre channel
+                interface.
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
+            - uuid: 0d6e91c43fb547ca9d57ec8bd88ecc61
+              name: fcStatsInstantaneousInRate
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.7.{#SNMPVALUE}'
+              key: 'fcStatsInstantaneousInRate[{#SNMPVALUE}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of bytes received by a fibre channel
+                interface in the last second.
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
+            - uuid: 0d95977b92d34601a0b9c0ec7307a281
+              name: fcStatsInstantaneousOutRate
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.8.{#SNMPVALUE}'
+              key: 'fcStatsInstantaneousOutRate[{#SNMPVALUE}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of bytes transmitted by a fibre channel
+                interface in the last second.
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
+            - uuid: bb5c9bb988754eee81312910d5c77ccb
+              name: fcStatsInterfaceEnabled
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.3.{#SNMPVALUE}'
+              key: 'fcStatsInterfaceEnabled[{#SNMPVALUE}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                Whether the fibre interface is enabled or not.
+                unknown(0)  - the information could not be obtained.
+                enabled(1)  - the interface is enabled.
+                disabled(2) - the interface is disabled.
+              valuemap:
+                name: fcStatsInterfaceEnabled
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
+            - uuid: 2b6a3982405049ea811545a02f72ed6e
+              name: fcStatsInterfaceIndex
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.2.{#SNMPVALUE}'
+              key: 'fcStatsInterfaceIndex[{#SNMPVALUE}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The index of the fibre channel interface to which
+                the statistics in this row apply.
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
+            - uuid: fa27912c595c42d78fda482cd1ddd152
+              name: fcStatsInterfaceLinkSpeed
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.5.{#SNMPVALUE}'
+              key: 'fcStatsInterfaceLinkSpeed[{#SNMPVALUE}]'
+              units: Gpbs
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The speed of the fibre channel interface in Gbps.
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
+            - uuid: 8670008967884c52b7b84c475aefe79e
+              name: fcStatsInterfaceLinkType
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.6.{#SNMPVALUE}'
+              key: 'fcStatsInterfaceLinkType[{#SNMPVALUE}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The link-type of the fibre interface.
+                unknown(0)  - the information could not be obtained.
+                n(1)        - fabric direct attach.
+                nl(2)       - arbitrated loop operation.
+              valuemap:
+                name: fcStatsInterfaceLinkType
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
+            - uuid: b5743d0c6f8e49cdb95086e27ed667de
+              name: fcStatsInterfaceStatus
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.4.{#SNMPVALUE}'
+              key: 'fcStatsInterfaceStatus[{#SNMPVALUE}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The status of the fibre interface.
+                unknown(0)  - the information could not be obtained.
+                up(1)  - the interface is up.
+                isolated(2) - the interface is isolated.
+                down(3) - the interface is down.
+              valuemap:
+                name: fcStatsInterfaceStatus
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
+            - uuid: bd1b0640b46e45808f3313efa9edefe6
+              name: fcStatsLinkFailErrors
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.16.{#SNMPVALUE}'
+              key: 'fcStatsLinkFailErrors[{#SNMPVALUE}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of link fail errors at a fibre channel interface.
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
+            - uuid: b8bd27779dfd49bba70da348556363c9
+              name: fcStatsLossSyncErrors
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.15.{#SNMPVALUE}'
+              key: 'fcStatsLossSyncErrors[{#SNMPVALUE}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of loss of synchronisation errors at a fibre
+                channel interface.
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
+            - uuid: d48eef84fb8b479183fb4354afc2e760
+              name: fcStatsPeakInRate
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.9.{#SNMPVALUE}'
+              key: 'fcStatsPeakInRate[{#SNMPVALUE}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The peak receive rate in bytes per second for data received
+                through a fibre channel interface.
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
+            - uuid: 11aa680ca38e40ea871874832220570e
+              name: fcStatsPeakOutRate
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.10.{#SNMPVALUE}'
+              key: 'fcStatsPeakOutRate[{#SNMPVALUE}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The peak transmission rate in bytes per second for data
+                transmitted through a fibre channel interface.
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
+            - uuid: 7f73005103f54702b21e455ef9098e81
+              name: fcStatsProtocolErrors
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.20.{#SNMPVALUE}'
+              key: 'fcStatsProtocolErrors[{#SNMPVALUE}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of fibre channel protocol errors at a fibre
+                channel interface.
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
+            - uuid: ef589e2994924233bb6655a11c3de607
+              name: fcStatsRXEOFErrors
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.17.{#SNMPVALUE}'
+              key: 'fcStatsRXEOFErrors[{#SNMPVALUE}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of messages received at a fibre channel interface
+                from the frame sender indicating that the frame should be
+                aborted because a problem occurred during transmission.
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
+            - uuid: 90276a7130014ebe861996015ea9b6c8
+              name: fcStatsSignalLossErrors
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.13.{#SNMPVALUE}'
+              key: 'fcStatsSignalLossErrors[{#SNMPVALUE}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The total number of loss of signal errors by a fibre channel
+                interface.
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
+            - uuid: 9b98e0c1698e437f91642d1a50f590ec
+              name: fcStatsTotalRxBytes
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.11.{#SNMPVALUE}'
+              key: 'fcStatsTotalRxBytes[{#SNMPVALUE}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The total bytes received through a fibre channel interface.
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
+            - uuid: a2c5dd7b56d3403ca50fafee90ac8db7
+              name: fcStatsTotalTxBytes
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.6.25.1.12.{#SNMPVALUE}'
+              key: 'fcStatsTotalTxBytes[{#SNMPVALUE}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The total bytes transmitted through a fibre channel interface.
+              tags:
+                - tag: component
+                  value: fcStatisticsEntry
         - uuid: 1931aef6dee949e0afed66a84c22f8b5
           name: 'FileSystemStats Discovery'
           type: SNMP_AGENT
@@ -1270,6 +1535,90 @@ zabbix_export:
               tags:
                 - tag: component
                   value: clusterStats
+        - uuid: c1271a662fc44183bd1609368f9b4055
+          name: 'NvramPoolStatsTable Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.1.3.9.6.1.1]'
+          key: NvramPoolStatsTable
+          delay: 12h
+          lifetime_type: DELETE_IMMEDIATELY
+          description: 'MIB:BLUEARC-SERVER-MIB'
+          item_prototypes:
+            - uuid: c2536bcd01ae493586852bf2f2621030
+              name: clusterNodeId
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.9.6.1.1.{#SNMPINDEX}'
+              key: 'clusterNodeId.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The ID of the cluster node for which these pool
+                statistics are reported.
+              tags:
+                - tag: compoonent
+                  value: nvramPool
+            - uuid: 6d9cea16ee1546d28cb27ad92a769d30
+              name: nvramPoolStatsMaximumUsed
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.9.6.1.3.{#SNMPINDEX}'
+              key: 'nvramPoolStatsMaximumUsed.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The maximum amount of nvram used. If no formatted or mounted 
+                file system is found, or if nvram is not supported, this value 
+                will be reported as zero.
+              tags:
+                - tag: compoonent
+                  value: nvramPool
+            - uuid: 339455a05aad467fbf78ababfdea1341
+              name: nvramPoolStatsSize
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.9.6.1.2.{#SNMPINDEX}'
+              key: 'nvramPoolStatsSize.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The total size of nvram. If no formatted or mounted file system
+                is found, or if nvram is not supported, this value will be reported
+                as zero.
+              tags:
+                - tag: compoonent
+                  value: nvramPool
+            - uuid: 789e8afba18d464b86ed7fba8d79226c
+              name: nvramPoolStatsTotalCurrentUsage
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.9.6.1.4.{#SNMPINDEX}'
+              key: 'nvramPoolStatsTotalCurrentUsage.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The amount of nvram currently in use. If no formatted or mounted
+                file system is found, or if nvram is not supported, this value 
+                will be reported as zero.
+              tags:
+                - tag: compoonent
+                  value: nvramPool
+            - uuid: 28fb3f9f8ecb4a919d11377dce08d896
+              name: nvramPoolStatsWaitedAllocs
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.9.6.1.5.{#SNMPINDEX}'
+              key: 'nvramPoolStatsWaitedAllocs.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of allocations, for the entire NVRAM pool, for which 
+                a wait has occurred.
+              tags:
+                - tag: compoonent
+                  value: nvramPool
+            - uuid: 744427c167a349a0b3fa4bae27e239f0
+              name: nvramPoolStatsWaitingAllocs
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.9.6.1.6.{#SNMPINDEX}'
+              key: 'nvramPoolStatsWaitingAllocs.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The number of allocations, for the entire NVRAM pool, for which 
+                a wait is occurring.
+              tags:
+                - tag: compoonent
+                  value: nvramPool
         - uuid: b4e36b9bd8374c24929b25b0105b8e03
           name: 'PSU Discovery'
           type: SNMP_AGENT
@@ -1323,7 +1672,7 @@ zabbix_export:
               trigger_prototypes:
                 - uuid: 76eecc66add541d398cfedcd3f8f5abe
                   expression: 'last(/Hitachi Cluster NAS 11096/psuStatus[{#SNMPINDEX}])<>1'
-                  name: '{#SNMPVALUE} psu status on {HOST.NAME} error'
+                  name: 'cluster {#SNMPVALUE} psu status on {HOST.NAME} error'
                   priority: HIGH
         - uuid: 79945bf0a81e4a299203d1bfa111c1be
           name: 'Sensor Discovery'
@@ -1354,9 +1703,10 @@ zabbix_export:
                   value: Sensor
               trigger_prototypes:
                 - uuid: f9c0b2a5676745ca89514d0c53f62b31
-                  expression: 'last(/Hitachi Cluster NAS 11096/temperatureSensorCReading[{#SNMPINDEX}])>35'
-                  name: '{#SNMPVALUE} temperature on {HOST.NAME} > 35 °C'
+                  expression: 'last(/Hitachi Cluster NAS 11096/temperatureSensorCReading[{#SNMPINDEX}])>{$SENSOR_WARN_TEMP}'
+                  name: 'cluster {#SNMPVALUE} temperature on {HOST.NAME} > {SENSOR_WARN_TEMP}'
                   priority: WARNING
+                  manual_close: 'YES'
             - uuid: 8b5693cdbab4469c9df01e63fc0a7104
               name: temperatureSensorFReading
               type: SNMP_AGENT
@@ -1399,7 +1749,7 @@ zabbix_export:
               trigger_prototypes:
                 - uuid: 2bdb8694a2454b158e82effd75473cc6
                   expression: 'last(/Hitachi Cluster NAS 11096/temperatureSensorStatus[{#SNMPINDEX}])<>1'
-                  name: '{#SNMPVALUE} sensor status {HOST.NAME} error'
+                  name: 'cluster {#SNMPVALUE} sensor status {HOST.NAME} error'
                   priority: AVERAGE
           graph_prototypes:
             - uuid: 1d0e6138e69040b2a1c527f01cff1357
@@ -1705,15 +2055,264 @@ zabbix_export:
               tags:
                 - tag: component
                   value: spanTierStats
+        - uuid: e9806865c73244acaee23b4db21ecc48
+          name: 'SysDrive Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.1.3.4.2.1.1]'
+          key: SysDriveDiscovery
+          delay: 12h
+          lifetime_type: DELETE_IMMEDIATELY
+          description: 'MIB:BLUEARC-SERVER-MIB'
+          item_prototypes:
+            - uuid: f89a805794844b65aee8513fac99f60d
+              name: sysDriveCacheMode
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.4.2.1.7.{#SNMPINDEX}'
+              key: 'sysDriveCacheMode.[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The caching mode employed by the RAID controller for
+                this system drive.
+                This object will only have the value unknown(3).
+              valuemap:
+                name: sysDriveRaidLevel
+              tags:
+                - tag: component
+                  value: sysDrive
+            - uuid: 87818e3fe6df47a483542f83b2284463
+              name: sysDriveCapacity
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.4.2.1.5.{#SNMPINDEX}'
+              key: 'sysDriveCapacity.[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The capacity of the system drive in bytes.
+              tags:
+                - tag: component
+                  value: sysDrive
+            - uuid: d9d5c1ac438d47b1b82d9cc9ade46aef
+              name: sysDriveIndex
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.4.2.1.1.{#SNMPINDEX}'
+              key: 'sysDriveIndex.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                
+                An identifier for the system drive (system drive id).
+                Its value ranges between 1 and the value of sysDriveNumber
+              tags:
+                - tag: component
+                  value: sysDrive
+            - uuid: 8f7936d9ecff4d3b8c41d33efac85ddc
+              name: sysDriveLUN
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.4.2.1.3.{#SNMPINDEX}'
+              key: 'sysDriveLUN.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                
+                The logical unit number (LUN) of the system drive.
+                NOTE: upto 8 system drives can exist under a single
+                      RAID controller.
+                LUNs range from 0 to 7.
+              tags:
+                - tag: component
+                  value: sysDrive
+            - uuid: 07863e4a877044a9875c43689fefd71c
+              name: sysDriveRaidLevel
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.4.2.1.6.{#SNMPINDEX}'
+              key: 'sysDriveRaidLevel.[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The configured RAID level of the system drive.
+                NOTE : jBOD(6) - means just a bunch of disks.
+              valuemap:
+                name: sysDriveRaidLevel
+              tags:
+                - tag: component
+                  value: sysDrive
+            - uuid: 927a5d4177ce49a9adf884c442cbb858
+              name: sysDriveStatus
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.4.2.1.4.{#SNMPINDEX}'
+              key: 'sysDriveStatus.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                
+                The status of the system drive.
+                online(1)          - the system drive is accessible through
+                                     the fibre channel interface.
+                corrupt(2)         - the system drives master boot record
+                                     is corrupt.
+                failed(3)          - the system drive has failed and is no
+                                     longer accessible through the fibre
+                                     channel interface.
+                notPresent(4)      - device no longer present.
+                disconnected(5)    - device is present but not accessible
+                                     by the controller
+                offline(6)         - all ports are offline  
+                initializing(7)    - not accessible until initialization phase has 
+                                     completed
+                formatting(8)      - device is formatting
+                unknown(9)         - unknown device status
+              valuemap:
+                name: sysDriveStatus
+              tags:
+                - tag: component
+                  value: sysDrive
+              trigger_prototypes:
+                - uuid: 8af3771e51534dcd83cf721d844895cf
+                  expression: 'last(/Hitachi Cluster NAS 11096/sysDriveStatus.[{#SNMPINDEX}])<>1'
+                  name: 'sysDriveStatus {#SNMPVALUE} on {HOST.NAME} error'
+                  priority: AVERAGE
+            - uuid: 225f7f7122d4471c9ac7118c14685edb
+              name: sysDriveWWN
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.4.2.1.2.{#SNMPINDEX}'
+              key: 'sysDriveWWN.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The world wide name (WWN) of the system drive.
+              tags:
+                - tag: component
+                  value: sysDrive
+        - uuid: 6e1519883a4a4fe7a288342aef50a22c
+          name: 'VolumeTable Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.11096.6.1.1.1.3.5.2.1.1]'
+          key: VolumeTableDiscovery
+          delay: 12h
+          lifetime_type: DELETE_IMMEDIATELY
+          description: 'MIB:BLUEARC-SERVER-MIB'
+          item_prototypes:
+            - uuid: 825eed055c27492c99795d493056d5df
+              name: volumeCapacity
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.5.2.1.5.{#SNMPINDEX}'
+              key: 'volumeCapacity.[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The volume's  (i.e. file system's) capacity in bytes.
+              tags:
+                - tag: component
+                  value: volumeEntry
+            - uuid: 6291572d153c43a29019249d03562990
+              name: volumeEnterpriseVirtualServer
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.5.2.1.5.{#SNMPINDEX}'
+              key: 'volumeEnterpriseVirtualServer.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The name of the Enterprise Virtual Server to which this
+                volume (i.e. file system) is assigned.
+              tags:
+                - tag: component
+                  value: volumeEntry
+            - uuid: df6c70242d9b4287a2d3bd9232432ec0
+              name: volumeFreeCapacity
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.5.2.1.6.{#SNMPINDEX}'
+              key: 'volumeFreeCapacity.[{#SNMPINDEX}]'
+              units: byte
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The remaining free volume  (i.e. file system) capacity in bytes.
+                NOTE: This value is 0 if the volume is not mounted.
+              tags:
+                - tag: component
+                  value: volumeEntry
+            - uuid: f6d5950f0fff4c17b682352815aece7d
+              name: volumeLabel
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.5.2.1.3.{#SNMPINDEX}'
+              key: 'volumeLabel.[{#SNMPINDEX}]'
+              value_type: TEXT
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The label assigned to the volume (i.e. file system)
+                by a user for identification purposes.
+                NOTE: If a label has not been assigned to the volume, this
+                      value will be a zero length string.
+              tags:
+                - tag: component
+                  value: volumeEntry
+            - uuid: b65cb81f71674386a8a293e0423545ba
+              name: volumePartitionID
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.5.2.1.2.{#SNMPINDEX}'
+              key: 'volumePartitionID.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The device ID of the volume (i.e. file system).
+                This ID has four-digits, is unique within a
+                cluster and persists across reboots (unless
+                certain storage re-configuration has taken place).
+              tags:
+                - tag: component
+                  value: volumeEntry
+            - uuid: 2a352b21ba484ccbb4760a63ada9e519
+              name: volumeStatus
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.5.2.1.4.{#SNMPINDEX}'
+              key: 'volumeStatus.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The status of the volume (i.e. file system).
+                unformatted(1)   - the volume does NOT contain a file system.
+                mounted(2)       - the volume contains a file system and may
+                                   be being accessed by users.
+                formatted(3)     - the volume contains a file system, but is
+                                   not accessible by users as it is not
+                                   mounted.
+                needsChecking(4) - the file system has some errors and cannot
+                                   be mounted.  Its must be checked and fixed
+                                   before it can be accessed by users.
+              valuemap:
+                name: volumeStatus
+              tags:
+                - tag: component
+                  value: volumeEntry
+              trigger_prototypes:
+                - uuid: 105b4e9aefec4189bf60fa2dd9b03a8b
+                  expression: 'last(/Hitachi Cluster NAS 11096/volumeStatus.[{#SNMPINDEX}])<>2'
+                  name: 'volume {#SNMPVALUE} volumeStatus on {HOST.NAME}  error'
+                  priority: AVERAGE
+            - uuid: 68d95ee9a2b24105a2ff683cb20a9369
+              name: volumeSysDriveIndex
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.3.5.2.1.1.{#SNMPINDEX}'
+              key: 'volumeSysDriveIndex.[{#SNMPINDEX}]'
+              description: |
+                MIB:BLUEARC-SERVER-MIB
+                The system drive on which the volume is stored.
+                Since a volume (i.e. file system) resides on a 
+                storage pool, which can contain many system drives,
+                this value is always reported as zero.
+              tags:
+                - tag: component
+                  value: volumeEntry
       tags:
         - tag: class
           value: hardware
         - tag: target
           value: hitachi
       macros:
+        - macro: '{$CPU_CRIT_TEMP}'
+          value: '55'
+        - macro: '{$CPU_WARN_TEMP}'
+          value: '45'
         - macro: '{$NODES}'
           value: '2'
           description: 'set number of your nodes'
+        - macro: '{$SENSOR_CRIT_TEMP}'
+          value: '55'
+        - macro: '{$SENSOR_WARN_TEMP}'
+          value: '45'
       valuemaps:
         - uuid: d4a36b6239ba49baa00f0aeefe07aa0c
           name: batteryStatus
@@ -1858,6 +2457,33 @@ zabbix_export:
               newvalue: severe
             - value: '4'
               newvalue: unknown
+        - uuid: 97ff18cc68554e2fbc396fdfccab2189
+          name: fcStatsInterfaceEnabled
+          mappings:
+            - value: '0'
+              newvalue: unknown
+            - value: '1'
+              newvalue: enabled
+            - value: '2'
+              newvalue: disabled
+        - uuid: d3980719c99e4d30adeeaf68f4c90c53
+          name: fcStatsInterfaceLinkType
+          mappings:
+            - value: '1'
+              newvalue: 'n'
+            - value: '2'
+              newvalue: nl
+        - uuid: 81fd3e9ef3a145888a915725a853655a
+          name: fcStatsInterfaceStatus
+          mappings:
+            - value: '0'
+              newvalue: unknown
+            - value: '1'
+              newvalue: up
+            - value: '2'
+              newvalue: isolated
+            - value: '3'
+              newvalue: down
         - uuid: 59a7143355ef4638b76914c882e7c807
           name: psuStatus
           mappings:
@@ -1924,6 +2550,57 @@ zabbix_export:
               newvalue: lpar1
             - value: '25'
               newvalue: hfb1
+        - uuid: 4053f6ce1b6540c481e23fbdefbd6456
+          name: sysDriveCacheMode
+          mappings:
+            - value: '1'
+              newvalue: writeThrough
+            - value: '2'
+              newvalue: writeBack
+            - value: '3'
+              newvalue: unknown
+        - uuid: 209655469c824bc4bd042f63383e9dfa
+          name: sysDriveRaidLevel
+          mappings:
+            - value: '1'
+              newvalue: raid0
+            - value: '2'
+              newvalue: raid1
+            - value: '3'
+              newvalue: raid3
+            - value: '4'
+              newvalue: raid5
+            - value: '5'
+              newvalue: raid10
+            - value: '6'
+              newvalue: jBOD
+            - value: '7'
+              newvalue: raid30
+            - value: '8'
+              newvalue: raid50
+            - value: '9'
+              newvalue: unknown
+        - uuid: 48c6ed5854fc486882e09e3adfb9928e
+          name: sysDriveStatus
+          mappings:
+            - value: '1'
+              newvalue: online
+            - value: '2'
+              newvalue: corrupt
+            - value: '3'
+              newvalue: failed
+            - value: '4'
+              newvalue: notPresent
+            - value: '5'
+              newvalue: disconnected
+            - value: '6'
+              newvalue: offline
+            - value: '7'
+              newvalue: initializing
+            - value: '8'
+              newvalue: formatting
+            - value: '9'
+              newvalue: unknown
         - uuid: dac7757761cc4186872e7930df4093ad
           name: temperatureSensorStatus
           mappings:
@@ -1939,3 +2616,14 @@ zabbix_export:
               newvalue: tempSensorWarning
             - value: '6'
               newvalue: unknown
+        - uuid: 1e1b83981b164b31a8bad812da8de68a
+          name: volumeStatus
+          mappings:
+            - value: '1'
+              newvalue: unformatted
+            - value: '2'
+              newvalue: mounted
+            - value: '3'
+              newvalue: formatted
+            - value: '4'
+              newvalue: needsChecking
