@@ -287,11 +287,11 @@ zabbix_export:
           description: 'Scanning ATEN-IPMI-MIB::sensorTable with filter: not connected FAN sensors (Value = 0)'
           item_prototypes:
             - uuid: 5309e5fab7a44b11a8f045db2868a544
-              name: '{#SENSOR_DESCR}: Fan speed, %'
+              name: '{#SENSOR_DESCR}: Fan speed, RPM'
               type: SNMP_AGENT
               snmp_oid: 'get[1.3.6.1.4.1.21317.1.3.1.2.{#SNMPINDEX}]'
               key: 'sensor.fan.speed.percentage[sensorReading.{#SNMPINDEX}]'
-              units: '%'
+              units: RPM
               description: |
                 MIB: ATEN-IPMI-MIB
                 A textual string containing information about the interface.
@@ -299,6 +299,16 @@ zabbix_export:
               tags:
                 - tag: component
                   value: fan
+          graph_prototypes:
+            - uuid: ef186933667b462db90cb9247f0bd1de
+              name: 'Fans Speed RPM'
+              yaxismax: '0'
+              graph_items:
+                - color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'Supermicro Aten by SNMP'
+                    key: 'sensor.fan.speed.percentage[sensorReading.{#SNMPINDEX}]'
         - uuid: 7c9cd13eb5014e6b970413c88d06ce36
           name: 'HDD Discovery'
           type: SNMP_AGENT
@@ -308,10 +318,11 @@ zabbix_export:
           description: 'MIB:ATEN-IPMI-MIB'
           item_prototypes:
             - uuid: f51b0bd25882414db472f63ca980a586
-              name: 'capacity{#SNMPINDEX}'
+              name: 'capacity disk {#SNMPINDEX}'
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.6.{$SNMPINDEX}'
+              snmp_oid: 'get[1.3.6.1.4.1.21317.1.7.2.1.6.{#SNMPINDEX}]'
               key: 'capacity.[{#SNMPINDEX}]'
+              delay: 1h
               units: GB
               description: |
                 MIB:ATEN-IPMI-MIB
@@ -320,10 +331,11 @@ zabbix_export:
                 - tag: component
                   value: hdd
             - uuid: 43a042588260423abb7f0d5d213f99dc
-              name: 'enclosureNumber{#SNMPINDEX}'
+              name: 'enclosureNumber disk {#SNMPINDEX}'
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.3.{$SNMPINDEX}'
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.3.{#SNMPINDEX}'
               key: 'enclosure.Number.[{#SNMPINDEX}]'
+              delay: 1h
               description: |
                 MIB:ATEN-IPMI-MIB
                 The enclosure that this HDD belongs to.
@@ -331,9 +343,9 @@ zabbix_export:
                 - tag: component
                   value: hdd
             - uuid: 8a73413048ba4ed388bab29f6ccd4532
-              name: 'fwState{#SNMPINDEX}'
+              name: 'fwState disk {#SNMPINDEX}'
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.12.{$SNMPINDEX}'
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.12.{#SNMPINDEX}'
               key: 'fwState.[{#SNMPINDEX}]'
               trends: '0'
               description: |
@@ -357,10 +369,11 @@ zabbix_export:
                 - tag: component
                   value: hdd
             - uuid: bd9c4d7e0e1849c38f8b03ebcf1ae1e6
-              name: 'hddControllerNumber {#SNMPINDEX}'
+              name: 'hddControllerNumber disk {#SNMPINDEX}'
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.2.{$SNMPINDEX}'
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.2.{#SNMPINDEX}'
               key: 'hdd.Controller.Number.[{#SNMPINDEX}]'
+              delay: 1h
               description: |
                 MIB:ATEN-IPMI-MIB
                 The controller that this HDD belongs to.
@@ -370,8 +383,9 @@ zabbix_export:
             - uuid: 5ff9016e690e4cbf974bd8d97a563eb1
               name: 'hddNumber {#SNMPINDEX}'
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.1.{$SNMPINDEX}'
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.1.{#SNMPINDEX}'
               key: 'hdd.number.[{#SNMPINDEX}]'
+              delay: 1h
               description: |
                 MIB:ATEN-IPMI-MIB
                 A unique value, greater than zero, for each HDD.  It
@@ -381,10 +395,11 @@ zabbix_export:
                 - tag: component
                   value: hdd
             - uuid: bf6087ba9d4f4ec6896afd7c80b5d251
-              name: 'linkSpeed{#SNMPINDEX}'
+              name: 'linkSpeed disk {#SNMPINDEX}'
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.11.{$SNMPINDEX}'
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.11.{#SNMPINDEX}'
               key: 'linkSpeed.[{#SNMPINDEX}]'
+              delay: 15m
               trends: '0'
               description: |
                 MIB:ATEN-IPMI-MIB
@@ -400,10 +415,11 @@ zabbix_export:
                 - tag: component
                   value: hdd
             - uuid: 88fd7a68878c4ceab635e54dda2392ce
-              name: 'mediaErrCount{#SNMPINDEX}'
+              name: 'mediaErrCount disk {#SNMPINDEX}'
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.15.{$SNMPINDEX}'
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.15.{#SNMPINDEX}'
               key: 'mediaErrCount.[{#SNMPINDEX}]'
+              delay: 15m
               description: |
                 MIB:ATEN-IPMI-MIB
                 Media error Count of the HDD.
@@ -411,10 +427,11 @@ zabbix_export:
                 - tag: component
                   value: hdd
             - uuid: bd8677b4d34f490a960c41fc392e4cc2
-              name: 'modelName{#SNMPINDEX}'
+              name: 'modelName disk {#SNMPINDEX}'
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.8.{$SNMPINDEX}'
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.8.{#SNMPINDEX}'
               key: 'modelName.[{#SNMPINDEX}]'
+              delay: 1h
               value_type: TEXT
               description: |
                 MIB:ATEN-IPMI-MIB
@@ -423,10 +440,11 @@ zabbix_export:
                 - tag: component
                   value: hdd
             - uuid: 583011227b87429b98cbceb94ed59a11
-              name: 'otherErrCount{#SNMPINDEX}'
+              name: 'otherErrCount disk {#SNMPINDEX}'
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.13.{$SNMPINDEX}'
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.13.{#SNMPINDEX}'
               key: 'otherErrCount.[{#SNMPINDEX}]'
+              delay: 15m
               description: |
                 MIB:ATEN-IPMI-MIB
                 Other error count of the HDD.
@@ -434,10 +452,11 @@ zabbix_export:
                 - tag: component
                   value: hdd
             - uuid: 078f27b546eb41b4a33c4b2d6730baf6
-              name: 'predictedFailCount{#SNMPINDEX}'
+              name: 'predictedFailCount disk {#SNMPINDEX}'
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.14.{$SNMPINDEX}'
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.14.{#SNMPINDEX}'
               key: 'predictedFailCount.[{#SNMPINDEX}]'
+              delay: 15m
               description: |
                 MIB:ATEN-IPMI-MIB
                 Predicted fail count of the HDD.
@@ -445,10 +464,11 @@ zabbix_export:
                 - tag: component
                   value: hdd
             - uuid: 425f8a23dcba4800bd678ee4f2a8d7c5
-              name: 'revision{#SNMPINDEX}'
+              name: 'revision disk {#SNMPINDEX}'
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.9.{$SNMPINDEX}'
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.9.{#SNMPINDEX}'
               key: 'revision.[{#SNMPINDEX}]'
+              delay: 15m
               value_type: TEXT
               description: |
                 MIB:ATEN-IPMI-MIB
@@ -457,10 +477,11 @@ zabbix_export:
                 - tag: component
                   value: hdd
             - uuid: 52d21f01af9e401cb176c04565406dd0
-              name: 'sn{#SNMPINDEX}'
+              name: 'sn disk {#SNMPINDEX}'
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.10.{$SNMPINDEX}'
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.10.{#SNMPINDEX}'
               key: 'sn.[{#SNMPINDEX}]'
+              delay: 15m
               value_type: TEXT
               description: |
                 MIB:ATEN-IPMI-MIB
@@ -468,11 +489,18 @@ zabbix_export:
               tags:
                 - tag: component
                   value: hdd
+              trigger_prototypes:
+                - uuid: 6e48e86e2af74dde8472996e714f59dd
+                  expression: '(last(/Supermicro Aten by SNMP/sn.[{#SNMPINDEX}],#1)<>last(/Supermicro Aten by SNMP/sn.[{#SNMPINDEX}],#2))>0'
+                  name: '{#SNMPVALUE} was changed'
+                  priority: INFO
+                  description: 'Disk was changed'
             - uuid: de55ab4f2a914eaf9748d798a576b3fb
-              name: 'status{#SNMPINDEX}'
+              name: 'status disk {#SNMPINDEX}'
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.4.{$SNMPINDEX}'
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.4.{#SNMPINDEX}'
               key: 'status.[{#SNMPINDEX}]'
+              delay: 15m
               description: |
                 MIB:ATEN-IPMI-MIB
                 Current status of the HDD.
@@ -484,9 +512,9 @@ zabbix_export:
                 - tag: component
                   value: hdd
             - uuid: c0dac8fbe11b4ff68f819a0a81101274
-              name: 'temperature {#SNMPINDEX}'
+              name: 'temperature disk {#SNMPINDEX}'
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.5.{$SNMPINDEX}'
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.5.{#SNMPINDEX}'
               key: 'temperature.[{#SNMPINDEX}]'
               units: °C
               description: |
@@ -495,11 +523,23 @@ zabbix_export:
               tags:
                 - tag: component
                   value: hdd
+              trigger_prototypes:
+                - uuid: 99709e10598643d4b13f1a97a0ae317a
+                  expression: 'avg(/Supermicro Aten by SNMP/temperature.[{#SNMPINDEX}],15)>{$HDD_TEMPERATURE_ALARM}'
+                  name: 'Temperature of HDD  {#SNMPINDEX} is critical for 15m'
+                  priority: HIGH
+                  description: 'Temperature of disk is higher than the threshold for 15 minutes.'
+                - uuid: 53c775414c644596986fc11d3310558f
+                  expression: 'avg(/Supermicro Aten by SNMP/temperature.[{#SNMPINDEX}],15)>{$HDD_TEMPERATURE_ALARM}'
+                  name: 'Temperature of HDD  {#SNMPINDEX} is excessive for 15m'
+                  priority: WARNING
+                  description: 'Temperature of disk is higher than the threshold for 15 minutes.'
             - uuid: b35602d1ead7483c9bc954db6cc7c463
-              name: 'vendor{#SNMPINDEX}'
+              name: 'vendor disk {#SNMPINDEX}'
               type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.7.{$SNMPINDEX}'
+              snmp_oid: '1.3.6.1.4.1.21317.1.7.2.1.7.{#SNMPINDEX}'
               key: 'vendor.[{#SNMPINDEX}]'
+              delay: 1h
               value_type: TEXT
               description: |
                 MIB:ATEN-IPMI-MIB
@@ -507,6 +547,23 @@ zabbix_export:
               tags:
                 - tag: component
                   value: hdd
+          trigger_prototypes:
+            - uuid: 69fc35510e4e480eb9204340d1f1694a
+              expression: 'last(/Supermicro Aten by SNMP/fwState.[{#SNMPINDEX}])<>24 and last(/Supermicro Aten by SNMP/status.[{#SNMPINDEX}])<>1'
+              name: 'Faulty state of HDD {#SNMPINDEX}'
+              opdata: 'Current state: {ITEM.LASTVALUE1}'
+              priority: HIGH
+              manual_close: 'YES'
+          graph_prototypes:
+            - uuid: b9cf918d102049d487662216062f3a1d
+              name: 'HDDS Temperatures'
+              yaxismax: '0'
+              graph_items:
+                - color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'Supermicro Aten by SNMP'
+                    key: 'temperature.[{#SNMPINDEX}]'
         - uuid: c03c556ed8e441099513aaacaf4a3752
           name: 'Temperature Discovery'
           type: SNMP_AGENT
@@ -585,6 +642,16 @@ zabbix_export:
                       value: availability
                     - tag: scope
                       value: performance
+          graph_prototypes:
+            - uuid: d77e8f3985614dfb8c592eaac7e800be
+              name: Temperatures
+              yaxismax: '0'
+              graph_items:
+                - color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'Supermicro Aten by SNMP'
+                    key: 'sensor.temp.value[sensorReading.{#SNMPINDEX}]'
         - uuid: 0dbc93e576ce4a0090db49ba0826590a
           name: 'VOL Discovery'
           type: SNMP_AGENT
@@ -769,6 +836,16 @@ zabbix_export:
               tags:
                 - tag: component
                   value: voltage
+          graph_prototypes:
+            - uuid: 682b6694e08347c890466c08e41a94bd
+              name: Volatages
+              yaxismax: '0'
+              graph_items:
+                - color: 199C0D
+                  calc_fnc: ALL
+                  item:
+                    host: 'Supermicro Aten by SNMP'
+                    key: 'sensor.voltage.v[sensorReading.{#SNMPINDEX}]'
       tags:
         - tag: class
           value: hardware
@@ -777,6 +854,10 @@ zabbix_export:
         - tag: target
           value: supermicro
       macros:
+        - macro: '{$HDD_TEMPERATURE_ALARM}'
+          value: '50'
+        - macro: '{$HD_TEMPERATURE_WARNING}'
+          value: '40'
         - macro: '{$ICMP_LOSS_WARN}'
           value: '20'
           description: 'Warning threshold of ICMP packet loss in %.'
