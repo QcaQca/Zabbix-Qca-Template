@@ -1,0 +1,210 @@
+zabbix_export:
+  version: '7.4'
+  template_groups:
+    - uuid: 70b4225e3807426c8d279a799de3effd
+      name: ssl
+    - uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
+      name: Templates/Applications
+  templates:
+    - uuid: 16e90d0c09ec4b32abcef88ed2e76097
+      template: 'Template SSL Certificate Monitoring with Discovery'
+      name: 'Template SSL Certificate Monitoring with Discovery'
+      groups:
+        - name: ssl
+        - name: Templates/Applications
+      discovery_rules:
+        - uuid: d4f0239b0a28405286fcd41cfaca244e
+          name: 'SSL Certficates'
+          key: ssl_cert_list
+          delay: 1h
+          lifetime: 1d
+          enabled_lifetime_type: DISABLE_NEVER
+          item_prototypes:
+            - uuid: e8bfc5174dcf4f2c82b8db641d1af2bd
+              name: 'SSL cert expiration on [{#IPADDR},{#SSLPORT},{#SSLDOMAIN}]'
+              key: 'ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}]'
+              delay: 1h
+              units: Days
+              tags:
+                - tag: Application
+                  value: ssl_monitoring
+              trigger_prototypes:
+                - uuid: 97304f40c85f47408b83fcc48f3ec8c2
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=0'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 0 days'
+                  event_name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in {ITEM.LASTVALUE} days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: DISASTER
+                - uuid: ed44d4ffca3d467da5e7e4473b8e83c8
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=1'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 1 days'
+                  event_name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in {ITEM.LASTVALUE} days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: DISASTER
+                - uuid: e07979ea374e4c9182c1ea5620c065f4
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=2'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 2 days'
+                  event_name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in {ITEM.LASTVALUE} days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: DISASTER
+                - uuid: 6b5ded9848e24757820cc78d310b607a
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=3'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 3 days'
+                  event_name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in {ITEM.LASTVALUE} days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: HIGH
+                - uuid: 4a497bafc1514c2183b6bdcccda3cc54
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=4'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 4 days'
+                  event_name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in {ITEM.LASTVALUE} days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: HIGH
+                - uuid: e52f5524c5164d44a42b9b1e8db29a00
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=5'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 5 days'
+                  event_name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in {ITEM.LASTVALUE} days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: HIGH
+                - uuid: 6c6dff4c5c2d408a81e7af7182d077fc
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=6'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 6 days'
+                  event_name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in {ITEM.LASTVALUE} days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: HIGH
+                - uuid: 53af81c4655746d5bc435d1842860e22
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=7'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 7 days'
+                  event_name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in {ITEM.LASTVALUE} days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: HIGH
+                - uuid: 1bbf3a2e785444259f5baee574157f41
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=8'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 8 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: 9b3fae20222a4e55a560337eef022750
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=9'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 9 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: 0b37a0b1be37494b9eb1d320bc33062f
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=10'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 10 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: 61f4e5b157584f7587c2b2d4dbbba76f
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=11'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 11 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: 41fdb9e1e8b64c8f811e5d20fc9870d4
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=12'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 12 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: 1514afffc5df4261b16575885ab0a2f6
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=13'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 13 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: a73ee508037449688de3179e83a5e04b
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=14'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 14 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: f22f4e50154b44ed98549aaa69dbf97d
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=15'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 15 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: 5bc2466524b4433db08ad9a9a5a92062
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=16'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 16 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: 368147f5d0444721a606eaa4fdb488d4
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=17'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 17 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: bf8f391d448f41af92eed92975f7f4ea
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=18'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 18 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: 661c9d8d10ac49d7a6b26d36ce5687e6
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=19'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 19 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: e162e3cc6db54e02af485ea9275909a3
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=20'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 20 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: f0f1fc6d2b1f4d5ab1545b9c19884ba4
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=21'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 21 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: 243a78decf324f70a5b0c5046c57dda1
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=22'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 22 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: bccc26eddf3349fe896b41444e8d9273
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=23'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 23 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: 4ff504f03dc541419492c89f24b43d3a
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=24'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 24 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: af5ee1b7b885421e89221b6ac7b6cc3a
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=25'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 25 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: ba9e6b111b3646dab77fe1b444cd498f
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=26'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 26 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: ce5d273256064165a6d338018d436a79
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=27'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 27 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: c851f1cc058b4f84b6f2a5afe41a574b
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=28'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 28 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: 8f3c885145c047849a87b9f4a0c24bac
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])=29'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 29 days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  priority: AVERAGE
+                - uuid: d9d4dc285ef349699a5c456682218fda
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])<60 and last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_expire[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])>31'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in 31-60 days'
+                  event_name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} expires in {ITEM.LASTVALUE2} days'
+                  opdata: 'Days: {ITEM.LASTVALUE2} ({ITEM.LASTVALUE1})'
+                  status: DISABLED
+                  priority: INFO
+                  manual_close: 'YES'
+            - uuid: 691eaee700d647a7b4a4fec53066979a
+              name: 'SSL cert validity on [{#IPADDR},{#SSLPORT},{#SSLDOMAIN}]'
+              key: 'ssl_cert_check_valid[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}]'
+              delay: 1h
+              tags:
+                - tag: Application
+                  value: ssl_monitoring
+              trigger_prototypes:
+                - uuid: 31a9b9c7107240ef8f047cd3bd09f98f
+                  expression: 'last(/Template SSL Certificate Monitoring with Discovery/ssl_cert_check_valid[{#IPADDR},{#SSLPORT},{#SSLDOMAIN},{#TIMEOUT}])<>1'
+                  name: 'SSL Certificate for {#SSLDOMAIN} on {#IPADDR}:{#SSLPORT} is invalid'
+                  priority: DISASTER
+                  manual_close: 'YES'
