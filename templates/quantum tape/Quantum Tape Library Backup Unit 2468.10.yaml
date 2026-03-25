@@ -1,1 +1,878 @@
 
+zabbix_export:
+  version: '7.4'
+  template_groups:
+    - uuid: 357667219cde4e2fb8d1b215503ece4b
+      name: Templates/DiskArray
+  templates:
+    - uuid: 335a915fe09d46af80c6fc54a427e642
+      template: 'Quantum Tape Library Backup Unit 2468.10'
+      name: 'Quantum Tape Library Backup Unit 2468.10'
+      description: |
+        ## Description
+        
+        Quantum Tape Library Backup unit 24681.10
+        
+        ## Overview
+        
+        Monitor Template Tape Library Backup Unit
+        
+        ## piotr.koltowski@gmail.com
+        https://github.com/QcaQca/Zabbix-Qca-Template
+      groups:
+        - name: Templates/DiskArray
+      items:
+        - uuid: 07747ac7697940bd8798548e3c18bdb2
+          name: connectivityStatus
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.3764.1.10.10.12.4.0
+          key: connectivityStatus.0
+          trends: '0'
+          description: |
+            MIB:ADIC-TAPE-LIBRARY-MIB
+            Indicates overall connectivity Status
+            good (1)
+            failed (2)
+            degraded (3)
+            warning (4)
+            informational (5)
+            unknown (6)
+            invalid (7)
+          valuemap:
+            name: rasSubSystemStatus
+          tags:
+            - tag: component
+              value: rasSubSystem
+        - uuid: 479bf6dfcba840f8b4f6a77d58989e35
+          name: controlStatus
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.3764.1.10.10.12.3.0
+          key: controlStatus.0
+          trends: '0'
+          description: |
+            MIB:ADIC-TAPE-LIBRARY-MIB
+            Indicate overall control subsystem status.
+            good (1)
+            failed (2)
+            degraded (3)
+            warning (4)
+            informational (5)
+            unknown (6)
+            invalid (7)
+          valuemap:
+            name: rasSubSystemStatus
+          tags:
+            - tag: component
+              value: rasSubSystem
+        - uuid: aa5066698148469c854d67f3c07678a0
+          name: coolingStatus
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.3764.1.10.10.12.2.0
+          key: coolingStatus.0
+          trends: '0'
+          description: |
+            MIB:ADIC-TAPE-LIBRARY-MIB
+            Indicates overall cooling fans Status.
+            good (1)
+            failed (2)
+            degraded (3)
+            warning (4)
+            informational (5)
+            unknown (6)
+            invalid (7)
+          valuemap:
+            name: rasSubSystemStatus
+          tags:
+            - tag: component
+              value: rasSubSystem
+        - uuid: 524b00db334d4fba8744d24eb60a7d51
+          name: driveStatus
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.3764.1.10.10.12.7.0
+          key: driveStatus.0
+          trends: '0'
+          description: |
+            MIB:ADIC-TAPE-LIBRARY-MIB
+            Indicates overall drive Status
+            good (1)
+            failed (2)
+            degraded (3)
+            warning (4)
+            informational (5)
+            unknown (6)
+            invalid (7)
+          valuemap:
+            name: rasSubSystemStatus
+          tags:
+            - tag: component
+              value: rasSubSystem
+        - uuid: 5cfb34310ceb4ebf9e8dfec68acd4728
+          name: libraryDescription
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.3764.1.10.10.1.6.0
+          key: libraryDescription.0
+          value_type: TEXT
+          description: |
+            MIB:ADIC-TAPE-LIBRARY-MIB
+            Description of Library.
+          tags:
+            - tag: component
+              value: system
+        - uuid: bc0b1460abaf45f99bec2390bf884f81
+          name: libraryFirmwareVersion
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.3764.1.10.10.1.11.0
+          key: libraryFirmwareVersion.0
+          value_type: TEXT
+          description: |
+            MIB:ADIC-TAPE-LIBRARY-MIB
+            Library firmware version.
+          tags:
+            - tag: component
+              value: system
+        - uuid: 2e1208906f014d5db2ad82e452b9fa99
+          name: libraryGlobalStatus
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.3764.1.10.10.1.8.0
+          key: libraryGlobalStatus.0
+          trends: '0'
+          description: |
+            MIB:ADIC-TAPE-LIBRARY-MIB
+            Current status of the entire library system (including all attached drive).
+            good (1)
+            failed (2)
+            degraded (3)
+            warning (4)
+            informational (5)
+            unknown (6)
+            invalid (7)
+          valuemap:
+            name: libraryGlobalStatus
+          tags:
+            - tag: component
+              value: system
+        - uuid: ebdb2f43caa04c83af7a05768a9ad684
+          name: libraryIpAddress
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.3764.1.10.10.1.1.0
+          key: libraryIpAddress.0
+          value_type: TEXT
+          description: |
+            MIB:ADIC-TAPE-LIBRARY-MIB
+            The IP address of this SNMP agent.  If the library has only an IPV4 address, or both an IPV4 and an IPV6 address, the the IP address is displayed in IPV4 format (xxx.xxx.xxx.xxx).  If the library only has an IPV6 address, then it will report an IPV6 address.
+          tags:
+            - tag: component
+              value: system
+        - uuid: 9ed803da50804619ad1e6e86dc0a5dc8
+          name: libraryModel
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.3764.1.10.10.1.7.0
+          key: libraryModel.0
+          value_type: TEXT
+          description: |
+            MIB:ADIC-TAPE-LIBRARY-MIB
+            Model of the Library.
+          tags:
+            - tag: component
+              value: system
+        - uuid: 7df47b52b60c4c248026e96104af8786
+          name: libraryName
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.3764.1.10.10.1.3.0
+          key: libraryName.0
+          value_type: TEXT
+          description: |
+            MIB:ADIC-TAPE-LIBRARY-MIB
+            The host name for the system hosting the SNMP agent.
+          tags:
+            - tag: component
+              value: system
+        - uuid: d3866d2b88b54c43b40b6c22eae94eb7
+          name: libraryProductName
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.3764.1.10.10.1.10.0
+          key: libraryProductName.0
+          value_type: TEXT
+          description: |
+            MIB:ADIC-TAPE-LIBRARY-MIB
+            Product name of the library.
+          tags:
+            - tag: component
+              value: system
+        - uuid: 875cddc046594357be86005810bbd8f1
+          name: librarySerialNumber
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.3764.1.10.10.1.4.0
+          key: librarySerialNumber.0
+          value_type: TEXT
+          description: |
+            MIB:ADIC-TAPE-LIBRARY-MIB
+            Library Serial Number.
+          inventory_link: SERIALNO_A
+          tags:
+            - tag: component
+              value: system
+        - uuid: 0386bb8f415343c388d6db7d3185933f
+          name: librarySNMPAgentDescription
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.3764.1.10.10.1.2.0
+          key: librarySNMPAgentDescription.0
+          value_type: TEXT
+          description: |
+            MIB:ADIC-TAPE-LIBRARY-MIB
+            Description of the library SNMP agent.
+          tags:
+            - tag: component
+              value: system
+        - uuid: 123a160982a844f689f269cd2cc40eca
+          name: libraryURL
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.3764.1.10.10.1.9.0
+          key: libraryURL.0
+          value_type: TEXT
+          description: |
+            MIB:ADIC-TAPE-LIBRARY-MIB
+            URL of the library's management application.
+          tags:
+            - tag: component
+              value: system
+        - uuid: 61f024b22eaf4a9c8bbef458c18dd64e
+          name: libraryVendor
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.3764.1.10.10.1.4.0
+          key: libraryVendor.0
+          value_type: TEXT
+          description: |
+            MIB:ADIC-TAPE-LIBRARY-MIB
+            Name of Library vendor
+          tags:
+            - tag: component
+              value: system
+        - uuid: 77f386426b054f589b3ee9fc7aec0104
+          name: mediaStatus
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.3764.1.10.10.12.6.0
+          key: mediaStatus.0
+          trends: '0'
+          description: |
+            MIB:ADIC-TAPE-LIBRARY-MIB
+            Indicates overall media Status
+            good (1)
+            failed (2)
+            degraded (3)
+            warning (4)
+            informational (5)
+            unknown (6)
+            invalid (7)
+          valuemap:
+            name: rasSubSystemStatus
+          tags:
+            - tag: component
+              value: rasSubSystem
+        - uuid: b56b7910ab024293aa21c67d1486f22a
+          name: operatorActionRequest
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.3764.1.10.10.12.8.0
+          key: operatorActionRequest.0
+          trends: '0'
+          description: |
+            MIB:ADIC-TAPE-LIBRARY-MIB
+            yes, if operator Action is required.
+            yes (1)
+            no (2)
+          valuemap:
+            name: operatorActionRequest
+          tags:
+            - tag: component
+              value: rasSubSystem
+        - uuid: 1d567b9ea023460782753eea8da6bf14
+          name: powerStatus
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.3764.1.10.10.12.1.0
+          key: powerStatus.0
+          trends: '0'
+          description: |
+            MIB:ADIC-TAPE-LIBRARY-MIB
+            Indicates overall power supply Status
+            good (1)
+            failed (2)
+            degraded (3)
+            warning (4)
+            informational (5)
+            unknown (6)
+            invalid (7)
+          valuemap:
+            name: rasSubSystemStatus
+          tags:
+            - tag: component
+              value: rasSubSystem
+        - uuid: bfd38ba6c0bb4daa8c215d1b92d76d9f
+          name: roboticsStatus
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.3764.1.10.10.12.5.0
+          key: roboticsStatus.0
+          trends: '0'
+          description: |
+            MIB:ADIC-TAPE-LIBRARY-MIB
+            Indicates overall robotics Status
+            good (1)
+            failed (2)
+            degraded (3)
+            warning (4)
+            informational (5)
+            unknown (6)
+            invalid (7)
+          valuemap:
+            name: rasSubSystemStatus
+          tags:
+            - tag: component
+              value: rasSubSystem
+      discovery_rules:
+        - uuid: 1c972279609448a3bccc3d5d3e97d6f7
+          name: Discovery
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#DRIVELOCATION},1.3.6.1.4.1.3764.1.10.10.11.3.1.6]'
+          key: discovery
+          delay: 12h
+          description: 'MIB:ADIC-TAPE-LIBRARY-MIB'
+          item_prototypes:
+            - uuid: 64542b368a134d5cab3f18e6367d9c6d
+              name: phDriveFirmwareVersion
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.11.3.1.7.{#SNMPINDEX}'
+              key: 'phDriveFirmwareVersion.[{#SNMPINDEX}]'
+              delay: 1h
+              value_type: TEXT
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Device firmware level as would be reported in a SCSI Inquiry command.
+              tags:
+                - tag: component
+                  value: Drive
+            - uuid: 351157acd03d4c148d9632def75fab22
+              name: phDriveInterfaceType
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.11.3.1.13.{#SNMPINDEX}'
+              key: 'phDriveInterfaceType.[{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Interface Type of the drive.
+                scsi (1)
+                fibreChannel (2)
+                sas (3)
+                iscsi (4)
+              valuemap:
+                name: phDriveInterfaceType
+              tags:
+                - tag: component
+                  value: Drive
+            - uuid: 181570eb05a9416a97384956d2c0292f
+              name: phDriveLibrarySerialNumber
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.11.3.1.9.{#SNMPINDEX}'
+              key: 'phDriveLibrarySerialNumber.[{#SNMPINDEX}]'
+              delay: 1h
+              value_type: TEXT
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Serial Number of the library that this drive is in as reported in SCSI Inquiry command,
+              tags:
+                - tag: component
+                  value: Drive
+            - uuid: 7c02336eeb03411b979bb8f8a2e904e9
+              name: phDriveLoads
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.11.3.1.16.{#SNMPINDEX}'
+              key: 'phDriveLoads.[{#SNMPINDEX}]'
+              delay: 1h
+              value_type: TEXT
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Total cartridge loads for the drive.
+              tags:
+                - tag: component
+                  value: Drive
+            - uuid: d4c3805982114b20ba1d5a19e1a7f14c
+              name: phDriveLocation
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.11.3.1.4.{#SNMPINDEX}'
+              key: 'phDriveLocation.[{#SNMPINDEX}]'
+              delay: 1h
+              value_type: TEXT
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Location of the Drive in the Library
+              tags:
+                - tag: component
+                  value: Drive
+            - uuid: e985d5f9db724b43830efca0b542ce0e
+              name: phDriveLogicalLibraryName
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.11.3.1.8.{#SNMPINDEX}'
+              key: 'phDriveLogicalLibraryName.[{#SNMPINDEX}]'
+              delay: 1h
+              value_type: TEXT
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Name of the logical library (partition) to which this physical drive is associated.
+                If the drive is not associated with a logical library, this field will be blank.
+              tags:
+                - tag: component
+                  value: Drive
+            - uuid: 521f4627140f4a1b99369d290158547d
+              name: phDriveModel
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.11.3.1.3.{#SNMPINDEX}'
+              key: 'phDriveModel.[{#SNMPINDEX}]'
+              delay: 1h
+              value_type: TEXT
+              description: 'Device Model as would be reported in a SCSI Inquiry command.'
+              tags:
+                - tag: component
+                  value: Drive
+            - uuid: adb1c379f01a44f7913436e874c77825
+              name: phDriveNeedsCleaning
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.11.3.1.12.{#SNMPINDEX}'
+              key: 'phDriveNeedsCleaning.[{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Cleaning status of the Drive.
+                required (1)
+                notRequired (2)
+                immediate (3)
+              valuemap:
+                name: phDriveNeedsCleaning
+              tags:
+                - tag: component
+                  value: Drive
+            - uuid: 34c7eb8667c84ca28bfd3c3184845279
+              name: phDrivePhysicalSerialNumber
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.11.3.1.17.{#SNMPINDEX}'
+              key: 'phDrivePhysicalSerialNumber.[{#SNMPINDEX}]'
+              delay: 1h
+              value_type: TEXT
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Physical Drive serial number.
+              tags:
+                - tag: component
+                  value: Drive
+            - uuid: 8266067401db4e0b8441dd8c74ff7933
+              name: phDriveRasStatus
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.11.3.1.11.{#SNMPINDEX}'
+              key: 'phDriveRasStatus.[{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Drive health status.
+                good (1)
+                failed (2)
+                degraded (3)
+                warning (4)
+                informational (5)
+                unknown (6)
+                invalid (7)
+              valuemap:
+                name: phDriveRasStatus
+              tags:
+                - tag: component
+                  value: Drive
+            - uuid: 06fcbe60c19c45c1be817417fb1b2718
+              name: phDriveScsiId
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.11.3.1.15.{#SNMPINDEX}'
+              key: 'phDriveScsiId.[{#SNMPINDEX}]'
+              delay: 1h
+              value_type: TEXT
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                SCSI ID of the device.
+              tags:
+                - tag: component
+                  value: Drive
+            - uuid: 0dcfa99e14c94982a20bb930cdd09993
+              name: phDriveScsiLun
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.11.3.1.14.{#SNMPINDEX}'
+              key: 'phDriveScsiLun.[{#SNMPINDEX}]'
+              delay: 1h
+              value_type: TEXT
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                SCSI Lun of the device.
+              tags:
+                - tag: component
+                  value: Drive
+            - uuid: 189916ab348f438380ba0d79d16808c7
+              name: phDriveSerialNumber
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.11.3.1.2.{#SNMPINDEX}'
+              key: 'phDriveSerialNumber.[{#SNMPINDEX}]'
+              delay: 1h
+              value_type: TEXT
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Device serial number as reported in SCSI Inquiry command.
+              tags:
+                - tag: component
+                  value: Drive
+            - uuid: 4bc88518f9b7483aa92754c563add678
+              name: phDriveState
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.11.3.1.10.{#SNMPINDEX}'
+              key: 'phDriveState.[{#SNMPINDEX}]'
+              delay: 1h
+              trends: '0'
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Device SCSI State.
+                online (1)
+                onlinePending (2)
+                offline (3)
+                offlinePending (4)
+                shutdownPending (5)
+              valuemap:
+                name: phDriveState
+              tags:
+                - tag: component
+                  value: Drive
+            - uuid: 29cbc8fed75d4440a9fb84e2bdfd2356
+              name: phDriveType
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.11.3.1.5.{#SNMPINDEX}'
+              key: 'phDriveType.[{#SNMPINDEX}]'
+              delay: 1h
+              value_type: TEXT
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Drive generation type.
+              tags:
+                - tag: component
+                  value: Drive
+            - uuid: 7d6da8310a6e4453be58a289858dba7d
+              name: phDriveVendor
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.11.3.1.4.{#SNMPINDEX}'
+              key: 'phDriveVendor.[{#SNMPINDEX}]'
+              delay: 1h
+              value_type: TEXT
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Device Vendor as would be reported in a SCSI Inquiry command.
+              tags:
+                - tag: component
+                  value: Drive
+        - uuid: 58abe44697e54986bcd6481806e835a6
+          name: 'Discovery Logical Library'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#LOGICALLIBRARIES},1.3.6.1.4.1.3764.1.10.10.13.1]'
+          key: discovery.logical.libraries
+          delay: 12h
+          description: 'MIB:ADIC-TAPE-LIBRARY-MIB'
+          item_prototypes:
+            - uuid: ef6d0c26004749d9bcb3e6c9a87bb45f
+              name: logicalLibraryAssignedLun
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.13.2.1.5.{#LOGICALLIBRARIES}'
+              key: 'logicalLibraryAssignedLun.[{#LOGICALLIBRARIES}]'
+              trends: '0'
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Assigned LUN of this library's (virtual) SCSI media                             changer.
+              tags:
+                - tag: component
+                  value: 'logical Library'
+            - uuid: 23da81a4736144f6a645a40b0513635a
+              name: logicalLibraryChangerDeviceAddr
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.13.2.1.15.{#LOGICALLIBRARIES}'
+              key: 'logicalLibraryChangerDeviceAddr.[{#LOGICALLIBRARIES}]'
+              trends: '0'
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                First Medium Transport Element Address.
+              tags:
+                - tag: component
+                  value: 'logical Library'
+            - uuid: 90c5b253d905435989cd8def3adcc1f2
+              name: logicalLibraryIEElemAddr
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.13.2.1.13.{#LOGICALLIBRARIES}'
+              key: 'logicalLibraryIEElemAddr.[{#LOGICALLIBRARIES}]'
+              trends: '0'
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                First Import/Export Element Address of the partition.
+              tags:
+                - tag: component
+                  value: 'logical Library'
+            - uuid: 5e5099f7a6764f0ab061e9d493fd6aad
+              name: logicalLibraryIndex
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.13.2.1.1.{#LOGICALLIBRARIES}'
+              key: 'logicalLibraryIndex.[{#LOGICALLIBRARIES}]'
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Table entry index value. Each unique partition has a unique partitionIndex.
+              tags:
+                - tag: component
+                  value: 'logical Library'
+            - uuid: 070fa08657104925ac55bfae65425a66
+              name: logicalLibraryMediaDomain
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.13.2.1.6.{#LOGICALLIBRARIES}'
+              key: 'logicalLibraryMediaDomain.[{#LOGICALLIBRARIES}]'
+              value_type: TEXT
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Supported Media Domain.
+              tags:
+                - tag: component
+                  value: 'logical Library'
+            - uuid: 72dc636e22ec46979753701cd0e1d551
+              name: logicalLibraryModel
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.13.2.1.4.{#LOGICALLIBRARIES}'
+              key: 'logicalLibraryModel.[{#LOGICALLIBRARIES}]'
+              value_type: TEXT
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Logical Library Model
+              tags:
+                - tag: component
+                  value: 'logical Library'
+            - uuid: 876e7f3b77cd4b61b79aa7d690d17ec0
+              name: logicalLibraryName
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.13.2.1.2.{#LOGICALLIBRARIES}'
+              key: 'logicalLibraryName.[{#LOGICALLIBRARIES}]'
+              value_type: TEXT
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Logical Library Name
+              tags:
+                - tag: component
+                  value: 'logical Library'
+            - uuid: 06e33985099847ddb52be83e43dc3053
+              name: logicalLibraryNumIE
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.13.2.1.10.{#LOGICALLIBRARIES}'
+              key: 'logicalLibraryNumIE.[{#LOGICALLIBRARIES}]'
+              trends: '0'
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Number of Import/Export Elements.
+              tags:
+                - tag: component
+                  value: 'logical Library'
+            - uuid: 1a19684c0d0c442e8d66beb194eb5bd4
+              name: logicalLibraryNumSlots
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.13.2.1.9.{#LOGICALLIBRARIES}'
+              key: 'logicalLibraryNumSlots.[{#LOGICALLIBRARIES}]'
+              trends: '0'
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Number of Storage Elements.
+              tags:
+                - tag: component
+                  value: 'logical Library'
+            - uuid: 2cde09ab35824b52951c111abd24fd52
+              name: logicalLibraryNumTapeDrives
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.13.2.1.11.{#LOGICALLIBRARIES}'
+              key: 'logicalLibraryNumTapeDrives.[{#LOGICALLIBRARIES}]'
+              trends: '0'
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Number of tape drives in the partition.
+              tags:
+                - tag: component
+                  value: 'logical Library'
+            - uuid: c7f3edbfdc4b4306bf8ac4fecd18dad5
+              name: logicalLibrarySerialNumber
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.13.2.1.3.{#LOGICALLIBRARIES}'
+              key: 'logicalLibrarySerialNumber.[{#LOGICALLIBRARIES}]'
+              value_type: TEXT
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Logical Library Serial Number
+              tags:
+                - tag: component
+                  value: 'logical Library'
+            - uuid: a56170f8c5e8468499eaa40ee1a2e0bf
+              name: logicalLibraryState
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.13.2.1.8.{#LOGICALLIBRARIES}'
+              key: 'logicalLibraryState.[{#LOGICALLIBRARIES}]'
+              trends: '0'
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Status of logical library.
+                online (1)
+                onlinePending (2)
+                offline (3)
+                offlinePending (4)
+                shutdownPending (5)
+              valuemap:
+                name: logicalLibraryState
+              tags:
+                - tag: component
+                  value: 'logical Library'
+            - uuid: 05bce53f7d2e40b8abcc54a9675ba396
+              name: logicalLibraryStorageElemAddr
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.13.2.1.12.{#LOGICALLIBRARIES}'
+              key: 'logicalLibraryStorageElemAddr.[{#LOGICALLIBRARIES}]'
+              trends: '0'
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                First Storage Element Address of the partition.
+              tags:
+                - tag: component
+                  value: 'logical Library'
+            - uuid: 517e41b19ecb4b999fcd30354a481c56
+              name: logicalLibrarySupportedMediaTypes
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.13.2.1.7.{#LOGICALLIBRARIES}'
+              key: 'logicalLibrarySupportedMediaTypes.[{#LOGICALLIBRARIES}]'
+              value_type: TEXT
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                Supported Media Types.
+              tags:
+                - tag: component
+                  value: 'logical Library'
+            - uuid: 09c44b4b04d841a79c38df7ffe2bb0e6
+              name: logicalLibraryTapeDriveElemAddr
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.3764.1.10.10.13.2.1.14.{#LOGICALLIBRARIES}'
+              key: 'logicalLibraryTapeDriveElemAddr.[{#LOGICALLIBRARIES}]'
+              trends: '0'
+              description: |
+                MIB:ADIC-TAPE-LIBRARY-MIB
+                First Data Transfer Element Address of the partition.
+              tags:
+                - tag: component
+                  value: 'logical Library'
+      tags:
+        - tag: class
+          value: hardware
+        - tag: model
+          value: i500
+        - tag: target
+          value: quantum
+      valuemaps:
+        - uuid: 9d63c75301e740fda1156db296137d04
+          name: libraryGlobalStatus
+          mappings:
+            - value: '1'
+              newvalue: good
+            - value: '2'
+              newvalue: failed
+            - value: '3'
+              newvalue: degraded
+            - value: '4'
+              newvalue: warning
+            - value: '5'
+              newvalue: informational
+            - value: '6'
+              newvalue: unknown
+            - value: '7'
+              newvalue: invalid
+        - uuid: 5c550ca14b164b308b57cb297f0854a7
+          name: logicalLibraryState
+          mappings:
+            - value: '1'
+              newvalue: online
+            - value: '2'
+              newvalue: onlinePending
+            - value: '3'
+              newvalue: offline
+            - value: '4'
+              newvalue: offlinePending
+            - value: '5'
+              newvalue: shutdownPending
+        - uuid: 3610056112aa4ca08c5e0546d320d3ae
+          name: operatorActionRequest
+          mappings:
+            - value: '1'
+              newvalue: 'yes'
+            - value: '2'
+              newvalue: 'no'
+        - uuid: e5fb66d5f6d749f3b7a1a764b47f7e69
+          name: phDriveInterfaceType
+          mappings:
+            - value: '1'
+              newvalue: scsi
+            - value: '2'
+              newvalue: fibreChannel
+            - value: '3'
+              newvalue: sas
+            - value: '4'
+              newvalue: iscsi
+        - uuid: 637f9b6d51e94fa39a82735355d6af3d
+          name: phDriveNeedsCleaning
+          mappings:
+            - value: '1'
+              newvalue: required
+            - value: '2'
+              newvalue: notRequired
+            - value: '3'
+              newvalue: immediate
+        - uuid: 30ad5968243d4b5a8b9640fb210fe917
+          name: phDriveRasStatus
+          mappings:
+            - value: '1'
+              newvalue: good
+            - value: '2'
+              newvalue: failed
+            - value: '3'
+              newvalue: degraded
+            - value: '4'
+              newvalue: warning
+            - value: '5'
+              newvalue: informational
+            - value: '6'
+              newvalue: unknown
+            - value: '7'
+              newvalue: invalid
+        - uuid: df2d4e578ec845c38c0456bd550acbf8
+          name: phDriveState
+          mappings:
+            - value: '1'
+              newvalue: online
+            - value: '2'
+              newvalue: onlinePending
+            - value: '3'
+              newvalue: offline
+            - value: '4'
+              newvalue: offlinePending
+            - value: '5'
+              newvalue: shutdownPending
+        - uuid: 3e1df9ad71a0407592145e4e36f5da2a
+          name: rasSubSystemStatus
+          mappings:
+            - value: '1'
+              newvalue: good
+            - value: '2'
+              newvalue: failed
+            - value: '3'
+              newvalue: degraded
+            - value: '4'
+              newvalue: warning
+            - value: '5'
+              newvalue: informational
+            - value: '6'
+              newvalue: unknown
+            - value: '7'
+              newvalue: invalid
