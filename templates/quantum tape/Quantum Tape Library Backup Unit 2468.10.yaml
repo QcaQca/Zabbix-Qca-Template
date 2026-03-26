@@ -42,6 +42,12 @@ zabbix_export:
           tags:
             - tag: component
               value: rasSubSystem
+          triggers:
+            - uuid: d85c3e7a07ff4c0d9424fa8f7368cd72
+              expression: 'last(/Quantum Tape Library Backup Unit 2468.10/connectivityStatus.0)<>1'
+              name: 'TapeLibrary Conectivity Status NOT OK'
+              opdata: '{ITEM.LASTVALUE1}'
+              priority: AVERAGE
         - uuid: 479bf6dfcba840f8b4f6a77d58989e35
           name: controlStatus
           type: SNMP_AGENT
@@ -63,6 +69,12 @@ zabbix_export:
           tags:
             - tag: component
               value: rasSubSystem
+          triggers:
+            - uuid: 75fe31b4df6947cbb7ee61132c8f803e
+              expression: 'last(/Quantum Tape Library Backup Unit 2468.10/controlStatus.0)<>1'
+              name: 'TapeLibrary Control Status NOT OK'
+              opdata: '{ITEM.LASTVALUE1}'
+              priority: AVERAGE
         - uuid: aa5066698148469c854d67f3c07678a0
           name: coolingStatus
           type: SNMP_AGENT
@@ -84,6 +96,12 @@ zabbix_export:
           tags:
             - tag: component
               value: rasSubSystem
+          triggers:
+            - uuid: ad4ed727c1954fc1b653401e945589ad
+              expression: 'last(/Quantum Tape Library Backup Unit 2468.10/coolingStatus.0)<>1'
+              name: 'TapeLibrary Cooling Status NOT OK'
+              opdata: '{ITEM.LASTVALUE1}'
+              priority: AVERAGE
         - uuid: 524b00db334d4fba8744d24eb60a7d51
           name: driveStatus
           type: SNMP_AGENT
@@ -105,6 +123,12 @@ zabbix_export:
           tags:
             - tag: component
               value: rasSubSystem
+          triggers:
+            - uuid: b02de99bf10b442da20668f5b8b4113c
+              expression: 'last(/Quantum Tape Library Backup Unit 2468.10/driveStatus.0)<>1'
+              name: 'TapeLibrary Drive Status NOT OK'
+              opdata: '{ITEM.LASTVALUE1}'
+              priority: AVERAGE
         - uuid: 5cfb34310ceb4ebf9e8dfec68acd4728
           name: libraryDescription
           type: SNMP_AGENT
@@ -129,6 +153,12 @@ zabbix_export:
           tags:
             - tag: component
               value: system
+          triggers:
+            - uuid: b4c73313e2794e35b2511fcb43ca3302
+              expression: 'last(/Quantum Tape Library Backup Unit 2468.10/libraryFirmwareVersion.0,#1)<>last(/Quantum Tape Library Backup Unit 2468.10/libraryFirmwareVersion.0,#2)'
+              name: 'TapeLibrary Drive-Firmware Changed'
+              opdata: '{ITEM.LASTVALUE1}'
+              priority: INFO
         - uuid: 2e1208906f014d5db2ad82e452b9fa99
           name: libraryGlobalStatus
           type: SNMP_AGENT
@@ -150,6 +180,12 @@ zabbix_export:
           tags:
             - tag: component
               value: system
+          triggers:
+            - uuid: ae9611c70a6e448b8ad7beb2ada57e94
+              expression: 'last(/Quantum Tape Library Backup Unit 2468.10/libraryGlobalStatus.0)<>1'
+              name: 'TapeLibrary Global Status NOT OK'
+              opdata: '{ITEM.LASTVALUE1}'
+              priority: AVERAGE
         - uuid: ebdb2f43caa04c83af7a05768a9ad684
           name: libraryIpAddress
           type: SNMP_AGENT
@@ -268,6 +304,12 @@ zabbix_export:
           tags:
             - tag: component
               value: rasSubSystem
+          triggers:
+            - uuid: f9f25535e8a944feb93abc2336c406cb
+              expression: 'last(/Quantum Tape Library Backup Unit 2468.10/mediaStatus.0)<>1'
+              name: 'TapeLibrary Media Status NOT OK'
+              opdata: '{ITEM.LASTVALUE1}'
+              priority: AVERAGE
         - uuid: b56b7910ab024293aa21c67d1486f22a
           name: operatorActionRequest
           type: SNMP_AGENT
@@ -284,6 +326,12 @@ zabbix_export:
           tags:
             - tag: component
               value: rasSubSystem
+          triggers:
+            - uuid: 3379e073dd8642efa166831d6a7da5fe
+              expression: 'last(/Quantum Tape Library Backup Unit 2468.10/operatorActionRequest.0)=1'
+              name: 'operator Action Requeston on {$HOSTNAME}'
+              opdata: '{ITEM.LASTVALUE1}'
+              priority: AVERAGE
         - uuid: 1d567b9ea023460782753eea8da6bf14
           name: powerStatus
           type: SNMP_AGENT
@@ -305,6 +353,12 @@ zabbix_export:
           tags:
             - tag: component
               value: rasSubSystem
+          triggers:
+            - uuid: a52febedab134dfdb4cc330c04dfa347
+              expression: 'last(/Quantum Tape Library Backup Unit 2468.10/powerStatus.0)<>1'
+              name: 'TapeLibrary Power Status NOT OK'
+              opdata: '{ITEM.LASTVALUE1}'
+              priority: AVERAGE
         - uuid: bfd38ba6c0bb4daa8c215d1b92d76d9f
           name: roboticsStatus
           type: SNMP_AGENT
@@ -326,6 +380,12 @@ zabbix_export:
           tags:
             - tag: component
               value: rasSubSystem
+          triggers:
+            - uuid: a5b33f7af5964cb28ca50ba6714233da
+              expression: 'last(/Quantum Tape Library Backup Unit 2468.10/roboticsStatus.0)<>1'
+              name: 'TapeLibrary Robot Status NOT OK'
+              opdata: '{ITEM.LASTVALUE1}'
+              priority: AVERAGE
       discovery_rules:
         - uuid: 1c972279609448a3bccc3d5d3e97d6f7
           name: 'Discovery Physical Drive'
@@ -1065,6 +1125,11 @@ zabbix_export:
               tags:
                 - tag: component
                   value: 'physical library'
+              trigger_prototypes:
+                - uuid: 5a329cfab5c24b489aa1a16c87618c2e
+                  expression: 'last(/Quantum Tape Library Backup Unit 2468.10/physicalLibraryState.[{#SNMPINDEX}])<>1'
+                  name: 'TapeLibrary Physical Library Status NOT OK'
+                  priority: AVERAGE
             - uuid: e41e28705b42429f811a56989d12e9a2
               name: robotState
               type: SNMP_AGENT
@@ -1078,6 +1143,11 @@ zabbix_export:
               tags:
                 - tag: component
                   value: 'physical library'
+              trigger_prototypes:
+                - uuid: 3173c00ea23442dba7940112808925e1
+                  expression: 'last(/Quantum Tape Library Backup Unit 2468.10/robotState.[{#SNMPINDEX}])<>1'
+                  name: 'TapeLibrary Robot Library Status NOT OK'
+                  priority: AVERAGE
       tags:
         - tag: class
           value: hardware
