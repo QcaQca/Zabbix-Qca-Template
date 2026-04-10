@@ -42,6 +42,7 @@ zabbix_export:
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.17.1.1.{#SNMPINDEX}'
               key: 'batteryClusterNode.[{#SNMPINDEX}]'
+              delay: 1h
               description: |
                 MIB:BLUEARC-SERVER-MIB
                 The ID of the cluster code in which the battery is located.
@@ -53,6 +54,7 @@ zabbix_export:
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.4.1.11096.6.1.1.1.2.1.17.1.2.{#SNMPINDEX}'
               key: 'batteryIndex.[{#SNMPINDEX}]'
+              delay: 1h
               description: |
                 MIB:BLUEARC-SERVER-MIB
                 A unique value for each battery on a cluster node.
@@ -86,11 +88,92 @@ zabbix_export:
                 - tag: component
                   value: diskarray
               trigger_prototypes:
-                - uuid: f732ef367bf84038a0f78df925d022a0
-                  expression: 'last(/Hitachi Cluster NAS 11096/batteryStatus.[{#SNMPINDEX}])<>1'
-                  name: 'Hitachi :Battery [{#batteryClusterNode}]: Critical state'
+                - uuid: 6772d5395b0349e3a8b1318999dc76fd
+                  expression: 'last(/Hitachi Cluster NAS 11096/batteryStatus.[{#SNMPINDEX}])=11'
+                  name: 'Hitachi :Battery [{#batteryClusterNode}]: ignore this battery'
                   opdata: 'Current state: {ITEM.LASTVALUE1}'
                   priority: AVERAGE
+                  description: 'Please check the device battery for faults.'
+                  tags:
+                    - tag: scope
+                      value: availability
+                - uuid: 1e1a61d00e5c412fb3ec09c318799f96
+                  expression: 'last(/Hitachi Cluster NAS 11096/batteryStatus.[{#SNMPINDEX}])=9'
+                  name: 'Hitachi :Battery [{#batteryClusterNode}]:  the battery charge is low'
+                  opdata: 'Current state: {ITEM.LASTVALUE1}'
+                  priority: AVERAGE
+                  description: 'Please check the device battery for faults.'
+                  tags:
+                    - tag: scope
+                      value: availability
+                - uuid: bf86e96aa4a04819ae0027bc8bfed96c
+                  expression: 'last(/Hitachi Cluster NAS 11096/batteryStatus.[{#SNMPINDEX}])=10'
+                  name: 'Hitachi :Battery [{#batteryClusterNode}]: the battery charge is very low'
+                  opdata: 'Current state: {ITEM.LASTVALUE1}'
+                  priority: AVERAGE
+                  description: 'Please check the device battery for faults.'
+                  tags:
+                    - tag: scope
+                      value: availability
+                - uuid: 3fa924d44d274546bb405ea80b8400f4
+                  expression: 'last(/Hitachi Cluster NAS 11096/batteryStatus.[{#SNMPINDEX}])=2'
+                  name: 'Hitachi :Battery [{#batteryClusterNode}]: the battery has a fault'
+                  opdata: 'Current state: {ITEM.LASTVALUE1}'
+                  priority: HIGH
+                  description: 'Please check the device battery for faults.'
+                  tags:
+                    - tag: scope
+                      value: availability
+                - uuid: 12d948700c034676b3115f33c5f67b94
+                  expression: 'last(/Hitachi Cluster NAS 11096/batteryStatus.[{#SNMPINDEX}])=5'
+                  name: 'Hitachi :Battery [{#batteryClusterNode}]: the battery is charging normally'
+                  opdata: 'Current state: {ITEM.LASTVALUE1}'
+                  priority: INFO
+                  description: 'Please check the device battery for faults.'
+                  tags:
+                    - tag: scope
+                      value: availability
+                - uuid: 349c0dfd0163435c87deadef12bfc28a
+                  expression: 'last(/Hitachi Cluster NAS 11096/batteryStatus.[{#SNMPINDEX}])=6'
+                  name: 'Hitachi :Battery [{#batteryClusterNode}]: the battery is discharged'
+                  opdata: 'Current state: {ITEM.LASTVALUE1}'
+                  priority: INFO
+                  description: 'Please check the device battery for faults.'
+                  tags:
+                    - tag: scope
+                      value: availability
+                - uuid: fbc4ad986b064ad6859e180b360525d0
+                  expression: 'last(/Hitachi Cluster NAS 11096/batteryStatus.[{#SNMPINDEX}])=4'
+                  name: 'Hitachi :Battery [{#batteryClusterNode}]:  the battery is initializing'
+                  opdata: 'Current state: {ITEM.LASTVALUE1}'
+                  priority: INFO
+                  description: 'Please check the device battery for faults.'
+                  tags:
+                    - tag: scope
+                      value: availability
+                - uuid: 3e4b18242d6e496ca4937319b739ef69
+                  expression: 'last(/Hitachi Cluster NAS 11096/batteryStatus.[{#SNMPINDEX}])=3'
+                  name: 'Hitachi :Battery [{#batteryClusterNode}]: the battery is not fitted'
+                  opdata: 'Current state: {ITEM.LASTVALUE1}'
+                  priority: AVERAGE
+                  description: 'Please check the device battery for faults.'
+                  tags:
+                    - tag: scope
+                      value: availability
+                - uuid: 1f612230eaa64641aeae5265e30d22b5
+                  expression: 'last(/Hitachi Cluster NAS 11096/batteryStatus.[{#SNMPINDEX}])=8'
+                  name: 'Hitachi :Battery [{#batteryClusterNode}]: the battery is not responding'
+                  opdata: 'Current state: {ITEM.LASTVALUE1}'
+                  priority: AVERAGE
+                  description: 'Please check the device battery for faults.'
+                  tags:
+                    - tag: scope
+                      value: availability
+                - uuid: 23541b9cb4cc4139b99ce19ddf2ffb10
+                  expression: 'last(/Hitachi Cluster NAS 11096/batteryStatus.[{#SNMPINDEX}])=7'
+                  name: 'Hitachi :Battery [{#batteryClusterNode}]:  the battery is testing itself'
+                  opdata: 'Current state: {ITEM.LASTVALUE1}'
+                  priority: INFO
                   description: 'Please check the device battery for faults.'
                   tags:
                     - tag: scope
