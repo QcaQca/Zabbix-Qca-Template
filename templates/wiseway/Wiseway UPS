@@ -1,1 +1,1565 @@
 
+zabbix_export:
+  version: '7.4'
+  template_groups:
+    - uuid: 3dcd5bbe90534f9e8eb5c2d53756af63
+      name: Templates/Power
+  templates:
+    - uuid: a79c58b23d4142b2b118683ec57e27ab
+      template: 'Wiseway UPS'
+      name: 'Wiseway UPS'
+      description: |
+        ## Overview
+        UPS
+        1.3.6.1.4.1.44782
+        Repalce macro {$SNMP_COMMUNITY} with your snmp community
+        https://github.com/QcaQca/Zabbix-Qca-Template
+        ## Piotr
+      groups:
+        - name: Templates/Power
+      items:
+        - uuid: 4247deea4952448b93f4a460a693baf2
+          name: 'Uptime (network)'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.1.3.0
+          key: 'system.net.uptime[sysUpTime.0]'
+          delay: 30s
+          history: 2w
+          trends: '0'
+          units: uptime
+          description: |
+            MIB: SNMPv2-MIB
+            The time (in hundredths of a second) since the network management
+            portion of the system was last re-initialized.
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            - tag: component
+              value: system
+        - uuid: dba97b07319d4952bf988bb73276dc2d
+          name: ups1batteryInstallationReplacementTime
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.44782.1.4.4.1.9.0
+          key: system.ups1batteryInstallationReplacementTime
+          delay: 1h
+          history: 90d
+          value_type: TEXT
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            - tag: component
+              value: inventory
+        - uuid: 47103b56e71946cd8db993ffbd9c1a2e
+          name: ups1installationTime
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.44782.1.4.4.1.6.0
+          key: system.ups1installationTime
+          delay: 1h
+          history: 90d
+          value_type: TEXT
+          inventory_link: SERIALNO_A
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            - tag: component
+              value: inventory
+        - uuid: 6e119413e7a44498b57e8f5118db93f6
+          name: ups1maintenanceExpirationTime
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.44782.1.4.4.1.8.0
+          key: system.ups1maintenanceExpirationTime
+          delay: 1h
+          history: 90d
+          value_type: TEXT
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            - tag: component
+              value: inventory
+        - uuid: d5bab63a33104e3c9fe4478d6351c8ec
+          name: 1batteryChargingAndDischargingCurrent.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.44782.1.4.4.1.20.0
+          key: ups1batteryChargingAndDischargingCurrent.0
+          delay: '30'
+          history: 90d
+          value_type: FLOAT
+          units: A
+          tags:
+            - tag: Application
+              value: battery
+        - uuid: fc31fffaa1144aaca00202103771edd6
+          name: 'UPS battery temperature'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.44782.1.4.4.1.21.0
+          key: ups1batteryTemperature
+          history: 90d
+          value_type: FLOAT
+          units: °C
+          description: 'MIB: kehua.mib'
+          tags:
+            - tag: Application
+              value: Operational
+          triggers:
+            - uuid: aca75fed700f44699c61f19ccb5325a6
+              expression: 'last(/Wiseway UPS/ups1batteryTemperature)>{$UPSADVBATTERYTEMPERATURE}'
+              name: 'High battery temperature on {HOST.NAME}'
+              priority: HIGH
+        - uuid: 323364bcd6b64074a59fa90942ab1f10
+          name: ups1batteryTimeRemaining.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.44782.1.4.4.1.17.0
+          key: ups1batteryTimeRemaining.0
+          delay: '30'
+          history: 90d
+          description: 'MIB:'
+        - uuid: 3e31bb4c0ff84cacbf079287be065fb1
+          name: ups1batteryVoltage.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.44782.1.4.4.1.19.0
+          key: ups1batteryVoltage.0
+          delay: '30'
+          history: 90d
+          value_type: FLOAT
+          units: V
+          description: 'MIB: kehua.mib'
+          tags:
+            - tag: Application
+              value: battery
+        - uuid: f42fb22fd2e14f79a8829c9beaec220d
+          name: ups1bypassUPhaseVoltage.1
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.44782.1.4.4.1.27.0
+          key: ups1bypassUPhaseVoltage.1
+          delay: '30'
+          history: 90d
+          value_type: FLOAT
+          units: V
+          description: 'MIB: kehua.mib'
+          tags:
+            - tag: Application
+              value: bypass
+        - uuid: 2aedb50d364540cab958d8b6d539f64f
+          name: ups1inputUPhaseVoltage.1
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.44782.1.4.4.1.27.0
+          key: ups1inputUPhaseVoltage.1
+          delay: '30'
+          history: 90d
+          value_type: FLOAT
+          units: V
+          description: 'MIB: kehua.mib'
+          tags:
+            - tag: Application
+              value: Input
+          triggers:
+            - uuid: a445640eb0ab410f84a87d0ef74588cb
+              expression: 'min(/Wiseway UPS/ups1inputUPhaseVoltage.1,{$TIME.PERIOD}) > 0 and (min(/Wiseway UPS/ups1inputUPhaseVoltage.1,{$TIME.PERIOD}) > {$UPS.INPUT_VOLT.MAX.WARN} or max(/Wiseway UPS/ups1inputUPhaseVoltage.1,{$TIME.PERIOD}) < {$UPS.INPUT_VOLT.MIN.WARN})'
+              name: 'Unacceptable input voltage'
+              event_name: 'Unacceptable input voltage (out of range {$UPS.INPUT_VOLT.MIN.WARN}-{$UPS.INPUT_VOLT.MAX.WARN}V for {$TIME.PERIOD})'
+              opdata: 'Current voltage: {ITEM.LASTVALUE1}'
+              priority: HIGH
+              tags:
+                - tag: scope
+                  value: notice
+        - uuid: 7b7b7daa9e554c8da5ad711722ff6fad
+          name: ups1outputUPhaseActivePower
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.44782.1.4.4.1.48.0
+          key: ups1outputUPhaseCurrent.1
+          delay: '30'
+          history: 90d
+          value_type: FLOAT
+          units: W
+          tags:
+            - tag: Application
+              value: Output
+        - uuid: df9f6fb59e8c4405be28a615baf5a86c
+          name: ups1outputUPhaseVoltage.1
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.44782.1.4.4.1.42.0
+          key: ups1outputUPhaseVoltage.1
+          delay: '30'
+          history: 90d
+          value_type: FLOAT
+          units: V
+          description: 'MIB: kehua.mib'
+          tags:
+            - tag: Application
+              value: Output
+        - uuid: 06c9948c29c3434094b0816f649fcfdf
+          name: ups1powerSupplyMode.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.44782.1.4.4.1.39.0
+          key: ups1powerSupplyMode.0
+          delay: '30'
+          history: 90d
+          description: 'MIB:'
+          valuemap:
+            name: 'Wiseway::ups1powerSupplyMode'
+          tags:
+            - tag: Application
+              value: Config
+        - uuid: f4bc4359756c43e3b1a27e25f55c6152
+          name: 'upsBattery Voltage (missing decimal after first digit)ups'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.2.5.0
+          key: upsAdvBatteryVoltage
+          history: 90d
+          value_type: FLOAT
+          units: VAC
+          description: |
+            MIB:UPS-MIB
+            The magnitude of the present battery voltage.
+          tags:
+            - tag: Application
+              value: Battery
+            - tag: Application
+              value: Operational
+        - uuid: ecc73ca273b34749919c86c0bb509cc2
+          name: 'UPS input power'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.3.3.1.5.1
+          key: upsAdvInputPower
+          history: 90d
+          value_type: FLOAT
+          units: W
+          description: |
+            MIB:UPS-MIB
+            The magnitude of the present input true power.
+          tags:
+            - tag: Application
+              value: Operational
+        - uuid: d2a8ebe043a8498e8b6874fd631340cb
+          name: 'UPS run time remaining'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.2.3.0
+          key: upsAdvRunTimeRemaining
+          history: 90d
+          units: m
+          description: |
+            MIB:UPS-MIB
+            An estimate of the time to battery charge depletion
+            under the present load conditions if the utility power
+            is off and remains off, or if it were to be lost and
+            remain off.
+          tags:
+            - tag: Application
+              value: Operational
+          triggers:
+            - uuid: f0d3767869814c32914eb61438700aa7
+              expression: 'last(/Wiseway UPS/upsAdvRunTimeRemaining)<5'
+              name: 'Run time remaining CRITICAL on {HOST.NAME}'
+              priority: DISASTER
+            - uuid: 61292ab0793e41e2a13e586b92d3805d
+              expression: 'last(/Wiseway UPS/upsAdvRunTimeRemaining)<10'
+              name: 'Run time remaining LOW on {HOST.NAME}'
+              priority: HIGH
+        - uuid: 1b17adc486124e90b08d78ce5477c1eb
+          name: upsAlarmsPresent.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.6.1.0
+          key: upsAlarmsPresent.0
+          delay: '30'
+          history: 90d
+          description: |
+            MIB:UPS-MIB
+            The present number of active alarm conditions.
+          preprocessing:
+            - type: RTRIM
+              parameters:
+                - ':'
+          triggers:
+            - uuid: fc98be4ae69e4c78bfc752e675a1d969
+              expression: 'last(/Wiseway UPS/upsAlarmsPresent.0)>0'
+              name: 'alarm on UPS'
+              priority: HIGH
+        - uuid: e83123cc75ce4ca799c77b1c93b12b5c
+          name: 'xppx upsBaseBatteryStatus.0'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.935.1.1.1.2.1.1.0
+          key: upsBaseBatteryStatus.0
+          delay: '30'
+          history: 90d
+          value_type: FLOAT
+          description: |
+            MIB:XPPC-MIB
+            The status of the UPS batteries.  A batteryLow(3)
+            value indicates the UPS will be unable to sustain the
+            current load, and its services will be lost if power is
+            not restored.  The amount of run time in reserve at the
+            time of low battery can be configured by the
+            upsSmartConfigLowBatteryRunTime.
+          valuemap:
+            name: 'XPPC:upsBaseBatteryStatus'
+          tags:
+            - tag: Application
+              value: battery
+        - uuid: df07ec9d43ea4e36810bf68eb688482b
+          name: 'xppx upsBaseBatteryTimeOnBattery.0'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.935.1.1.1.2.1.2.0
+          key: upsBaseBatteryTimeOnBattery.0
+          delay: '30'
+          history: 90d
+          value_type: FLOAT
+          description: |
+            MIB:XPPC-MIB
+            The elapsed time in seconds since the UPS has switched
+            to battery power.
+          tags:
+            - tag: Application
+              value: battery
+        - uuid: be0b717f37ac4fba8828235342ea4268
+          name: 'xppc upsBaseOutputStatus.0'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.935.1.1.1.4.1.1.0
+          key: upsBaseOutputStatus.0
+          delay: '30'
+          history: 90d
+          description: |
+            MIB:XPPC-MIB
+            The current state of the UPS.  If the UPS is unable
+            to determine the state of the UPS this variable is set
+            to unknown(1).
+          valuemap:
+            name: 'XPPC:upsBaseOutputStatus'
+          tags:
+            - tag: Application
+              value: Output
+        - uuid: 92c91f76be7f4c6ca963d85646e3656e
+          name: upsBatteryStatus.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.44782.1.4.4.1.16.0
+          key: upsBatteryStatus.0
+          delay: '30'
+          history: 90d
+          description: 'MIB:'
+          valuemap:
+            name: 'Wiseway::upsBasicBatteryStatus'
+          triggers:
+            - uuid: 343404feed5a4fceb10929374b2c9c95
+              expression: 'last(/Wiseway UPS/upsBatteryStatus.0)=4'
+              name: 'Battery has an internal error condition'
+              priority: AVERAGE
+              description: 'A battery installed has an internal error condition.'
+              tags:
+                - tag: scope
+                  value: notice
+            - uuid: 1a70a4a8c3dd493ca2f5d0c14e072c5f
+              expression: 'last(/Wiseway UPS/upsBatteryStatus.0)=3'
+              name: 'Battery is Low'
+              priority: AVERAGE
+              description: 'The UPS will be unable to sustain the current load, and its services will be lost if power is not restored.'
+              tags:
+                - tag: scope
+                  value: capacity
+            - uuid: 1e3a234eca124e12af1128cf7bdb742a
+              expression: 'last(/Wiseway UPS/upsBatteryStatus.0)=3'
+              name: 'The battery power is too low to support the load on {HOST.NAME}'
+              priority: DISASTER
+        - uuid: 8eeb96b29d9b403dbd9ec53e74a3a645
+          name: upsBypassFrequency.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.44782.1.4.4.1.57.0
+          key: upsBypassFrequency.0
+          delay: '30'
+          history: 90d
+          value_type: FLOAT
+          units: Hz
+          description: 'MIB:'
+          tags:
+            - tag: Application
+              value: Operational
+        - uuid: 91f3a734a718499b8458d9ce395ef56b
+          name: upsBypassLineIndex.1
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.5.3.1.1.1
+          key: upsBypassLineIndex.1
+          delay: '30'
+          history: 90d
+          description: |
+            MIB:UPS-MIB
+            The bypass line identifier.
+        - uuid: 9bd2336c67044aa39cf929163b6af9c0
+          name: upsBypassNumLines.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.5.2.0
+          key: upsBypassNumLines.0
+          delay: '30'
+          history: 90d
+          description: |
+            MIB:UPS-MIB
+            The number of bypass lines utilized in this device.
+            This entry indicates the number of rows in the bypass
+            table.
+        - uuid: 6bbd782710654bee9d4ea517e984745c
+          name: upsBypassVoltage.1
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.44782.1.4.4.1.59.0
+          key: upsBypassVoltage.1
+          delay: '30'
+          history: 90d
+          units: V
+          description: |
+            MIB:
+            The present bypass voltage.
+          tags:
+            - tag: Application
+              value: bypass
+        - uuid: 3bfc22bfa57d4181aa3f019f7d824d89
+          name: upsConfigAudibleStatus.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.9.8.0
+          key: upsConfigAudibleStatus.0
+          delay: '30'
+          history: 90d
+          description: |
+            MIB:UPS-MIB
+            The requested state of the audible alarm.  When in
+            the disabled state, the audible alarm should never
+            sound.  The enabled state is self-describing.  Setting
+            this object to muted(3) when the audible alarm is
+            sounding shall temporarily silence the alarm.  It will
+            remain muted until it would normally stop sounding and
+            the value returned for read operations during this
+            period shall equal muted(3).  At the end of this
+            period, the value shall revert to enabled(2).  Writes
+            of the value muted(3) when the audible alarm is not
+            sounding shall be accepted but otherwise shall have no
+            effect.
+          valuemap:
+            name: upsConfigAudibleStatus
+          tags:
+            - tag: Application
+              value: Config
+        - uuid: b244b735da434151b65c0e0841c67d6a
+          name: upsConfigHighVoltageTransferPoint.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.9.10.0
+          key: upsConfigHighVoltageTransferPoint.0
+          delay: '30'
+          history: 90d
+          units: V
+          description: |
+            MIB:UPS-MIB
+            The maximum line voltage allowed before the UPS
+            system transfers to battery backup.
+          tags:
+            - tag: Application
+              value: Config
+        - uuid: 6d291fc9a207401d9392ed22dbe58439
+          name: upsConfigInputFreq.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.9.2.0
+          key: upsConfigInputFreq.0
+          delay: '30'
+          history: 90d
+          value_type: FLOAT
+          units: Hz
+          description: |
+            MIB:UPS-MIB
+            The nominal input frequency.  On those systems which
+            support read-write access to this object, if there is
+            an attempt to set this variable to a value that is not
+            supported, the request must be rejected and the agent
+            shall respond with an appropriate error message, i.e.,
+            badValue for SNMPv1, or inconsistentValue for SNMPv2.
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            - tag: Application
+              value: Config
+        - uuid: f2d6718dac824b86a2386012eefb8254
+          name: upsConfigInputVoltage.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.9.1.0
+          key: upsConfigInputVoltage.0
+          delay: '30'
+          history: 90d
+          units: V
+          description: |
+            MIB:UPS-MIB
+            The magnitude of the nominal output voltage.  On
+            those systems which support read-write access to this
+            object, if there is an attempt to set this variable to
+            a value that is not supported, the request must be
+            rejected and the agent shall respond with an
+            appropriate error message, i.e., badValue for SNMPv1,
+            or inconsistentValue for SNMPv2.
+          tags:
+            - tag: Application
+              value: Config
+        - uuid: 3534432fff6045c9907fb0f39cdf3a14
+          name: upsConfigLowBattTime.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.9.7.0
+          key: upsConfigLowBattTime.0
+          delay: '30'
+          history: 90d
+          description: |
+            MIB:UPS-MIB
+            The value of upsEstimatedMinutesRemaining at which a
+            lowBattery condition is declared.  For agents which
+            support only discrete (discontinuous) values, then the
+            agent shall round up to the next supported value.  If
+            the requested value is larger than the largest
+            supported value, then the largest supported value
+            shall be selected.
+          tags:
+            - tag: Application
+              value: Config
+        - uuid: d08ce4f2c4d3465f97a7051271f93809
+          name: upsConfigLowVoltageTransferPoint.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.9.9.0
+          key: upsConfigLowVoltageTransferPoint.0
+          delay: '30'
+          history: 90d
+          units: V
+          description: |
+            MIB:UPS-MIB
+            The minimum input line voltage allowed before the UPS
+            system transfers to battery backup.
+          tags:
+            - tag: Application
+              value: Config
+        - uuid: 443e9dcb446e4010aaae0d75163fe852
+          name: upsConfigOutputFreq.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.9.4.0
+          key: upsConfigOutputFreq.0
+          delay: '30'
+          history: 90d
+          value_type: FLOAT
+          units: Hz
+          description: |
+            MIB:UPS-MIB
+            The nominal output frequency.  On those systems which
+            support read-write access to this object, if there is
+            an attempt to set this variable to a value that is not
+            supported, the request must be rejected and the agent
+            shall respond with an appropriate error message, i.e.,
+            badValue for SNMPv1, or inconsistentValue for SNMPv2.
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            - tag: Application
+              value: Config
+        - uuid: 7de4bb2c122e40889de8af66e521483f
+          name: upsConfigOutputVA.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.9.5.0
+          key: upsConfigOutputVA.0
+          delay: '30'
+          history: 90d
+          units: VA
+          description: |
+            MIB:UPS-MIB
+            The magnitude of the nominal Volt-Amp rating.
+          tags:
+            - tag: Application
+              value: Config
+        - uuid: 04a6c2d6fc27419da7831f3cd3755af7
+          name: upsConfigOutputVoltage.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.9.3.0
+          key: upsConfigOutputVoltage.0
+          delay: '30'
+          history: 90d
+          units: V
+          description: |
+            MIB:UPS-MIB
+            The magnitude of the nominal output voltage.  On
+            those systems which support read-write access to this
+            object, if there is an attempt to set this variable to
+            a value that is not supported, the request must be
+            rejected and the agent shall respond with an
+            appropriate error message, i.e., badValue for SNMPv1,
+            or inconsistentValue for SNMPv2.
+          tags:
+            - tag: Application
+              value: Config
+        - uuid: 88381dc8f31845f9ad930b3fdea11565
+          name: upsEstimatedChargeRemaining.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.2.4.0
+          key: upsEstimatedChargeRemaining.0
+          delay: '30'
+          history: 90d
+          units: '%'
+          description: |
+            MIB:UPS-MIB
+            An estimate of the battery charge remaining expressed
+            as a percent of full charge.
+        - uuid: b80b19d998234d1bbe3226d6b244668e
+          name: upsIdentAgentSoftwareVersion.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.1.4.0
+          key: upsIdentAgentSoftwareVersion.0
+          delay: '86400'
+          history: 90d
+          value_type: TEXT
+          description: |
+            MIB:UPS-MIB
+            The UPS agent software version.  This variable may or
+            may not have the same value as
+            upsIdentUPSSoftwareVersion in some implementations.
+          tags:
+            - tag: Application
+              value: System
+        - uuid: 4e4bdc67da9840209d477f2d21023759
+          name: upsIdentAttachedDevices.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.1.6.0
+          key: upsIdentAttachedDevices.0
+          delay: '86400'
+          history: 90d
+          value_type: TEXT
+          description: |
+            MIB:UPS-MIB
+            A string identifying the devices attached to the
+            output(s) of the UPS.  This object should be set by
+            the administrator.
+          tags:
+            - tag: Application
+              value: System
+        - uuid: 25c71302492241b6a054a69c95c69176
+          name: upsIdentManufacturer.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.1.1.0
+          key: upsIdentManufacturer.0
+          delay: '86400'
+          history: 90d
+          value_type: TEXT
+          description: |
+            MIB:UPS-MIB
+            The name of the UPS manufacturer.
+          tags:
+            - tag: Application
+              value: System
+        - uuid: 37d4b9e617ad4c718e604f74e9916eab
+          name: upsIdentModel.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.1.2.0
+          key: upsIdentModel.0
+          delay: '86400'
+          history: 90d
+          value_type: TEXT
+          description: |
+            MIB:UPS-MIB
+            The name of the UPS manufacturer.
+          inventory_link: MODEL
+          tags:
+            - tag: Application
+              value: System
+        - uuid: 5444273cc7b7455ab507f653c7376bf1
+          name: upsIdentName.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.1.5.0
+          key: upsIdentName.0
+          delay: '86400'
+          history: 90d
+          value_type: TEXT
+          description: |
+            MIB:UPS-MIB
+            A string identifying the UPS.  This object should be
+            set by the administrator.
+          inventory_link: NAME
+          tags:
+            - tag: Application
+              value: System
+          triggers:
+            - uuid: beef9ca753f34330848cf228169c4ea7
+              expression: 'last(/Wiseway UPS/upsIdentName.0,#1)<>last(/Wiseway UPS/upsIdentName.0,#2) and length(last(/Wiseway UPS/upsIdentName.0))>0'
+              name: 'System name has changed'
+              event_name: 'System name has changed (new name: {ITEM.VALUE})'
+              priority: INFO
+              description: 'System name has changed. Ack to close.'
+              tags:
+                - tag: scope
+                  value: notice
+                - tag: scope
+                  value: security
+        - uuid: c558bb59153b44a9b3ba5866ac5b77d8
+          name: upsIdentUPSSoftwareVersion.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.1.3.0
+          key: upsIdentUPSSoftwareVersion.0
+          delay: '30'
+          history: 90d
+          value_type: TEXT
+          description: |
+            MIB:UPS-MIB
+            The UPS firmware/software version(s).  This variable
+            may or may not have the same value as
+            upsIdentAgentSoftwareVersion in some implementations.
+          tags:
+            - tag: Application
+              value: System
+        - uuid: 7f7a9ea30388499895ec66de1c64207c
+          name: upsInputFrequency.1
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.44782.1.4.4.1.24.0
+          key: upsInputFrequency.1
+          delay: '30'
+          history: 90d
+          value_type: FLOAT
+          units: Hz
+          description: |
+            MIB:
+            The present input frequency.
+          tags:
+            - tag: Application
+              value: Input
+          triggers:
+            - uuid: b97dcbea68c043a98e29706e6868d18b
+              expression: 'min(/Wiseway UPS/upsInputFrequency.1,{$TIME.PERIOD}) > 0 and (min(/Wiseway UPS/upsInputFrequency.1,{$TIME.PERIOD}) > {$UPS.INPUT_FREQ.MAX.WARN} or max(/Wiseway UPS/upsInputFrequency.1,{$TIME.PERIOD}) < {$UPS.INPUT_FREQ.MIN.WARN})'
+              name: 'Unacceptable input frequency'
+              event_name: 'Unacceptable input frequency (out of range {$UPS.INPUT_FREQ.MIN.WARN}-{$UPS.INPUT_FREQ.MAX.WARN}Hz for {$TIME.PERIOD})'
+              opdata: 'Current frequency: {ITEM.LASTVALUE1}'
+              priority: HIGH
+              tags:
+                - tag: Application
+                  value: Config
+        - uuid: 3b012a6ac79b4edc8388bd0e492ad11c
+          name: upsInputLineBads.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.3.1.0
+          key: upsInputLineBads.0
+          delay: '30'
+          history: 90d
+          description: 'MIB:'
+          preprocessing:
+            - type: SIMPLE_CHANGE
+          tags:
+            - tag: Application
+              value: Input
+        - uuid: 9564230db67c415bad9f39d6e8f4168f
+          name: upsInputNumLines.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.3.2.0
+          key: upsInputNumLines.0
+          delay: '30'
+          history: 90d
+          description: |
+            MIB:UPS-MIB
+            The number of input lines utilized in this device.
+            This variable indicates the number of rows in the
+            input table.
+          tags:
+            - tag: Application
+              value: Input
+        - uuid: 5ff2d3d45c14496081e4975d0739978a
+          name: upsOutputFrequency.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.44782.1.4.4.1.40.0
+          key: upsOutputFrequency.0
+          delay: '30'
+          history: 90d
+          value_type: FLOAT
+          units: Hz
+          description: 'MIB:'
+          tags:
+            - tag: Application
+              value: Output
+        - uuid: 150962f593234798ace7b9a3e15101c9
+          name: upsOutputLineIndex.1
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.4.4.1.1.1
+          key: upsOutputLineIndex.1
+          delay: '30'
+          history: 90d
+          description: |
+            MIB:UPS-MIB
+            The output line identifier.
+          tags:
+            - tag: Application
+              value: Output
+        - uuid: 74f472776c6249a48f3ac66511ca6aa9
+          name: upsOutputNumLines.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.4.3.0
+          key: upsOutputNumLines.0
+          delay: '30'
+          history: 90d
+          description: |
+            MIB:UPS-MIB
+            The number of output lines utilized in this device.
+            This variable indicates the number of rows in the
+            output table.
+          tags:
+            - tag: Application
+              value: Output
+        - uuid: 6663c8e1df2444de8874dd786a28f4b3
+          name: upsOutputPercentLoad.1
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.44782.1.4.4.1.51.0
+          key: upsOutputPercentLoad.1
+          delay: '30'
+          history: 90d
+          units: '%'
+          description: |
+            MIB:
+            The percentage of the UPS power capacity presently
+            being used on this output line, i.e., the greater of
+            the percent load of true power capacity and the
+            percent load of VA.
+          tags:
+            - tag: Application
+              value: Output
+          triggers:
+            - uuid: 1857dbbda5334e6ba41ba18fe46795e9
+              expression: 'min(/Wiseway UPS/upsOutputPercentLoad.1,{$TIME.PERIOD}) > {$UPS.OUTPUT.MAX.CRIT}'
+              name: 'Output load is crit'
+              event_name: 'Output load is high (over {$UPS.OUTPUT.MAX.CRIT}% for {$TIME.PERIOD})'
+              opdata: 'Current load: {ITEM.LASTVALUE1}'
+              priority: HIGH
+              description: 'A battery installed has an internal error condition.'
+              tags:
+                - tag: scope
+                  value: notice
+            - uuid: 439a3bf5ccdd4904b0c9b23b6a9fcf60
+              expression: 'min(/Wiseway UPS/upsOutputPercentLoad.1,{$TIME.PERIOD}) > {$UPS.OUTPUT.MAX.WARN}'
+              name: 'Output load is high'
+              event_name: 'Output load is high (over {$UPS.OUTPUT.MAX.WARN}% for {$TIME.PERIOD})'
+              opdata: 'Current load: {ITEM.LASTVALUE1}'
+              priority: AVERAGE
+              description: 'A battery installed has an internal error condition.'
+              tags:
+                - tag: scope
+                  value: notice
+        - uuid: c9fe35b0998b4706abf0b0efbc9249ca
+          name: upsOutputPower.1
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.33.1.4.4.1.4.1
+          key: upsOutputPower.1
+          delay: '30'
+          history: 90d
+          units: W
+          description: |
+            MIB:UPS-MIB
+            The present output true power.
+          tags:
+            - tag: Application
+              value: Output
+        - uuid: 92392ba0807d4e1d90149c733de8d23d
+          name: upsOutputSource.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.4.1.0
+          key: upsOutputSource.0
+          delay: '30'
+          history: 90d
+          description: |
+            MIB:UPS-MIB
+            The present source of output power.  The enumeration
+            none(2) indicates that there is no source of output
+            power (and therefore no output power), for example,
+            the system has opened the output breaker.
+          valuemap:
+            name: 'Wiseway::upsOutputSource'
+          tags:
+            - tag: Application
+              value: Output
+        - uuid: 836044a02ea14a6e9109ad346dfb865a
+          name: 'UPS time on battery'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.33.1.2.2.0
+          key: upsSecondsOnBattery
+          history: 90d
+          units: s
+          description: |
+            MIB:UPS-MIB
+            If the unit is on battery power, the elapsed time
+            since the UPS last switched to battery power, or the
+            time since the network management subsystem was last
+            restarted, whichever is less.  Zero shall be returned
+            if the unit is not on battery power.
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            - tag: Application
+              value: Operational
+        - uuid: 352bf29e50714d1ca062d6dc73de72ba
+          name: upsSecondsOnBattery.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.2.2.0
+          key: upsSecondsOnBattery.0
+          delay: '30'
+          history: 90d
+          description: |
+            MIB:UPS-MIB
+            If the unit is on battery power, the elapsed time
+            since the UPS last switched to battery power, or the
+            time since the network management subsystem was last
+            restarted, whichever is less.  Zero shall be returned
+            if the unit is not on battery power.
+        - uuid: 1d93193fa4a24875be5a4775d664db64
+          name: upsShutdownAfterDelay.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.8.2.0
+          key: upsShutdownAfterDelay.0
+          delay: '30'
+          history: 90d
+          description: |
+            MIB:UPS-MIB
+            Setting this object will shutdown (i.e., turn off)
+            either the UPS output or the UPS system (as determined
+            by the value of upsShutdownType at the time of
+            shutdown) after the indicated number of seconds, or
+            less if the UPS batteries become depleted. Setting
+            this object to 0 will cause the shutdown to occur
+            immediately.  Setting this object to -1 will abort the
+            countdown.  If the system is already in the desired
+            state at the time the countdown reaches 0, then
+            nothing will happen.  That is, there is no additional
+            action at that time if upsShutdownType = system and
+            the system is already off.  Similarly, there is no
+            additional action at that time if upsShutdownType =
+            output and the output is already off.  When read,
+            upsShutdownAfterDelay will return the number of
+            seconds remaining until shutdown, or -1 if no shutdown
+            countdown is in effect.  On some systems, if the agent
+            is restarted while a shutdown countdown is in effect,
+            the countdown may be aborted.  Sets to this object
+            override any upsShutdownAfterDelay already in effect.
+        - uuid: 1fbc7ec876ad4992a2ad8055a4e18bc3
+          name: upsShutdownType.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.8.1.0
+          key: upsShutdownType.0
+          delay: '30'
+          history: 90d
+          description: |
+            MIB:UPS-MIB
+            This object determines the nature of the action to be
+            taken at the time when the countdown of the
+            upsShutdownAfterDelay and upsRebootWithDuration
+            objects reaches zero.
+            Setting this object to output(1) indicates that
+            shutdown requests should cause only the output of the
+            UPS to turn off.  Setting this object to system(2)
+            indicates that shutdown requests will cause the entire
+            UPS system to turn off.
+        - uuid: 869dd2d8ffbc4d519477a16859ef34b9
+          name: 'xppx upsSmartBatteryCapacity.0'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.935.1.1.1.2.2.1.0
+          key: upsSmartBatteryCapacity.0
+          delay: '30'
+          history: 90d
+          value_type: FLOAT
+          description: |
+            MIB:XPPC-MIB
+            The remaining battery capacity expressed in
+            percent of full capacity.
+          tags:
+            - tag: Application
+              value: battery
+        - uuid: 1cc47eec61c84ad49c38b4ee77ab69c8
+          name: 'xppx upsSmartBatteryRunTimeRemaining.0'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.935.1.1.1.2.2.4.0
+          key: upsSmartBatteryRunTimeRemaining.0
+          delay: '30'
+          history: 90d
+          value_type: FLOAT
+          description: |
+            MIB:XPPC-MIB
+            The UPS battery run time remaining before battery
+            exhaustion, in seconds.
+          tags:
+            - tag: Application
+              value: battery
+        - uuid: c942713dac9144f5963f2914857c4f8d
+          name: 'xppx upsSmartConfigAlarmTimer.0'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.935.1.1.1.5.2.5.0
+          key: upsSmartConfigAlarmTimer.0
+          delay: '30'
+          history: 90d
+          value_type: FLOAT
+          units: s
+          description: |
+            MIB:XPPC-MIB
+            The time in seconds after initial line failure at which the
+            UPS begins emitting audible alarms (beeping).  This timer is
+            observerd only if the value of extControlAlarm is timed(2).
+            Allowed values are 0 or 30 seconds.
+                            
+            If a value other than a supported value is provided in a
+            set request, the UPS interprets it as a the next lower
+            acceptable value.  If the provided value is lower than
+            the lowest acceptable value, the lowest acceptable
+            value is used.
+        - uuid: d82318e0191e473a8ea4c620d200b322
+          name: 'xppc upsSmartInputLineVoltage.0'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.935.1.1.1.3.2.1.0
+          key: upsSmartInputLineVoltage.0
+          delay: '30'
+          history: 90d
+          description: |
+            MIB:XPPC-MIB
+            The current utility line voltage in 1/10 VAC.
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            - tag: Application
+              value: Input
+        - uuid: a4e51b285b4941fc898a4c202d15419c
+          name: upsStartupAfterDelay.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.8.3.0
+          key: upsStartupAfterDelay.0
+          delay: '30'
+          history: 90d
+          units: s
+          description: |
+            MIB:UPS-MIB
+            Setting this object will start the output after the
+            indicated number of seconds, including starting the
+            UPS, if necessary.  Setting this object to 0 will
+            cause the startup to occur immediately.  Setting this
+            object to -1 will abort the countdown.  If the output
+            is already on at the time the countdown reaches 0,
+            then nothing will happen.  Sets to this object
+            override the effect of any upsStartupAfterDelay
+            countdown or upsRebootWithDuration countdown in
+            progress.  When read, upsStartupAfterDelay will return
+            the number of seconds until startup, or -1 if no
+            startup countdown is in effect.  If the countdown
+            expires during a utility failure, the startup shall
+            not occur until the utility power is restored.  On
+            some systems, if the agent is restarted while a
+            startup countdown is in effect, the countdown is
+            aborted.
+        - uuid: e6a865b5eed8495ea8a2953958f3cf7d
+          name: upsTestElapsedTime.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.7.6.0
+          key: upsTestElapsedTime.0
+          delay: '30'
+          history: 90d
+          value_type: FLOAT
+          units: uptime
+          description: |
+            MIB:UPS-MIB
+            The amount of time, in TimeTicks, since the test in
+            progress was initiated, or, if no test is in progress,
+            the previous test took to complete.  If the value of
+            upsTestResultsSummary is noTestsInitiated(6),
+            upsTestElapsedTime has the value 0.
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            - tag: Application
+              value: Test
+          triggers:
+            - uuid: b18443669baf49aeb6dce090f190288b
+              expression: 'last(/Wiseway UPS/upsTestElapsedTime.0)>35'
+              name: 'UPS Test Elapsed Time more than 35 days'
+              priority: WARNING
+        - uuid: 5fbfc8e3250c4198af391b09d1f8e8f2
+          name: upsTestId.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.7.1.0
+          key: upsTestId.0
+          delay: '30'
+          history: 90d
+          value_type: TEXT
+          description: |
+            MIB:UPS-MIB
+            The test is named by an OBJECT IDENTIFIER which
+            allows a standard mechanism for the initiation of
+            tests, including the well known tests identified in
+            this document as well as those introduced by a
+            particular implementation, i.e., as documented in the
+            private enterprise MIB definition for the device.
+            Setting this variable initiates the named test. Sets
+            to this variable require the presence of
+            upsTestSpinLock in the same SNMP message.
+            The set request will be rejected with an appropriate
+            error message if the requested test cannot be
+            performed, including attempts to start a test when
+            another test is already in progress.  The status of
+            the current or last test is maintained in
+            upsTestResultsSummary. Tests in progress may be
+            aborted by setting the upsTestId variable to
+            upsTestAbortTestInProgress.
+            Read operations return the value of the name of the
+            test in progress if a test is in progress or the name
+            of the last test performed if no test is in progress,
+            unless no test has been run, in which case the well
+            known value upsTestNoTestsInitiated is returned.
+          tags:
+            - tag: Application
+              value: Test
+        - uuid: 7586d43986ed402281d3f4d632fb741f
+          name: upsTestResultsDetail.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.7.4.0
+          key: upsTestResultsDetail.0
+          delay: '30'
+          history: 90d
+          value_type: TEXT
+          description: |
+            MIB:UPS-MIB
+            Additional information about upsTestResultsSummary.
+            If no additional information available, a zero length
+            string is returned.
+          tags:
+            - tag: Application
+              value: Test
+        - uuid: 61f976d1ec5a4bc7abe89fdf1b0ff099
+          name: upsTestResultsSummary.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.7.3.0
+          key: upsTestResultsSummary.0
+          delay: '30'
+          history: 90d
+          description: |
+            MIB:UPS-MIB
+            The results of the current or last UPS diagnostics
+            test performed.  The values for donePass(1),
+            doneWarning(2), and doneError(3) indicate that the
+            test completed either successfully, with a warning, or
+            with an error, respectively.  The value aborted(4) is
+            returned for tests which are aborted by setting the
+            value of upsTestId to upsTestAbortTestInProgress.
+            Tests which have not yet concluded are indicated by
+            inProgress(5).  The value noTestsInitiated(6)
+            indicates that no previous test results are available,
+            such as is the case when no tests have been run since
+            the last reinitialization of the network management
+            subsystem and the system has no provision for non-
+            volatile storage of test results.
+          valuemap:
+            name: 'Wiseway::upsTestResultsSummary'
+          tags:
+            - tag: Application
+              value: Test
+        - uuid: 77d5a804a1d0426189ee710371d53b0c
+          name: upsTestSpinLock.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.7.2.0
+          key: upsTestSpinLock.0
+          delay: '30'
+          history: 90d
+          description: |
+            MIB:UPS-MIB
+            A spin lock on the test subsystem.  The spinlock is
+            used as follows.
+            Before starting a test, a manager-station should make
+            sure that a test is not in progress as follows:
+                try_again:
+                  get (upsTestSpinLock)
+                  while (upsTestResultsSummary == inProgress) {
+                    /* loop while a test is running for another
+            manager */
+                    short delay
+                    get (upsTestSpinLock)
+                  }
+                  lock_value = upsTestSpinLock
+                  /* no test in progress, start the test */
+                  set (upsTestSpinLock = lock_value, upsTestId =
+            requested_test)
+                  if (error_index == 1) { /* (upsTestSpinLock
+            failed) */
+                    /* if problem is not access control, then
+                        some other manager slipped in ahead of us
+            */
+                    goto try_again
+                  }
+                  if (error_index == 2) { /* (upsTestId) */
+                    /* cannot perform the test */
+                    give up
+                  }
+                  /* test started ok */
+                  /* wait for test completion by polling
+            upsTestResultsSummary */
+                  get (upsTestSpinLock, upsTestResultsSummary,
+            upsTestResultsDetail)
+                  while (upsTestResultsSummary == inProgress) {
+                    short delay
+                    get (upsTestSpinLock, upsTestResultsSummary,
+            upsTestResultsDetail)
+                  }
+                  /* when test completes, retrieve any additional
+            test results */
+                  /* if upsTestSpinLock == lock_value + 1, then
+            these are our test */
+                  /* results (as opposed to another manager's */
+                  The initial value of upsTestSpinLock at agent
+            initialization shall
+                  be 1.
+          tags:
+            - tag: Application
+              value: Test
+        - uuid: 2457f880b829444d961fef8dcbe6e597
+          name: upsTestStartTime.0
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.33.1.7.5.0
+          key: upsTestStartTime.0
+          delay: '30'
+          history: 90d
+          value_type: FLOAT
+          units: uptime
+          description: |
+            MIB:UPS-MIB
+            The value of sysUpTime at the time the test in
+            progress was initiated, or, if no test is in progress,
+            the time the previous test was initiated.  If the
+            value of upsTestResultsSummary is noTestsInitiated(6),
+            upsTestStartTime has the value 0.
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.1'
+          tags:
+            - tag: Application
+              value: Test
+      tags:
+        - tag: class
+          value: power
+        - tag: target
+          value: Wiseway
+      macros:
+        - macro: '{$BATTERY.CAPACITY.MIN.WARN}'
+          value: '50'
+          description: 'Minimum battery capacity percentage for trigger expression.'
+        - macro: '{$SNMP.TIMEOUT}'
+          value: 5m
+          description: 'The time interval for SNMP agent availability trigger expression.'
+        - macro: '{$TIME.PERIOD}'
+          value: 15m
+          description: 'Time period for trigger expression.'
+        - macro: '{$UPS.INPUT_FREQ.MAX.WARN}'
+          value: '50.3'
+          description: 'Maximum input frequency for trigger expression'
+        - macro: '{$UPS.INPUT_FREQ.MIN.WARN}'
+          value: '48.7'
+          description: 'Minimum input frequency for trigger expression'
+        - macro: '{$UPS.INPUT_VOLT.MAX.WARN}'
+          value: '243'
+          description: 'Maximum input voltage for trigger expression.'
+        - macro: '{$UPS.INPUT_VOLT.MIN.WARN}'
+          value: '197'
+          description: 'Minimum input voltage for trigger expression.'
+        - macro: '{$UPS.OUTPUT.MAX.CRIT}'
+          value: '95'
+          description: 'Maximum output load in % for trigger expression.'
+        - macro: '{$UPS.OUTPUT.MAX.WARN}'
+          value: '80'
+          description: 'Maximum output load in % for trigger expression.'
+        - macro: '{$UPSADVBATTERYTEMPERATURE}'
+          value: '40'
+      valuemaps:
+        - uuid: 55b10ee628294cfa86f2a20c9423d261
+          name: 'Service state'
+          mappings:
+            - value: '0'
+              newvalue: Down
+            - value: '1'
+              newvalue: Up
+        - uuid: 27f0d801314d4e9d8f534c10eea85364
+          name: upsConfigAudibleStatus
+          mappings:
+            - value: '1'
+              newvalue: disabled
+            - value: '2'
+              newvalue: enabled
+            - value: '3'
+              newvalue: muted
+        - uuid: cde0a9902d6643edb08bb1e63ab21b68
+          name: 'Viseway::uioSensorStatusAlarmStatus'
+          mappings:
+            - value: '1'
+              newvalue: Normal
+            - value: '2'
+              newvalue: Warning
+            - value: '3'
+              newvalue: Critical
+            - value: '4'
+              newvalue: 'Not applicable'
+        - uuid: d464996cf3d24ac796a1f94aa30e7193
+          name: 'Viseway::upsAdvBatteryReplaceIndicator'
+          mappings:
+            - value: '1'
+              newvalue: 'no Battery Needs Replacing'
+            - value: '2'
+              newvalue: 'battery Needs Replacing'
+        - uuid: 4b6e13a2850a49d0b7a91c20dc6270b6
+          name: 'Viseway::upsAdvInputLineFailCause'
+          mappings:
+            - value: '1'
+              newvalue: 'no Transfer'
+            - value: '2'
+              newvalue: 'High Line Voltage'
+            - value: '3'
+              newvalue: Brownout
+            - value: '4'
+              newvalue: Blackout
+            - value: '5'
+              newvalue: 'Small Momentary Sag'
+            - value: '6'
+              newvalue: 'Deep Momentary Sag'
+            - value: '7'
+              newvalue: 'Small Momentary Spike'
+            - value: '8'
+              newvalue: 'Large Momentary Spike'
+            - value: '9'
+              newvalue: 'Self Test'
+            - value: '10'
+              newvalue: 'Rate of Voltage Change'
+        - uuid: da2e7d717ed0483e988af9156bcfd4d0
+          name: 'Wiseway::ups1powerSupplyMode'
+          mappings:
+            - value: '1'
+              newvalue: standby
+            - value: '2'
+              newvalue: online
+            - value: '3'
+              newvalue: battery
+            - value: '4'
+              newvalue: bypass
+            - value: '5'
+              newvalue: eco
+        - uuid: b853fd747e5d4bbf99c8a594fb9f3da5
+          name: 'Wiseway::upsBasicBatteryStatus'
+          mappings:
+            - value: '1'
+              newvalue: Unknown
+            - value: '2'
+              newvalue: Normal
+            - value: '3'
+              newvalue: Low
+            - value: '4'
+              newvalue: 'In Fault Condition'
+        - uuid: 95f26b1e66d14db59238dda02d1d1517
+          name: 'Wiseway::upsBasicOutputStatus'
+          mappings:
+            - value: '1'
+              newvalue: Unknown
+            - value: '2'
+              newvalue: Online
+            - value: '3'
+              newvalue: 'On Battery'
+            - value: '4'
+              newvalue: 'On Smart Boost'
+            - value: '5'
+              newvalue: 'Timed Sleeping'
+            - value: '6'
+              newvalue: 'Software Bypass'
+            - value: '7'
+              newvalue: 'Off'
+            - value: '8'
+              newvalue: Rebooting
+            - value: '9'
+              newvalue: 'Switched Bypass'
+            - value: '10'
+              newvalue: 'Hardware Failure Bypass'
+            - value: '11'
+              newvalue: 'Sleeping Until Power Return'
+            - value: '12'
+              newvalue: 'On Smart Trim'
+            - value: '13'
+              newvalue: 'Eco Mode'
+            - value: '14'
+              newvalue: 'Hot Standby'
+            - value: '15'
+              newvalue: 'On Battery Test'
+            - value: '16'
+              newvalue: 'Emergency Static Bypass'
+            - value: '17'
+              newvalue: 'Static Bypass Standby'
+            - value: '18'
+              newvalue: 'Power Saving Mode'
+            - value: '19'
+              newvalue: 'Spot Mode'
+            - value: '20'
+              newvalue: E-Conversion
+            - value: '21'
+              newvalue: 'Charger Spotmode'
+            - value: '22'
+              newvalue: 'Inverter Spotmode'
+            - value: '23'
+              newvalue: 'Active Load'
+            - value: '24'
+              newvalue: 'Battery Discharge Spotmode'
+            - value: '25'
+              newvalue: 'Inverter Standby'
+            - value: '26'
+              newvalue: 'Charger Only'
+        - uuid: 9f3f2b3663194d84bb6e5ba890c0702d
+          name: 'Wiseway::upsOutputSource'
+          mappings:
+            - value: '1'
+              newvalue: other
+            - value: '2'
+              newvalue: none
+            - value: '3'
+              newvalue: normal
+            - value: '4'
+              newvalue: bypass
+            - value: '5'
+              newvalue: battery
+            - value: '6'
+              newvalue: booster
+            - value: '7'
+              newvalue: reducer
+        - uuid: 4fe40fe2b1a94a34916ed237ce0a2e00
+          name: 'Wiseway::upsTestResultsSummary'
+          mappings:
+            - value: '1'
+              newvalue: donePass
+            - value: '2'
+              newvalue: doneWarning
+            - value: '3'
+              newvalue: doneError
+            - value: '4'
+              newvalue: aborted
+            - value: '5'
+              newvalue: inProgress
+            - value: '6'
+              newvalue: noTestsInitiated
+        - uuid: 8b59801ca4dd4c51bb4a5d7e8d61c7d4
+          name: 'XPPC:upsBaseBatteryStatus'
+          mappings:
+            - value: '1'
+              newvalue: unknown
+            - value: '2'
+              newvalue: batteryNormal
+            - value: '3'
+              newvalue: batteryLow
+        - uuid: 07c55915556e4502b6af29ca0ac55ec1
+          name: 'XPPC:upsBaseOutputStatus'
+          mappings:
+            - value: '1'
+              newvalue: unknown
+            - value: '2'
+              newvalue: onLine
+            - value: '3'
+              newvalue: onBattery
+            - value: '4'
+              newvalue: onBoost
+            - value: '5'
+              newvalue: sleeping
+            - value: '6'
+              newvalue: onBypass
+            - value: '7'
+              newvalue: rebooting
+            - value: '8'
+              newvalue: standBy
+            - value: '9'
+              newvalue: onBuck
+        - uuid: 4f6461801e8543e0bc236c8f8db7b1c7
+          name: zabbix.host.available
+          mappings:
+            - value: '0'
+              newvalue: 'not available'
+            - value: '1'
+              newvalue: available
+            - value: '2'
+              newvalue: unknown
+  graphs:
+    - uuid: e67dd1f4d7af4ebe88289b2437120bc0
+      name: 'Battery status'
+      ymin_type_1: FIXED
+      graph_items:
+        - drawtype: BOLD_LINE
+          color: FF0000
+          item:
+            host: 'Wiseway UPS'
+            key: upsBatteryStatus.0
+    - uuid: 215b0bad65aa4cfbb9fbf0af8b0339a8
+      name: Output
+      graph_items:
+        - color: 199C0D
+          item:
+            host: 'Wiseway UPS'
+            key: ups1outputUPhaseCurrent.1
+        - sortorder: '1'
+          color: 0080FF
+          item:
+            host: 'Wiseway UPS'
+            key: upsOutputPercentLoad.1
+    - uuid: c94e3f74ddb04f31aadc592b3e08fe70
+      name: 'UPS Frequency'
+      ymin_type_1: FIXED
+      graph_items:
+        - drawtype: GRADIENT_LINE
+          color: 199C0D
+          item:
+            host: 'Wiseway UPS'
+            key: upsInputFrequency.1
+        - sortorder: '1'
+          drawtype: GRADIENT_LINE
+          color: F63100
+          item:
+            host: 'Wiseway UPS'
+            key: upsOutputFrequency.0
+    - uuid: cd49ed1ef12b4541b3a08de53b33de9f
+      name: 'UPS Load'
+      ymin_type_1: FIXED
+      ymax_type_1: FIXED
+      graph_items:
+        - color: 4000FF
+          calc_fnc: ALL
+          item:
+            host: 'Wiseway UPS'
+            key: upsOutputPower.1
+    - uuid: 27b6f42de27b443db93a83e11781d259
+      name: 'UPS Power'
+      ymin_type_1: FIXED
+      graph_items:
+        - drawtype: BOLD_LINE
+          color: FF0000
+          item:
+            host: 'Wiseway UPS'
+            key: upsAdvInputPower
+        - sortorder: '1'
+          drawtype: BOLD_LINE
+          color: 4000FF
+          item:
+            host: 'Wiseway UPS'
+            key: upsOutputPower.1
+    - uuid: d603452ba6b74fa2974208adc94f6cdb
+      name: 'UPS Temperature'
+      ymin_type_1: FIXED
+      graph_items:
+        - drawtype: GRADIENT_LINE
+          color: FF0000
+          item:
+            host: 'Wiseway UPS'
+            key: ups1batteryTemperature
+    - uuid: 5123647f7239492eb33490d33a1aa746
+      name: Voltage
+      graph_items:
+        - color: 199C0D
+          item:
+            host: 'Wiseway UPS'
+            key: ups1inputUPhaseVoltage.1
+        - sortorder: '1'
+          color: 0080FF
+          item:
+            host: 'Wiseway UPS'
+            key: ups1outputUPhaseVoltage.1
